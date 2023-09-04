@@ -45,7 +45,7 @@ Should:
 * Have means of **handling the uncertainty** associated to its sensor inputs and the effects of its actions over a surrounding, dynamic environment;
 * Have **means to take rational decisions**, leading to the achievement of its goals.
 
---
+---
 
 ## Autonomous Robots
 

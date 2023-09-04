@@ -1,5 +1,7 @@
 # Introduction to [ROS (Robot Operating System)](https://www.ros.org/)
 
+> _ROS is an **open-source**, **meta-operating system** for your **robot**. It provides the services you would expect from an operating system, including hardware abstraction, low-level device control, implementation of commonly-used functionality, message-passing between processes, and package management._
+
 <p align="center">
     <img src="./imgs/ros.png" width="200px" alt="ROS"/>
 </p>
@@ -7,14 +9,18 @@
 ## What is ROS?
 
 * Framework for **robot software development**, providing operating system-like functionality on a heterogeneous computer cluster;
-* Works well in Linux Ubuntu, but there are bindings to Java, C#, and can be tunneled via web sockets;
+* Works well in **Linux Ubuntu**, but there are bindings to Java, C#, and can be tunneled via web sockets;
 * Large user community.
 
 ---
 
 ## Basic Concepts
 
-### Node
+<p align="center">
+    <img src="https://docs.ros.org/en/humble/_images/Nodes-TopicandService.gif" width="500px" alt="Basic Concepts"/>
+</p>
+
+### [Nodes](http://wiki.ros.org/Nodes)
 
 * Modularization in ROS is achieved by separated OS processes called **nodes**;
 * **Node is a process that uses ROS framework**;
@@ -26,26 +32,23 @@
     <img src="./imgs/roscore.png" width="300px" alt="roscore"/>
 </p>
 
-### Topic
+### [Topics](http://wiki.ros.org/Topics)
 
 * The **communication between nodes** is done via **topics**;
 * Publish/subscribe pattern;
 * **Publishers** send messages to a **topic**;
 * Published messages are **broadcasted** to all **subscribers**.
 
-### Service
+### [Services](http://wiki.ros.org/Services)
 
 * **Service** is a **request/response** pattern;
 * A node can **request a service** from another node, which will **respond** to the request;
 * Similar to **RPC** (Remote Procedure Call).
 
-### Message
+### [Messages](http://wiki.ros.org/Messages)
 
 * **Message** is a **data structure** used for communication between nodes;
-* All messages are defined in text files with the extension `.msg`;
-* Messages have a **fixed structure**:
-  * **Header** - metadata about the message (e.g. timestamp);
-  * **Data** - the actual message data (e.g. sensor readings). 
+* All messages are defined in text files with the extension `.msg`.
 
 ---
 
@@ -117,7 +120,7 @@ rosbag info <bag_file>                 # Prints information about a bag file
 
 ## Useful ROS Facilities
 
-### Parameters
+### [Parameters](http://wiki.ros.org/Parameter%20Server)
 
 * **Parameters** are used to **configure nodes**;
 * Defined in a `.yaml` file;
@@ -129,30 +132,30 @@ rosbag info <bag_file>                 # Prints information about a bag file
 * XML format;
 * `roslaunch` command line tool is used to **start** and **stop** launch files.
 
-### TF (Transforms)
+### [TF (Transforms)](http://wiki.ros.org/tf)
 
 * **TF** is a **framework** that keeps track of **multiple coordinate frames** over time;
 * Represents geometric transformations in 3D, position and orientation.
 
-### RViz
+### [RViz](https://www.google.com/search?q=RViz&rlz=1C1FCXM_pt-PTPT968PT968&oq=RViz&aqs=chrome..69i57j0i512l9.287j0j4&sourceid=chrome&ie=UTF-8)
 
 * **RViz** is a **3D visualization tool** for ROS;
 * Displays **sensor data** and **state information** from ROS nodes;
 * Displays **TF** frames.
 
-### Gazebo
+### [Gazebo](https://gazebosim.org/home)
 
 * **Gazebo** is a **3D simulator** for ROS;
 * Simulates **sensors** and **actuators**;
 * Simulates **physics**.
 * Can be used to **simulate robots**.
 
-### Actionlib
+### [Actionlib](http://wiki.ros.org/actionlib)
 
 * **Actionlib** is a **framework** for **asynchronous communication**;
 * State-full scheme to manage action execution.
 
-### SMACH
+### [SMACH](http://wiki.ros.org/smach)
 
 * **SMACH** is a **framework** for **state machines**;
 * State machines are used to **model complex behavior**;
@@ -160,9 +163,9 @@ rosbag info <bag_file>                 # Prints information about a bag file
 
 Other packages:
 
-* GMapping - SLAM (Simultaneous Localization and Mapping);
-* AMCL - Adaptive Monte Carlo Localization;
-* MoveIt! - Motion Planning;
-* MoveBase - Navigation;
-* OctoMap - 3D Mapping;
-* ROSPlan - Planning.
+* [**GMapping**](http://wiki.ros.org/gmapping) - SLAM (Simultaneous Localization and Mapping);
+* [**AMCL**](http://wiki.ros.org/amcl) - Adaptive Monte Carlo Localization;
+* [**MoveIt!**](https://moveit.ros.org/) - Motion Planning;
+* [**MoveBase**](http://wiki.ros.org/move_base) - Navigation;
+* [**OctoMap**](http://wiki.ros.org/octomap) - 3D Mapping;
+* [**ROSPlan**](https://kcl-planning.github.io/ROSPlan/) - Planning.
