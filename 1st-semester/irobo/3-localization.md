@@ -166,10 +166,16 @@ Usual configurations:
 
 * **Landmarks**: one transmitter on board the robot and receivers/transponders/retroreflectors mounted on the environment; e.g. LIDAR.
 
-<!--
+
 > #### GPS (Global Positioning System)
 >
-> ... -->
+> **GPS (Global Positioning System)** is a worldwide radio-navigation system formed from a constellation of 24 satellites and their ground stations.
+>
+> Each satellite transmits data via high frequency radio waves back to Earth that can be received by anyone with a GPS receiver.
+>
+> **Position of GPS receiver** determined by **trilateration** based on TOF (Time Of Flight) of radio signals from 3 or more satellites.
+>
+> **Position**: latitude, longitude, altitude.
   
 ### Triangulation
 
@@ -216,5 +222,193 @@ Usual configurations:
 ---
 
 ## Fundamentals of Probabilistic Robotics
+
+> **Probabilistic Robotics** is a new and growing area in robotics, concerned with **perception** and **action** in the face of **uncertainty**.
+>
+> **Perception** - state estimation (localization, mapping, etc.);
+> **Action** - utility optimization (planning, control, etc.).
+
+### Axioms of Probability
+
+* `Pr(A)` - probability that proposition `A` is true;
+* `Pr(A) ∈ [0, 1]`;
+* `Pr(True) = 1`;
+* `Pr(False) = 0`;
+* `Pr(A ∨ B) = Pr(A) + Pr(B) - Pr(A ∧ B)`.
+
+### Discrete Random Variables
+
+* `X` denotes a **random variable**;
+* `X ∈ {x1, x2, ..., xn}` - `X` can take on one of the values `x1, x2, ..., xn`;
+* `P(X = xi)` - probability that `X` takes on the value `xi`;
+* `P()` is the **probability mass function** (PMF) of `X`.
+
+### Continuous Random Variables
+
+* `X` takes on values in the **continuum**;
+* `p(X = x)` or `p(x)` is the **probability density function** (PDF) of `X`.
+
+### Joint and Conditional Probability
+
+* `P(x, y)` - **joint probability** of `x` and `y` - `P(X = x ∧ Y = y)`;
+* If `P(x, y) = P(x)P(y)`, then `x` and `y` are **independent**;
+* `P(x | y)` - **conditional probability** of `x` given `y` - `P(X = x | Y = y)`;
+* `P(x | y) = P(x, y) / P(y)`;
+* If `P(x | y) = P(x)`, then `x` and `y` are **independent**.
+
+### Law of Total Probability
+
+|          Discrete          |          Continuous           |
+| :------------------------: | :---------------------------: |
+|       `∑x P(x) = 1`        |       `∫x p(x) dx = 1`        |
+|    `P(x) = ∑y P(x, y)`     |    `p(x) = ∫y p(x, y) dy`     |
+| `P(x) = ∑y P(x \| y) P(y)` | `p(x) = ∫y p(x \| y) p(y) dy` |
+
+### Bayes' Rule
+
+`P(x | y) = P(y | x) P(x) / P(y) = likelihood * prior / evidence`
+
+### Normalization
+
+... _section in construction_
+
+### Conditioning
+
+Law of Total Probability:
+
+* `P(x) = ∫P(x, z) dz`;
+* `P(x) = ∫P(x | z) P(z) dz`
+* `P(x | y) = ∫P(x | y, z) P(z | y) dz`
+
+### Bayes' Rule for Background Knowledge
+
+`P(x | y, z) = P(y | x, z) P(x | z) / P(y | z)`
+
+### Conditional Independence
+
+* `P(x, y | z) = P(x | z) P(y | z)` - `x` and `y` are **conditionally independent** given `z`;
+* `P(x | z) = P(x|y, z)` - `x` and `y` are **conditionally independent** given `z`;
+* `P(y | z) = P(y|z, x)` - `x` and `y` are **conditionally independent** given `z`.
+
+---
+---
+
+## State Estimation
+
+* Suppose a robot scanning a door;
+* The robot obtains measurement `z`;
+* What is `P(open | z)`?
+  * `open` - door is open;
+  * `z` - measurement (e.g. vision sensor - image of the door).
+
+### Casual vs Diagnostic Reasoning
+
+* `P(open | z)` is **diagnostic** - given `z`, what is the probability that the door is open?
+* `P(z | open)` is **causal** - given that the door is open, what is the probability of obtaining measurement `z`?
+  * Casual knowledge is **easier** to obtain than diagnostic knowledge.
+  
+Bayes' Rule allows us to use **casual knowledge** to obtain **diagnostic knowledge**:
+
+`P(open | z) = P(z | open) P(open) / P(z)`
+
+### Combining Evidence
+
+* Suppose the robot obtains two measurements `z1` and `z2`;
+* What is `P(open | z1, z2)`? or `P(open | z1 ... zn)`?
+* Bayes' Rule:
+
+`P(x | z1, ..., zn) = P(zn | x, z1, ..., zn-1) P(x | z1, ..., zn-1) / P(zn | z1, ..., zn-1)`
+
+The **Markov Assumption** states that: `z1, ..., zn` are **conditionally independent** given `x`:
+
+```
+P(x | z1, ..., zn) = P(zn | x) P(x | z1, ..., zn-1) / P(zn | z1, ..., zn-1)
+                   = hP(zn | x) P(x | z1, ..., zn-1)
+                   = ...
+```
+
+---
+---
+
+## Actions
+
+* Often, the world is **dynamic** since:
+  * actions are **performed** by the robot;
+  * actions are **performed** by other agents;
+  * the world **changes** over time.
+
+* Actions are **never carried out with absolute certainty**;
+* In contrast to measurements, **actions generally increase the uncertainty** about the state of the world.
+
+### Modeling Actions
+
+* **Actions** are **probabilistic**;
+* To incorporate the outcome of an action `u` into the current belief, we use the conditional pdf(Probability Density Function) `P(x' | u, x)`, where `x'` is the **new state** and `x` is the **previous state**;
+* "Executing action `u` in state `x` results in state `x'` with probability `P(x' | u, x)`".
+
+### Integrating the Outcome of Actions
+
+* Continuous case:
+
+`P(x') = ∫P(x' | u, x) P(x) dx`
+
+* Discrete case:
+
+`P(x') = ∑P(x' | u, x) P(x)`
+
+---
+
+### [Bayes Filters](https://www.youtube.com/watch?v=qDvd5lu80bA)
+
+> **Bayes Filters** are a **family of probabilistic filters** that estimate the **state of a dynamic system** given a **history** of **observations** and **actions**.
+
+* Given:
+  * Stream of observations `z` and action data `u`: `dt = {z1, u1, z2, u2, ..., zt, ut}`;
+  * **Sensor model** `P(z | x)`;
+  * **Action model** `P(x' | u, x)`;
+  * **Prior probability** `P(x)` of the state of the system at time `t = 0`;
+
+* Wanted:
+  * Estimate of the state `X` of a **dynamic system** at time `t` given the **history** of **observations** and **actions**;
+  * The posterior of the state is also called the **belief** `Bel(xt) = P(xt | dt)`.
+
+> #### Markov Assumption
+>
+> The **Markov Assumption** states that the **future** is **independent** of the **past** given the **present**.
+>
+> * Static world: `P(xt | dt) = P(xt | xt-1, dt-1)`;
+> * Independent noise;
+> * Perfect model - no approximation errors.
+
+**Bayes Filters**: `Bel(xt) = nP(zt | xt) ∫ P(xt | ut, xt-1) Bel(xt-1) dx`
+
+```
+BayesFilter(¬Bel(x), z, u):
+    n = 0
+    for x in X:
+        Bel'(x) = P(z | x) ¬Bel(x)
+        n = n + Bel'(x)
+    for x in X:
+        Bel(x) = Bel'(x) / n    // Update
+    for x' in X:
+        Bel'(x') = ∫ P(x' | u, x) Bel(x) dx
+    return ¬Bel'(x')           // Prediction
+```
+
+* **Kalman Filters** are **Bayes Filters** that assume **linear Gaussian** models;
+* **Particle Filters** are **Bayes Filters** that use **samples** to represent the **belief**.
+* Hidden Markov Models (HMMs) are a special case of **Bayes Filters**.
+* Dynamic Bayesian Networks (DBNs) are a generalization of **Bayes Filters**;
+* Partially Observable Markov Decision Processes (POMDPs) are a generalization of **Bayes Filters**.
+
+---
+
+### Kalman Filter
+
+...
+
+---
+
+### Particle Filter
 
 ...

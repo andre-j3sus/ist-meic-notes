@@ -2,5 +2,10 @@
 
 ## Syllabus
 
-1. [Introduction to Distributed Systems](1-introduction-to-distributed-systems.md)
-2. [Group Communication](2-group-communication.md)
+1. [Consensus](1-consensus.md) - Paxos and Multi-Paxos;
+2. [Coordination Services](2-coordination-services.md) - Chubby and Zookeeper;
+3. [Group Communication and View-Synchrony](3-group-communication.md);
+4. [Reconfiguring Paxos](4-reconfiguring-paxos.md);
+5. [Database Replication](5-database-replication.md);
+6. [Transactional Causal Consistency](6-transactional-causal-consistency.md);
+7. [P2P Systems](7-p2p-systems.md);

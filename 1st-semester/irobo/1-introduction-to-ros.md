@@ -65,21 +65,19 @@
 * **Package** is a encapsulation of sources, data files and building files;
 * A large variety of packages are available on the web, and can be installed via `apt-get` or `rosdep`. Examples: sensor drivers, simulators, SLAM, image processing, etc.
 
-
 Ros relies on the combination of spaces in the shell environment by sourcing scripts, this allows one to have multiple ros versions installed.
 
-`source /opt/ros/<distro>/setup.bash`
+> `source /opt/ros/<distro>/setup.bash` -> source the **setup script** for the desired ros version.
 
-## Catkin
+## [Catkin](http://wiki.ros.org/catkin)
 
-> catkin is the official build system of ROS and the successor to the original ROS build system, rosbuild. catkin combines CMake macros and Python scripts to provide some functionality on top of CMake's normal workflow. catkin was designed to be more conventional than rosbuild, allowing for better distribution of packages, better cross-compiling support, and better portability. catkin's workflow is very similar to CMake's but adds support for automatic 'find package' infrastructure and building multiple, dependent projects at the same time.
-
+> catkin is the official **build system of ROS** and the successor to the original ROS build system, rosbuild. catkin combines **CMake macros** and **Python scripts** to provide some functionality on top of CMake's normal workflow. catkin was designed to be more **conventional** than rosbuild, allowing for better distribution of packages, better cross-compiling support, and better portability. catkin's workflow is very similar to CMake's but adds support for automatic 'find package' infrastructure and building multiple, dependent projects at the same time.
 
 ### Catkin workspaces
 
-> catkin packages can be built as a standalone project, in the same way that normal cmake projects can be built, but catkin also provides the concept of workspaces, where you can build multiple, interdependent packages together all at once.
-
-Example workspace
+* catkin packages can be built as a **standalone project**, in the same way that normal cmake projects can be built;
+* But catkin also provides the concept of **workspaces**, where you can build **multiple, interdependent packages** together all at once.
+* Example workspace:
 
 ```
 workspace_folder/         -- WORKSPACE
@@ -122,12 +120,12 @@ workspace_folder/         -- WORKSPACE
 
 ### Spaces
 
-1. Source Space: The source space contains the source code of catkin packages.
-2. Build Space: The build space is where CMake is invoked to build the catkin packages in the source space.
-3. Development Space: The development space (or devel space) is where built targets are placed prior to being installed
-4. Install Space: Once targets are built, they can be installed into the install space by invoking the install target, usually with make install.
+1. **Source Space**: The source space contains the source code of catkin packages.
+2. **Build Space**: The build space is where CMake is invoked to build the catkin packages in the source space.
+3. **Development Space**: The development space (or devel space) is where built targets are placed prior to being installed
+4. **Install Space**: Once targets are built, they can be installed into the install space by invoking the install target, usually with make install.
 
-`catkin_make`: Builds any packages in the source space.
+> `catkin_make`: Builds any packages in the source space.
 
 ### Packages
 
@@ -161,8 +159,9 @@ The first order dependencies can be found on the `package.xml` file of the packa
 
 Packages also have indirect dependencies, these can be found with the `rospack depends <package_name>` command.
 
+---
 
-## Ros Concepts
+## ROS Concepts
 
 ### Quick overview:
 
@@ -171,25 +170,21 @@ Packages also have indirect dependencies, these can be found with the `rospack d
 8. **roscore**: Master + rosout + parameter server
 
 ### Commands
-`roscore` -> is the first thing you should run when using ROS
 
-`rosnode` -> displays information about the ROS nodes
-
-`rosrun [package_name] [node_name]` -> Allows you to run a node of a package
-
-`rostopic` -> Allows you to get information about a topic
-
-`rosservice` ->  Can easily attach to ROS's client/service framework with services.
-
-`rosparam` -> allows you to store and manipulate data on the ROS Parameter Server.
-
-`roslaunch [package_name] [launch_file_name]` -> Starts nodes as defined in a launch file.
+* `roscore` -> is the first thing you should run when using ROS;
+* `rosnode` -> displays information about the ROS nodes;
+* `rosrun [package_name] [node_name]` -> Allows you to run a node of a package;
+* `rostopic` -> Allows you to get information about a topic;
+* `rosservice` ->  Can easily attach to ROS's client/service framework with services;
+* `rosparam` -> allows you to store and manipulate data on the ROS Parameter Server;
+* `roslaunch [package_name] [launch_file_name]` -> Starts nodes as defined in a launch file.
 
 ### Launch file
-Provides a convenient way to start up multiple nodes and a master, as well as other initialization requirements such as setting parameters.
 
-Launch files are stored in the `/launch` directory of a package.
-Example:
+* Provides a **convenient way to start up multiple nodes and a master**, as well as other initialization requirements such as setting parameters
+* Launch files are stored in the `/launch` directory of a package.
+* Example:
+
 ``` xml
 <launch>
 
@@ -211,38 +206,36 @@ Example:
 
 ### Useful nodes
 
-`rosrun rqt_plot rqt_plot` -> displays a scrolling time plot of the data published on topics.
-
-`rosrun rqt_graph rqt_graph` -> creates a dynamic graph of what's going on in the system.
-
-`rosrun rqt_console rqt_console` -> attaches to ROS's logging framework to display output from nodes
-
-`rosrun rqt_console rqt_logger_level` -> allows us to change the verbosity level (DEBUG, WARN, INFO, and ERROR) of nodes as they run
+* `rosrun rqt_plot rqt_plot` -> displays a scrolling time plot of the data published on topics;
+* `rosrun rqt_graph rqt_graph` -> creates a dynamic graph of what's going on in the system;
+* `rosrun rqt_console rqt_console` -> attaches to ROS's logging framework to display output from nodes;
+* `rosrun rqt_console rqt_logger_level` -> allows us to change the verbosity level (DEBUG, WARN, INFO, and ERROR) of nodes as they run.
 
 ### Msg Files
-msg files are simple text files that describe the fields of a ROS message. They are used to generate source code for messages in different languages.
 
-msg files are stored in the `/msg` directory of a package.
+* **Msg files** are simple text files that **describe the fields of a ROS message**. They are used to generate source code for messages in different languages.
+* Msg files are stored in the `/msg` directory of a package;
+* Msgs contain a **field type** and **field name per line**. The field types you can use are: 
 
-msgs contain a field type and field name per line. The field types you can use are:
-
+```
 int8, int16, int32, int64 (plus uint*)
 float32, float64
 string
 time, duration
 other msg files
 variable-length array[] and fixed-length array[C]
+```
 
-There is also a special type in ROS: Header, the header contains a timestamp and coordinate frame information that are commonly used in ROS. You will frequently see the first line in a msg file have Header header.
+There is also a special type in ROS: **Header**, the header contains a timestamp and coordinate frame information that are commonly used in ROS. You will frequently see the first line in a msg file have Header `header`.
 
-To make sure the messages are compiled into source code at build time and used at runtime, we need to add the following packages to the package.xml file:
+To make sure the messages are **compiled into source code at build time and used at runtime**, we need to add the following packages to the package.xml file:
 
 ```
 <build_depend>message_generation</build_depend>
 <exec_depend>message_runtime</exec_depend>
 ```
 
-You also need to add the message_generation and dependency to the find_package call in the CMakeLists.txt file:
+You also need to add the `message_generation` and dependency to the `find_package` call in the `CMakeLists.txt` file:
 
 ```cmake
 find_package(catkin REQUIRED COMPONENTS
@@ -253,7 +246,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 ```
 
-And the message_runtime dependency to the catkin_package call
+And the `message_runtime` dependency to the `catkin_package` call:
 
 ```cmake
 catkin_package(
@@ -262,7 +255,7 @@ catkin_package(
   ...)
 ```
 
-Finally you need to add the msg file to the add_message_files call:
+Finally you need to add the msg file to the `add_message_files` call:
 
 ```cmake
 add_message_files(
@@ -271,9 +264,9 @@ add_message_files(
 )
 ```
 
-By adding the .msg files manually, we make sure that CMake knows when it has to reconfigure the project after you add other .msg files.
+By adding the `.msg` files **manually**, we make sure that CMake knows when it has to reconfigure the project after you add other **.msg files**.
 
-And also add the std_msgs dependency to the the generate_msgs call:
+And also add the `std_msgs` dependency to the the `generate_msgs` call:
 
 ```cmake
 generate_messages(
@@ -282,43 +275,44 @@ generate_messages(
 )
 ```
 
-> You may notice that sometimes your project builds fine even if you did not call find_package with all dependencies. This is because catkin combines all your projects into one, so if an earlier project calls find_package, yours is configured with the same values. But forgetting the call means your project can easily break when built in isolation.
+> You may notice that sometimes your project builds fine even if you did not call `find_package` with all dependencies. This is because **catkin combines all your projects into one**, so if an earlier project calls `find_package`, yours is configured with the same values. But forgetting the call means your project can easily break when built in isolation.
 
 To view your messages you can use the `rosmg` command:
 
 `rosmsg show [message type]` -> `rosmsg show beginner_tutorials/Num`
 
-If you are using a new custom message defined in a different package, remember to add:
-
-to package.xml:
+If you are using a new custom message defined in a different package, remember to add the dependency to the `package.xml`:
 
 ```xml
 <build_depend>name_of_package_containing_custom_msg</build_depend>
 <exec_depend>name_of_package_containing_custom_msg</exec_depend>
 ```
 
-and also add this to CMakeList.txt:
+and also add this to `CMakeList.txt`:
 
 ```cmake
 add_dependencies(your_program ${catkin_EXPORTED_TARGETS})
 ```
 
+---
+
 ## Managing System Dependencies
 
-> ROS packages sometimes require external libraries and tools that must be provided by the operating system. These required libraries and tools are commonly referred to as system dependencies. In some cases these system dependencies are not installed by default. ROS provides a simple tool, `rosdep`, that is used to download and install system dependencies.
+> **ROS packages** sometimes require **external libraries and tools** that must be provided by the operating system. These required libraries and tools are commonly referred to as **system dependencies**. In some cases these system dependencies are not installed by default. ROS provides a simple tool, `rosdep`, that is used to **download and install system dependencies**.
 
-Examples of system dependencies are libqt4-dev and qt4-qmake that turtlesim uses (`roscd turtlesim & cat package.xml`)
+Examples of system dependencies are `libqt4-dev` and `qt4-qmake` that turtlesim uses (`roscd turtlesim & cat package.xml`).
 
 ## Commands overview
 
-`rospack` -> Get information of packages
-`roswtf` -> is a tool for diagnosing issues with a running ROS system
-`rosdep` is a tool you can use to install system dependencies required by ROS packages.
+* `rospack` -> Get information of packages;
+* `roswtf` -> is a tool for diagnosing issues with a running ROS system;
+* `rosdep` is a tool you can use to install system dependencies required by ROS packages.
 
 ## `rosbash` package commands
-`roscd` -> Allows you to change directory to a package
-`rosls` -> `ls` directly on the package directory
-`rosed` -> Allows you to directly edit a file within a package by using the package name
+
+* `roscd` -> Allows you to change directory to a package;
+* `rosls` -> `ls` directly on the package directory;
+* `rosed` -> Allows you to directly edit a file within a package by using the package name.
 
 To have access to catkin build (isolated packages):
 `sudo apt-get install python3-catkin-tools python3-osrf-pycommon`
