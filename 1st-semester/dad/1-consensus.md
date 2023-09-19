@@ -169,4 +169,64 @@ The solution to this is the **Paxos** algorithm.
 
 ## [Paxos](https://lamport.azurewebsites.net/pubs/paxos-simple.pdf)
 
-...
+> _[**Paxos**](https://www.cs.yale.edu/homes/aspnes/pinewiki/Paxos.html) is an algorithm for solving consensus assuming a very weak assumption on synchrony of the system (**without a perfect failure detector**)._
+
+1. Messages can take **arbitrarily long** to be delivered, can be **lost**, and can be **duplicated**, but they **cannot be corrupted**;
+2.  Agents operate at **arbitrary speeds**;
+3.   For a sufficient log period of time, the system is **synchronous enough** to allow electing a single leader - **distinguished proposer**.
+
+Paxos has **3 types of agents/roles**:
+
+* **Proposers** - propose values;
+* **Acceptors** - accept values;
+* **Learners** - learn values.
+
+> Assumption: **asynchronous**, **non-Byzantine** system with a distinguished proposer.
+
+### Leaders in Paxos
+
+* Proposers pre-agree on a order to become leaders: `{p1, p2, ..., pn}`;
+* `p1` is the first leader;
+* If a process `pi` suspects that all the previous leaders have crashed, it becomes the new leader;
+* If `pn` is suspected to have crashed, `p1` becomes leader again, and the **cycle repeats**;
+* The leader numbers work as a logical clock, that marks the **passage of time**.
+
+---
+
+### Algorithm of the Leader
+
+Each leader performs **two steps** (the first step is skipped by the first leader):
+
+1. **Prepare**: checks for evidence of the **activity of past leaders** and selects a value that is consistent with any decision that previous leaders may have taken;
+    * For this, each process keeps a tuple with the last adopted value: `<value, wr_timestamp, rd_timestamp>` - `value` is the adopted value, `wr_timestamp` is the timestamp of the last write, and `rd_timestamp` is the timestamp of the last read.
+    * Initially, this tuple is `<my_value, 0, 0>` - `my_value` is the value proposed by the process.
+2. **Propose**: attempts to have a **majority** of nodes to adopted the value it has selected. If a majority is reached, the leader sends a commit message to all nodes, and the **value is decided**.
+
+
+### Example of Execution
+
+* 1st leader is `p1`;
+  1. Skips the prepare step;
+  2. Step 2:
+     1. `p1` sends a `accept!(1, A)` message to all nodes;
+     2. Waits for a majority of nodes to send an `accepted(1, A)` message;
+     3. If a majority is reached, `p1` decides: `decide(A)`.
+
+* 2nd leader is `p2`;
+  1. Step 1:
+     1. `p2` sends a `prepare(2)` message to all nodes;
+     2. Waits for a majority of nodes to send an `promise(wr_timestamp, value)` message;
+     3. Adopts the **most recent value** - highest `wr_timestamp`;
+     4. If the majority of values are still the initial values (with timestamp 0), then `p2` adopts its own value;
+  2. Step 2 (same as before)
+     1. `p2` sends a `accept!(2, A)` message to all nodes;
+     2. Waits for a majority of nodes to send an `accepted(2, A)` message;
+     3. If a majority is reached, `p2` decides: `decide(A)`.
+
+---
+
+### Concurrent Leaders
+
+* If two leaders are active at the same time, they may **propose different values**;
+* The `rd_timestamp` stores the round identifier of the last `prepare` message to which the current process replied with a `promise` message - this is used to prevent two concurrent leaders from proposing different values;
+* Nodes only send `promise` messages to leaders that use a **timestamp larger** than any timestamp seen in the past - this is similar to a fault-tolerant, distributed, **compare-and-swap** operation.

@@ -23,7 +23,7 @@
     * **Artificial/natural landmarks** - landmarks with **known positions**;
     * **Model matching** - match the **sensor data** with a **map** of the environment.
   
-* **Hybrid Localization**:
+* **Hybrid Localization** - combines **relative** and **absolute** localization:
     * **Kalman filter** - combines **odometry** and **beacon** measurements;
     * **Particle filter** - combines **odometry** and **landmark** measurements.
 
@@ -167,7 +167,7 @@ Usual configurations:
 * **Landmarks**: one transmitter on board the robot and receivers/transponders/retroreflectors mounted on the environment; e.g. LIDAR.
 
 
-> #### GPS (Global Positioning System)
+> ### GPS (Global Positioning System)
 >
 > **GPS (Global Positioning System)** is a worldwide radio-navigation system formed from a constellation of 24 satellites and their ground stations.
 >
@@ -176,6 +176,8 @@ Usual configurations:
 > **Position of GPS receiver** determined by **trilateration** based on TOF (Time Of Flight) of radio signals from 3 or more satellites.
 >
 > **Position**: latitude, longitude, altitude.
+>
+> **DGPS (Differential GPS)**: uses a **fixed reference station** to **improve accuracy**.
   
 ### Triangulation
 
@@ -257,6 +259,8 @@ Usual configurations:
 * If `P(x | y) = P(x)`, then `x` and `y` are **independent**.
 
 ### Law of Total Probability
+
+> **Law of Total Probability** is a fundamental rule relating **marginal probabilities** to **conditional probabilities**.
 
 |          Discrete          |          Continuous           |
 | :------------------------: | :---------------------------: |
@@ -356,6 +360,8 @@ P(x | z1, ..., zn) = P(zn | x) P(x | z1, ..., zn-1) / P(zn | z1, ..., zn-1)
 
 `P(x') = ∑P(x' | u, x) P(x)`
 
+This means that the belief `P(x)` is calculated by **integrating** the **previous belief** `P(x)` with the **outcome of the action** `P(x' | u, x)`.
+
 ---
 
 ### [Bayes Filters](https://www.youtube.com/watch?v=qDvd5lu80bA)
@@ -370,17 +376,24 @@ P(x | z1, ..., zn) = P(zn | x) P(x | z1, ..., zn-1) / P(zn | z1, ..., zn-1)
 
 * Wanted:
   * Estimate of the state `X` of a **dynamic system** at time `t` given the **history** of **observations** and **actions**;
-  * The posterior of the state is also called the **belief** `Bel(xt) = P(xt | dt)`.
+  * The posterior of the state is also called the **belief** `Bel(xt) = P(xt | dt)` - Probability of the state `x` at time `t` given the history of observations and actions - "belief of where you are in the world".
 
 > #### Markov Assumption
 >
-> The **Markov Assumption** states that the **future** is **independent** of the **past** given the **present**.
+> The **Markov Assumption** states that the **future** is **independent** of the **past** given the **present** - "if you know your current state, you don't need to know the past states to predict the future state".
 >
 > * Static world: `P(xt | dt) = P(xt | xt-1, dt-1)`;
 > * Independent noise;
 > * Perfect model - no approximation errors.
+>
+> Markov assumption allows us to **recursively** compute the **belief**.
 
 **Bayes Filters**: `Bel(xt) = nP(zt | xt) ∫ P(xt | ut, xt-1) Bel(xt-1) dx`
+
+* `n` - normalization constant;
+* `P(zt | xt)` - **sensor model** - probability of obtaining measurement `zt` given the state `xt`;
+* `P(xt | ut, xt-1)` - **action model** - probability of obtaining state `xt` given the action `ut` and the previous state `xt-1`;
+* `Bel(xt-1)` - **prior belief** - probability of the state `xt-1` at time `t-1` - integrates the previous belief with the outcome of the action.
 
 ```
 BayesFilter(¬Bel(x), z, u):
@@ -405,10 +418,50 @@ BayesFilter(¬Bel(x), z, u):
 
 ### Kalman Filter
 
-...
+> **Kalman Filter** is a **Bayes Filter** that assumes **linear Gaussian** models.
+
+* **Highly efficient** recursive filter;
+* **Optimal** for **linear Gaussian** models, but most robotic problems are **non-linear**.
+
+#### Discrete Kalman Filter
+
+* Estimates the state `x` of a discrete-time controlled process that is governed by the linear stochastic difference equation:
+
+`xt = At xt-1 + Bt ut + Et`
+
+with the measurement: `zt = Ct xt + Dt`
+
+* `xt` - state vector;
+* `ut` - control vector;
+* `zt` - measurement vector;
+* `At` - state transition matrix (nxn) - describes how the state evolves from `t-1` to `t`, without controls or noise;
+* `Bt` - control matrix (nxl) - describes how the control `ut` changes the state from `t-1` to `t`;
+* `Ct` - measurement matrix (kxn) - describes how to map the state `xt` to an observation `zt`;
+* `Et` - process noise;
+* `Dt` - measurement noise.
+
+#### KF Initialization
+
+* Initial belief is normally distributed: `Bel(x0) = N(x0; µ0, Σ0)`;
+  * `µ0` - mean of the initial state;
+  * `Σ0` - covariance of the initial state;
+  * `N(x; µ, Σ)` - Gaussian distribution with mean `µ` and covariance `Σ`.
+
+#### Non-Linear Dynamic Systems
+
+* `xt = g(ut, xt-1)` - non-linear dynamic system;
+* `zt = h(xt)` - non-linear measurement model;
+
+_to be continued..._
 
 ---
 
 ### Particle Filter
 
-...
+> **Particle Filter** is a **Bayes Filter** that uses **samples** to represent the **belief**.
+
+* **Non-parametric** filter - does not assume a parametric form for the belief;
+* Represents belief by **random samples** (**particles**);
+* Estimation of **non-Gaussian and non-linear** systems;
+
+_to be continued..._
