@@ -230,3 +230,37 @@ Each leader performs **two steps** (the first step is skipped by the first leade
 * If two leaders are active at the same time, they may **propose different values**;
 * The `rd_timestamp` stores the round identifier of the last `prepare` message to which the current process replied with a `promise` message - this is used to prevent two concurrent leaders from proposing different values;
 * Nodes only send `promise` messages to leaders that use a **timestamp larger** than any timestamp seen in the past - this is similar to a fault-tolerant, distributed, **compare-and-swap** operation.
+
+---
+---
+
+## Multi-Paxos
+
+> _**Multi-Paxos** is an extension of Paxos that allows for multiple rounds of agreement from a stable leader._
+
+### Roles
+
+* **Clients** - propose input values to consensus;
+* **Proposers** - leaders; execute the read/write phases of a Paxos round to commit a value;
+* **Acceptors** - accept values; keep a record of the last value written/read by the most recent proposer (`<value, wr_timestamp, rd_timestamp>`);
+* **Learners** - obtain the output of the consensus algorithm.
+
+<p align="center">
+    <img src="./imgs/paxos-made-simple.png" width="500px" alt="Paxos made simple"/>
+</p>
+
+---
+
+### From Paxos to SMR (State Machine Replication)
+
+> _**State Machine Replication** is a technique for implementing a fault-tolerant service by replicating servers and coordinating client interactions with a replicated state machine._
+
+* In SMR we need to order the **commands** sent by the clients; thus we need to run **multiple instances** of consensus one after the other;
+* Use a different ser of proposers and acceptors for each consensus instance would be **inefficient** - so we want to keep the same set of proposers and acceptors for multiple instances;
+* Proposers should be learners, to avoid proposers from proposing values that have already been accepted in other instances.
+
+### Optimizations
+
+* To prevent the slowdown from having to run step 1 (prepare) form multiple instances of consensus, the leader can execute this step for multiple instances in **parallel**;
+
+_notes about multi-paxos to be completed and improved_
