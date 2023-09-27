@@ -1,6 +1,10 @@
-# [Consensus](https://w3.cs.jmu.edu/kirkpams/OpenCSF/Books/csf/html/DistConsensus.html#:~:text=Consensus%20in%20a%20distributed%20system,to%20determine%20a%20variable's%20value.)
+# [Consensus 🤝](https://w3.cs.jmu.edu/kirkpams/OpenCSF/Books/csf/html/DistConsensus.html#:~:text=Consensus%20in%20a%20distributed%20system,to%20determine%20a%20variable's%20value.)
 
 > _**Consensus** is the process of **agreeing on one result among a group of participants**. This problem becomes difficult when the participants or their communication medium may experience **failures**._
+
+<p align="center">
+    <img src="./imgs/consensus-protocol.jpg" width="500px" alt="Consensus"/>
+</p>
 
 * Set of **N** processes;
 * Each process **proposes** a value;
@@ -212,6 +216,10 @@ Each leader performs **two steps** (the first step is skipped by the first leade
      2. Waits for a majority of nodes to send an `accepted(1, A)` message;
      3. If a majority is reached, `p1` decides: `decide(A)`.
 
+<p align="center">
+    <img src="./imgs/paxos-ex1.png" width="500px" alt="Paxos example 1"/>
+</p>
+
 * 2nd leader is `p2`;
   1. Step 1:
      1. `p2` sends a `prepare(2)` message to all nodes;
@@ -223,6 +231,10 @@ Each leader performs **two steps** (the first step is skipped by the first leade
      2. Waits for a majority of nodes to send an `accepted(2, A)` message;
      3. If a majority is reached, `p2` decides: `decide(A)`.
 
+<p align="center">
+    <img src="./imgs/paxos-ex2.png" width="500px" alt="Paxos example 2"/>
+</p>
+
 ---
 
 ### Concurrent Leaders
@@ -230,6 +242,8 @@ Each leader performs **two steps** (the first step is skipped by the first leade
 * If two leaders are active at the same time, they may **propose different values**;
 * The `rd_timestamp` stores the round identifier of the last `prepare` message to which the current process replied with a `promise` message - this is used to prevent two concurrent leaders from proposing different values;
 * Nodes only send `promise` messages to leaders that use a **timestamp larger** than any timestamp seen in the past - this is similar to a fault-tolerant, distributed, **compare-and-swap** operation.
+
+> **Live-lock** is a special case of **deadlock** in which a process **repeatedly** changes its state in response to changes in the other processes without doing any real work.
 
 ---
 ---
@@ -257,10 +271,10 @@ Each leader performs **two steps** (the first step is skipped by the first leade
 
 * In SMR we need to order the **commands** sent by the clients; thus we need to run **multiple instances** of consensus one after the other;
 * Use a different ser of proposers and acceptors for each consensus instance would be **inefficient** - so we want to keep the same set of proposers and acceptors for multiple instances;
-* Proposers should be learners, to avoid proposers from proposing values that have already been accepted in other instances.
+* **Proposers should be learners**, to avoid proposers from proposing values that have already been accepted in other instances.
 
 ### Optimizations
 
 * To prevent the slowdown from having to run step 1 (prepare) form multiple instances of consensus, the leader can execute this step for multiple instances in **parallel**;
 
-_notes about multi-paxos to be completed and improved_
+_TODO: notes about multi-paxos to be completed and improved_

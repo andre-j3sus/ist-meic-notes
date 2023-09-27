@@ -18,7 +18,7 @@
 
 ### Paxos Implementation
 
-Chubby implements Paxos with some twists.
+Chubby implements Paxos with some twists:
 
 #### Leaders
 
@@ -79,7 +79,7 @@ There are two solutions for this problem:
   * Server adapts lease duration to load: **higher load -> longer lease**.
 * Client use a conservative approximation of lease time - time keep-alive messages spend in the network and server clock drift rate.
 
-_notes about chubby to be improved_
+_TODO: notes about chubby to be improved_
 
 ---
 
