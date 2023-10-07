@@ -4,7 +4,7 @@
 
 1. [Consensus](1-consensus.md) - Paxos and Multi-Paxos;
 2. [Coordination Services](2-coordination-services.md) - Chubby and Zookeeper;
-3. [Group Communication and View-Synchrony](3-group-communication.md);
+3. [Group Communication and View-Synchrony](3-group-communication-view-synchrony.md);
 4. [Reconfiguring Paxos](4-reconfiguring-paxos.md);
 5. [Database Replication](5-database-replication.md);
 6. [Transactional Causal Consistency](6-transactional-causal-consistency.md);
