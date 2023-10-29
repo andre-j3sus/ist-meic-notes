@@ -10,7 +10,7 @@
 * Each process **proposes** a value;
 * All correct processes **decide** on the same value;
 * The output value must be a **proposed value**;
-* The output value must be any of the proposed values - **all inputs are equally good**.
+* The output value may be any of the proposed values - **all inputs are equally good**.
 
 ## Properties of Consensus
 
@@ -270,11 +270,10 @@ Each leader performs **two steps** (the first step is skipped by the first leade
 > _**State Machine Replication** is a technique for implementing a fault-tolerant service by replicating servers and coordinating client interactions with a replicated state machine._
 
 * In SMR we need to order the **commands** sent by the clients; thus we need to run **multiple instances** of consensus one after the other;
-* Use a different ser of proposers and acceptors for each consensus instance would be **inefficient** - so we want to keep the same set of proposers and acceptors for multiple instances;
+* Use a different ser of proposers and acceptors for each consensus instance would be **inefficient** - so we want to **keep the same set of proposers and acceptors for multiple instances**;
 * **Proposers should be learners**, to avoid proposers from proposing values that have already been accepted in other instances.
 
 ### Optimizations
 
-* To prevent the slowdown from having to run step 1 (prepare) form multiple instances of consensus, the leader can execute this step for multiple instances in **parallel**;
-
-_TODO: notes about multi-paxos to be completed and improved_
+* A proposer can start **a new instance of consensus while the other is still executing**, but this may create some weird situations, if the channel is not FIFO;
+* To prevent the slowdown from having to run step 1 (prepare) form multiple instances of consensus, the leader can execute this step for multiple instances in **parallel**.

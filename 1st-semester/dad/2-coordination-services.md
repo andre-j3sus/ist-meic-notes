@@ -28,6 +28,8 @@ Chubby implements Paxos with some twists:
 * If the **leader fails, the lease will expire** and another node will be able to become leader;
 * The new leader must get a **majority of votes** to be elected.
 
+> This is similar to a **primary-backup** system, where the **primary** is the **leader** and the **backups** are the **followers**.
+
 #### Clients
 
 * Clients send requests to the leader;
