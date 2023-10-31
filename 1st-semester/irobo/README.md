@@ -6,6 +6,4 @@
 1. [Introduction to ROS](1-introduction-to-ros.md);
 2. [Perception](2-perception.md);
 3. [Localization](3-localization.md);
-4. [Motion Planning and Guidance](4-motion-planning-and-guidance.md);
-5. Learning Decision Making and Execution;
-6. Robot Systems Architectures;
+4. [Motion Planning and Guidance](4-motion-planning-and-guidance.md).
