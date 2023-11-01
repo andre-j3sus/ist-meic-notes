@@ -53,6 +53,12 @@
 
 * Database replication involves replicating a database across multiple nodes for load balancing, fault tolerance, and improved performance.
 
+* **Uses Paxos** as a building block;
+* Assumes **full replication** (all replicas have the entire database);
+* **Support parallelism** because transactions can be executed at any replica   (multi-master approaches);
+* Requires **Paxos to totally order transactions**;
+* **Blocking** (due to Paxos).
+
 * **Chain Replication:**
   * Chain Replication is a replication technique where messages pass through a chain of nodes, with one node as the head and another as the tail, providing fault tolerance.
 
@@ -68,3 +74,12 @@
 
 * **View Synchrony:**
   * View Synchrony refers to the concept of maintaining a consistent view of the system configuration, which is essential for distributed systems' stability and coordination.
+
+### Spanner
+
+* **Uses Paxos** as a building block;
+* Supports **partial replication**;
+* Support **parallelism** because transactions that only access one partition can be executed in parallel;
+* In each partition, update transactions need to be executed by the Paxos leader;
+* **Total order is achieved via “collective agreement”** protocol executed by the leaders of each Paxos group involved in the transaction;
+* **Blocking** (due to Paxos).
