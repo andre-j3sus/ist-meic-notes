@@ -122,7 +122,7 @@ Works in **epochs/rounds** -  in each epoch there is a different leader;
 #### Execution
 
 1. The **leader** `pi` of epoch `i` **sends** its value `vi` to all processes;
-2. When a process receives a value `vi` from the leader `pi`, it **adopts** `vi` as its value (forgetting any previous value) and sends back and **acknowledgement** to `pi`;
+2. When a process receives a value `vi` from the leader `pi`, it **adopts** `vi` as its value (forgetting any previous value) and sends back an **acknowledgement** to `pi`;
 3. The leader waits until it receives an **acknowledgement** from **all correct processes** - all correct processes have adopted the leader's value;
 4. The leader then sends a second message that **commits** its proposed value;
 5. When a process receives a **commit** message from the leader, it **decides/outputs** on the leader's value.
@@ -177,7 +177,7 @@ The solution to this is the **Paxos** algorithm.
 
 1. Messages can take **arbitrarily long** to be delivered, can be **lost**, and can be **duplicated**, but they **cannot be corrupted**;
 2.  Agents operate at **arbitrary speeds**;
-3.   For a sufficient log period of time, the system is **synchronous enough** to allow electing a single leader - **distinguished proposer**.
+3.   For a sufficiently long period of time, the system is **synchronous enough** to allow electing a single leader - **distinguished proposer**.
 
 Paxos has **3 types of agents/roles**:
 
@@ -189,7 +189,7 @@ Paxos has **3 types of agents/roles**:
 
 ### Leaders in Paxos
 
-* Proposers pre-agree on a order to become leaders: `{p1, p2, ..., pn}`;
+* Proposers pre-agree on an order to become leaders: `{p1, p2, ..., pn}`;
 * `p1` is the first leader;
 * If a process `pi` suspects that all the previous leaders have crashed, it becomes the new leader;
 * If `pn` is suspected to have crashed, `p1` becomes leader again, and the **cycle repeats**;
@@ -270,10 +270,10 @@ Each leader performs **two steps** (the first step is skipped by the first leade
 > _**State Machine Replication** is a technique for implementing a fault-tolerant service by replicating servers and coordinating client interactions with a replicated state machine._
 
 * In SMR we need to order the **commands** sent by the clients; thus we need to run **multiple instances** of consensus one after the other;
-* Use a different ser of proposers and acceptors for each consensus instance would be **inefficient** - so we want to **keep the same set of proposers and acceptors for multiple instances**;
+* Use a different set of proposers and acceptors for each consensus instance would be **inefficient** - so we want to **keep the same set of proposers and acceptors for multiple instances**;
 * **Proposers should be learners**, to avoid proposers from proposing values that have already been accepted in other instances.
 
 ### Optimizations
 
 * A proposer can start **a new instance of consensus while the other is still executing**, but this may create some weird situations, if the channel is not FIFO;
-* To prevent the slowdown from having to run step 1 (prepare) form multiple instances of consensus, the leader can execute this step for multiple instances in **parallel**.
+* To prevent the slowdown from having to run step 1 (prepare) for multiple instances of consensus, the leader can execute this step for multiple instances in **parallel**.
