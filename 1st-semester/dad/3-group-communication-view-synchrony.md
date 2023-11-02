@@ -38,7 +38,7 @@ A full membership services maintains **group views**:
 * A **new group view is generated each time a membership change occurs** (e.g. a process joins or leaves the group);
 * **View delivery** is the idea that processes can **deliver views** (like delivering multicast messages);
 * If a process is suspected, it is **excluded from the group**;
-  * If the process not failed, or recovered, it can **rejoin the group**.
+  * If the process has not failed, or recovered, it can **rejoin the group**.
   * **False suspicions reduce effectiveness** of the system.
 
 ### View-synchronous group communication with reliability

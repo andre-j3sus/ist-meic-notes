@@ -39,7 +39,7 @@ Chubby implements Paxos with some twists:
 
 ### Architecture
 
-* Chubby internally maintains an **hierarchical file syste**m, such that it can keep the state of different files/locks (these are named **nodes**);
+* Chubby internally maintains a **hierarchical file system**, such that it can keep the state of different files/locks (these are named **nodes**);
   * Each node has a **version number** (incremented when the content is updated) and a **lock number** (incremented when the lock is acquired);
   * Nodes can be **ephemeral** (deleted when the client disconnects), used as an indication of **liveness**;
 * Differences `wrt` UNIX to ease distribution:
