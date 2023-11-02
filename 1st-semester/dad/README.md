@@ -15,65 +15,84 @@
 
 ## Key Concepts
 
-### Broadcasters
-
-**URB (Uniform Reliable Broadcast):**
-* URB is a communication primitive that ensures reliable message delivery to all correct processes in a distributed system.
-* It is often used as a building block for other distributed systems protocols.
-
-**Atomic Broadcast or Total Order Broadcast:**
-* Atomic Broadcast is a protocol that ensures that messages are delivered to all nodes in the same order, and they are either delivered to all or none.
-* It provides a strong form of message ordering and reliability.
-
-**FIFO Broadcast:**
-* FIFO Broadcast ensures that messages are delivered in the same order they were sent to all correct processes.
-* It is a weaker form of ordering compared to Atomic Broadcast.
-
 ### Consensus
 
-* Consensus is a fundamental problem in distributed systems where nodes need to agree on a single value.
-* Paxos and Multi-Paxos are consensus algorithms used to solve this problem.
+Consensus is a fundamental problem in distributed systems where nodes need to **agree on a single value**;
 
-* **Paxos:**
-  * Paxos is a consensus algorithm that helps nodes agree on a value even in the presence of failures and network partitions.
+* **Paxos** is a consensus algorithm that helps nodes agree on a value **even in the presence of failures and network partitions**;
+  * Steps: 1. Prepare, 2. Promise, 3. Accept!, 4. Accepted;
+* **Multi-Paxos** extends Paxos to handle m**ultiple consensus instances efficiently**, often used in state machine replication;
+  * The leader sends multiple prepare messages to different instances in a single round.
 
-* **Multi-Paxos:**
-  * Multi-Paxos extends Paxos to handle multiple consensus instances efficiently, often used in state machine replication.
+### Coordination Services
 
-* **Coordination Services (Chubby and Zookeeper):**
-  * Coordination services like Chubby (Google) and Zookeeper (Apache) provide distributed locking and coordination for managing distributed systems and ensuring synchronization.
+Coordination services like Chubby (Google) and Zookeeper (Apache) provide **distributed locking and coordination** for managing distributed systems and ensuring synchronization.
 
-* **State Machine Replication:**
-  * State Machine Replication is a technique to achieve fault tolerance by replicating a state machine across multiple servers.
+* **Chubby:**
+  * Supports **locks** that can be used for **coordination**;
+  * Locks are **leased** and **renewed** periodically - if the lease expires, the lock is released;
+  * **Locks are replicated** across multiple nodes for fault tolerance, using **Paxos**;
+  * Reads and writes are **linearizable** - **only directed to the leader**;
+  * Clients **cache** the lock state for **performance** - they only need to contact the server when the lock is not cached or the lease expires - **if it expires, the client needs to invalidate its own cache**.
 
-* **Lease-based Replication:**
-  * Lease-based replication is a method to manage leadership and failover in distributed systems, ensuring that only one leader operates at a time.
+* **Zookeeper:**
+  * Clients can read from any replica, but **writes are forwarded to the leader** - **writes are linearizable**;
+  * Clients can **create znodes** (zookeeper nodes) that can be **ephemeral** (deleted when the client disconnects) or **persistent** (deleted when the client deletes it);
+  * Does not support **locks** - **clients can create ephemeral znodes to represent locks**;
+  * If a client wants to perform **linearizable reads**, it needs to send a **sync** request to the replica - **write null** - to make the replica update its state before reading.
+
+### View-Synchrony
+
+View-Synchrony refers to the concept of **maintaining a consistent view of the system configuration**, which is essential for distributed systems' stability and coordination.
+
+Guarantees:
+* **Agreement:** **correct** processes deliver the **same sequence (order) of views and messages**;
+* **Uniform Agreement:** if **any** process delivers a view, then **all** correct processes deliver the same view;
+* **Integrity:** if `p` delivers `m`, then `m` was sent by `p` in the corresponding view;
+* **Validity:** correct processes **always deliver messages send**.
+
+Broadcast protocols:
+
+* **URB (Uniform Reliable Broadcast):** if **any** process delivers a message, then **all** correct processes deliver the message;
+* **Regular Reliable Broadcast:** if a **correct** process delivers a message, then **all** correct processes deliver the message;
+* **FIFO Reliable Broadcast:** **all messages from the same process are delivered in the same order** by all correct processes;
+* **Atomic Broadcast or Total Order Broadcast:** **all messages are delivered in the same order** by all correct processes.
+
+### Stoppable Paxos
+
+Stoppable Paxos is a variant of Paxos that allows **stopping the protocol** and **resuming it later**, to make **reconfiguration easier**.
+
+* Easy approach but **slow**: do not start instance `i` until instance `i-1` is decided, and use a **special command to stop** the protocol;
+* Better approaches:
+  * **Delayed Stop Sign:** instance `i` can only start when values for instances `i-a` and lower are decided;
+  * **Padding:** proposer proposes a reconfiguration for instance `i` and a **special null command for instances higher** than `i`;
+  * **Brick-wall:** a new **stop** command is added; 
+    * in an instance, if a stop command is accepter, **no other command can be accepted**.
+    * _to be continued..._
+
+### Reconfigurable Registers
+
+Reconfigurable Registers are a **generalization of consensus** that allows **updating a register** with a **new value**. The **ABD algorithm** is an example of a reconfigurable register.
+
+* Simple solution that uses Paxos to **totally order reconfiguration commands**;
+* A client that learns about a `Ci` before writing in it, **writes in `Ci-1` a pointer to `Ci`**, to make sure that a majority of replicas of `Ci-1` will know about `Ci`; then, it **writes in `Ci`**;
+* If later a client reads from `Ci-1` and finds a pointer to `Ci`, it **reads from `Ci`**.
 
 ### Database Replication
 
-* Database replication involves replicating a database across multiple nodes for load balancing, fault tolerance, and improved performance.
+Database replication involves **replicating a database across multiple nodes** for **load balancing**, **fault tolerance**, and **improved performance**.
 
-* **Uses Paxos** as a building block;
-* Assumes **full replication** (all replicas have the entire database);
-* **Support parallelism** because transactions can be executed at any replica   (multi-master approaches);
-* Requires **Paxos to totally order transactions**;
-* **Blocking** (due to Paxos).
-
-* **Chain Replication:**
-  * Chain Replication is a replication technique where messages pass through a chain of nodes, with one node as the head and another as the tail, providing fault tolerance.
-
-* **Primary-Backup Replication:**
-  * Primary-Backup Replication is a replication technique where one node is the primary and the others are backups, and the primary is responsible for handling all requests.
-
-* **Multi-Master Replication:**
-  * Multi-Master Replication is a replication technique where all nodes are masters, and they can all handle requests, which are then propagated to the other nodes.
-
-### Group Communication
-
-* Group Communication involves sending messages to a group of nodes, and it can be used for various purposes, including fault tolerance and data distribution.
-
-* **View Synchrony:**
-  * View Synchrony refers to the concept of maintaining a consistent view of the system configuration, which is essential for distributed systems' stability and coordination.
+* **Primary-Backup:** one node is the primary and the others are backups;
+  * reads are **performed by any node**;
+  * writes are **performed by the primary** and **propagated to the backups**;
+* **Replicated State Machine (RSM):** usage of **Paxos** to **totally order transactions**;
+  * Send transactions via **TOB** to other nodes;
+  * Each node **executes transactions in the same order**.
+* **Multi-Master:** all nodes are masters, and they can all handle requests, which are then propagated to the other nodes.
+  * **Global certification**: only one node executes the transaction, then propagates it using **TOB** to the other nodes;
+    * The other nodes certify the transaction and then **commit** it;
+  * **Local certification**: each node executes the transaction and then propagates it using **TOB** to the other nodes;
+    * **Only the node that executed the transaction certifies it** and then **commits** it (sending via **URB** to the other nodes, so they can commit it too).
 
 ### Spanner
 
@@ -83,3 +102,9 @@
 * In each partition, update transactions need to be executed by the Paxos leader;
 * **Total order is achieved via “collective agreement”** protocol executed by the leaders of each Paxos group involved in the transaction;
 * **Blocking** (due to Paxos).
+
+### TCC
+
+...
+
+### P2P
