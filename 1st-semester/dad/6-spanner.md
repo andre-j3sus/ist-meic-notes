@@ -49,16 +49,16 @@
 
 ### Read Snapshot
 
-* All transactions read the database at a given tie, defined when the **transaction starts**;
+* All transactions read the database at a given time, defined when the **transaction starts**;
 * To achieve strict-serializability, read snapshot must be in the future of all transactions that commit before the read starts;
-* The client also can opt to read from and **older snapshot**;
+* The client also can opt to read from an **older snapshot**;
 * **The read snapshot is defined when the transaction starts**.
 
 ### Commit Timestamp
 
 * **Commit timestamp != read timestamp**;
 * Commit timestamp is decided when the transaction commits;
-* Must be larger that timestamps of all transactions that commit before it;
+* Must be larger than timestamps of all transactions that commit before it;
 
 ---
 
