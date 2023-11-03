@@ -142,4 +142,37 @@ Database replication involves **replicating a database across multiple nodes** f
 
 ### P2P
 
-...
+**Peer-to-Peer** systems are distributed systems where all nodes have the same capabilities and responsibilities, and there is no central authority.
+
+|                               | Hybrid Centralization | Partial Centralization | Decentralization           |
+| ----------------------------- | --------------------- | ---------------------- | -------------------------- |
+| **Unstructured**              | Napster               | Gnutella               | Gnutella (initial version) |
+| **Structured Infrastructure** | -                     | -                      | Chord, Pastry, Tapestry    |
+| **Structured Systems**        | -                     | -                      | OceanStore                 |
+
+* **Structured** - the overlay network is **organized** in a **structured way** - **each node has a routing table** that allows it to route messages to the destination node;
+* **Unstructured** - the placement of content is completely **random** - **each node has a list of neighbors** that it can use to route messages to the destination node.
+
+* **Chord**
+  * Mapping of nodes to a **ring** - each node is responsible for a **range of keys**;
+  * Key `k` is stored in the **first node with an ID greater than or equal to `k`** - **successor** of `k`;
+  * When a node joins the network, certain keys are **reassigned** to the new node, from the **successor** of the new node;
+  * When a node leaves the network, its keys are **reassigned** to the **successor** of the node;
+  * Uses **finger tables** to route messages to the destination node - **each entry in the finger table is the successor of the node ID plus a power of 2**.
+
+* **Pastry**
+  * Nodes have a **128-bit ID**;
+  * Messages are routed to the **node with the closest ID to the destination ID**;
+  * Each node maintains a **routing table** with GUIDs viewed as **hexadecimal digits**
+    * number of rows = number of digits in a GUID;
+    * number of columns = 16, one for each hexadecimal digit;
+  * When a node joins the network, it **contacts a node with a similar ID** and **copies its routing table**.
+
+* **Tapestry**
+  * ...
+
+* **OceanStore**
+  * ...
+
+* **Dynamo**
+  * ...
