@@ -113,6 +113,11 @@ Eiger can require a **third round trip, if the second round value is still prepa
 * Local commits use **two-phase commit**, similar to Spanner, to find a commit time in the future of all partitions;
 * The **write timestamp is selected by picking the most recent** clock value from all partitions (similar to Spanner).
 
+### Updates on a Single Data-center
+
+* The **coordinator** of the transaction **selects a timestamp** for the transaction, using the **vector clock** of the transaction; It uses the **largest timestamp** of all objects written by the transaction;
+* Then it commits the transaction and **propagates the updates** to other data-centers, sending the **vector clock** of the transaction (contains the timestamp of the transaction and the stable timestamp for other objects).
+
 ### Concurrent Updates on Different Data-centers
 
 * Cure allows different transactions that affect a given object X to run **concurrently** in two or more datacenters;
@@ -123,10 +128,14 @@ Eiger can require a **third round trip, if the second round value is still prepa
 
 ### Read Snapshot captured as a Vector Clock
 
-...
+* When a transaction starts at `DCi`, the system attempts to offer the most recent snapshot that:
+  * Does not violate **causality**;
+  * It is unlikely to be **block the client**;
+* This contains:
+  * All transactions previously committed at `DCi`;
+  * All transactions from **remote data-centers that are stable** at `DCi`.
 
 ### Applying Updates in Causal Order
 
-...
-
-<!--TODO: Finish these notes-->
+* As said before, updates are tagged with the **vector clock** of the transaction, that captures the **causal past** of the transaction;
+* When a partition receives an update, it **buffers the update** until all transactions in the causal past have been applied.
