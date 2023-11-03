@@ -15,6 +15,18 @@
 
 ## Key Concepts
 
+### Consistency Models
+
+* **Linearizability:** every operation occurs instantaneously in a linear order;
+  * property of a **single operation**;
+  * includes notion of time;
+* **Serializability:** transactions are executed in a serial order;
+  * property of a **set of operations**;
+  * does not include notion of time;
+* **Strict Serializability:** transactions are executed in the same order in all replicas;
+  * property of a **set of operations**;
+  * does not include notion of time.
+
 ### Consensus
 
 Consensus is a fundamental problem in distributed systems where nodes need to **agree on a single value**;
@@ -96,12 +108,14 @@ Database replication involves **replicating a database across multiple nodes** f
 
 ### Spanner
 
-* **Uses Paxos** as a building block;
+* **Distributed database** that **spans multiple datacenters**;
+* Each datacenter has **multiple replicas** of each partition, that are **grouped in Paxos groups** - **virtual servers**;
+  * Transactions are executed by the **leader** of the Paxos group;
+* Supports **external consistency** (linearizability);
 * Supports **partial replication**;
-* Support **parallelism** because transactions that only access one partition can be executed in parallel;
-* In each partition, update transactions need to be executed by the Paxos leader;
-* **Total order is achieved via “collective agreement”** protocol executed by the leaders of each Paxos group involved in the transaction;
-* **Blocking** (due to Paxos).
+* Supports **strict serializability** (transactions are executed in the same order in all replicas);
+* Uses a clock synchronization service called **TrueTime API** to **enforce linearizability in an efficient** way;
+* Keeps multiple versions of each object - there is a **total order of versions, corresponding to the total order of transactions**.
 
 ### TCC
 
