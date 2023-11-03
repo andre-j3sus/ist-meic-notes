@@ -91,7 +91,7 @@
 #### Blocking Reads
 
 * If a transaction reads an object that was written by a transaction that has not yet committed, the transaction **blocks** until the other transaction commits or aborts;
-  * If the final timestamp of the other transaction is in the future of the read snapshot, the transaction **aborts** and restarts;
-  * If the final timestamp of the other transaction is in the past of the read snapshot, the transaction **waits** until the other transaction commits or aborts;
+  * If the final timestamp of the other transaction is in the future of the read snapshot, the transaction reads the previous value;
+  * If the final timestamp of the other transaction is in the past of the read snapshot, the transaction **waits** until the other transaction commits or aborts, and if commited, reads that new value;
 * So, to execute a transaction that needs to be executed with strict-serializability, the transaction must be executed with a read snapshot in the future of all transactions that commit before it - this can be achieved by using `TT.now().latest` since nodes use **synchronized clocks**;
 * An advantage for **clients that do not need strict-serializability** is that they can read from an **older snapshot, without blocking**.
