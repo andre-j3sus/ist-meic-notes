@@ -119,6 +119,27 @@ Database replication involves **replicating a database across multiple nodes** f
 
 ### TCC
 
-...
+**Transactional Causal Consistency** is a **consistency model** that **combines causal consistency** with **transactions**. *Casual Consistency** is a consistency model that guarantees that if a process reads the latest version of a data item, it will read the latest version of all data items that are **causally related** - i.e., if one data item is updated based on another, the process will read the latest version of both.
+
+* Multi-versioned databases;
+  * Each update creates a new version of the data item;
+  * Transactions read from a given **snapshot** of the database;
+
+* **TCC Eiger**:
+  * Does not support general transactions, **only read-only and write-only transactions**;
+  * Uses **logical time** to give a global view of the data store;
+  * When an object is read, the partition returns: the **value** of the object, the **commit timestamp** of the object, and the **local clock when the value is read** - this is called the promise (any future version will have a timestamp grater than the promise) - the **version is valid** in the interval `[commit timestamp, promise]`;
+  * **Select the read timestamp**: 1. Check which object has the **newest commit timestamp**; 2. Then, among all other reads that have a promise higher than the commit timestamp, it selects the **lowest promise** - this is the **read timestamp**;
+    * When an object have a **promise lower than the read timestamp**, the transaction needs to **read the object again**, now specifying the **read timestamp** - second round trip - a **third round** trip can be necessary if in the second round, the value is still **prepared**.
+  * Concurrent updates are allowed, but **only one can be committed** - **last writer wins**.
+
+* **TCC Cure**:
+  * **General transactions**;
+  * Uses **synchronized physical clocks** - clients maintain **vector clocks** to keep track of the causality of transactions;
+  * When a transaction starts, it is assigned a **vector timestamp** that defines the **snapshot the transaction will read from** - contains the stable timestamp of all objects;
+  * Transactions are committed in one data-center and then propagated to other data-centers, **sending the vector clock** of the transaction - the other data-centers **only commit the transaction after all transactions in its causal past have been applied**;
+  * To allow concurrent updates on different data-centers, **Cure allows both transactions to commit and merge the two versions** - **last writer wins** - uses **Conflict-free Replicated Data Types (CRDTs)** to make merging concurrent updates easier.
 
 ### P2P
+
+...
