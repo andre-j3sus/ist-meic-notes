@@ -132,8 +132,8 @@ Overlay Network Structure:
 
 #### Hybrid Decentralized
 
-* There is a **central server facilitating the interaction between peers** bu maintaining **directories of metadata** about the files shared by peers;
-* End-to-end interaction and file exchanges may still be **directly between peers**, but the central server facilitate this interaction by **performing the lookups**;
+* There is a **central server facilitating the interaction between peers** but maintaining **directories of metadata** about the files shared by peers;
+* End-to-end interaction and file exchanges may still be **directly between peers**, but the central server facilitates this interaction by **performing the lookups**;
 * There is a **single point of failure - the central server**;
 * Usually, these systems are names **peer-through-peer** or **broker mediated**.
 
@@ -169,7 +169,7 @@ Overlay Network Structure:
 
 ### Chord
 
-* **Peer-to-peer routing and location infrastructure** that performs mapping of file identifiers to nodes identifiers;
+* **Peer-to-peer routing and location infrastructure** that performs mapping of file identifiers to node identifiers;
 * **Strutured** with **no centralization**;
 * **Data location can be implemented on top of Chord**, by identifying data items with keys and storing them at the node to which the key maps;
 * **Nodes are also identified by keys**;
