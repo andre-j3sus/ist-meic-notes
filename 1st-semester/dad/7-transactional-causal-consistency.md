@@ -2,7 +2,7 @@
 
 > **Transactional Causal Consistency** is a consistency model that provides causal consistency guarantees for transactions.
 
-> **Casual Consistency** is a consistency model that guarantees that if a process reads the latest version of a data item, it will read the latest version of all data items that are **causally related** - i.e., if one data item is updated based on another, the process will read the latest version of both;
+> **Causal Consistency** is a consistency model that guarantees that if a process reads the latest version of a data item, it will read the latest version of all data items that are **causally related** - i.e., if one data item is updated based on another, the process will read the latest version of both;
 
 * Strong consistency model that ensures **high availability**;
 * **Does not require ordering concurrent operations** originated at different nodes - operations can be **executed locally and propagated asynchronously**.
@@ -38,7 +38,7 @@
 When an object is read, **the partition returns**:
 * The **value** of the object;
 * The **commit timestamp** of the object;
-* The **local clock when the value is read** - this is called the promise (any future version will have a timestamp grater than the promise);
+* The **local clock when the value is read** - this is called the promise (any future version will have a timestamp greater than the promise);
 
 This information defines an interval where the **version is valid**: `[commit timestamp, promise]`.
 
@@ -130,7 +130,7 @@ Eiger can require a **third round trip, if the second round value is still prepa
 
 * When a transaction starts at `DCi`, the system attempts to offer the most recent snapshot that:
   * Does not violate **causality**;
-  * It is unlikely to be **block the client**;
+  * Is unlikely to **block the client**;
 * This contains:
   * All transactions previously committed at `DCi`;
   * All transactions from **remote data-centers that are stable** at `DCi`.
