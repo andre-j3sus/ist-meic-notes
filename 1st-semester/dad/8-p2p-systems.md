@@ -183,7 +183,7 @@ Overlay Network Structure:
 
 * The **only routing information required** for each node is the **address of its successor**;
 * Queries for a given key are passed around the circle via these successor pointers, until they reach the node responsible for that key;
-* When a new node `n` **joins**, certains keys previously assigned to `n's` successor are **transferred to `n`**;
+* When a new node `n` **joins**, certains keys previously assigned to `n's` successor are **transferred to `n`**. These keys are attributed based on the same criteria as before: if a key `k` is lower or equal to `n`, it is assigned to it;
 * When a node `n` **leaves**, its keys are **transferred to `n's` successor**.
 
 #### Efficiency
