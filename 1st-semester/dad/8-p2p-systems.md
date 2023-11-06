@@ -196,6 +196,7 @@ Overlay Network Structure:
 #### Optimization with Finger Tables
 
 * Each node maintains a **finger table** with additional routing information;
+* Number of entries on the table is **based on the number of bits** in the identifiers of the nodes (e.g. 4 bit identifiers, 4 entries);
 * The `i`th entry in the finger table of node `n` contains the **identity of the first node** that succeeds `n` by at least `2^(i-1)` on the identifier circle;
 * For a node `n` to perform a lookup for a key `k`, the finger table is consulted to identify the highest node `n` whose ID is between `n` and `k`;
   * If such a node is found, the query is forwarded to that node;
