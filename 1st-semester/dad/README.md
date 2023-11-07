@@ -33,8 +33,10 @@ Consensus is a fundamental problem in distributed systems where nodes need to **
 
 * **Paxos** is a consensus algorithm that helps nodes agree on a value **even in the presence of failures and network partitions**;
   * Steps: 1. Prepare, 2. Promise, 3. Accept!, 4. Accepted;
-* **Multi-Paxos** extends Paxos to handle m**ultiple consensus instances efficiently**, often used in state machine replication;
-  * The leader sends multiple prepare messages to different instances in a single round.
+* **Multi-Paxos** extends Paxos to handle **multiple consensus instances efficiently**, often used in state machine replication;
+  * The leader sends multiple prepare messages to different instances in a single round - `Prepare([i, n], <bullet num>`;
+  * If the prepare is accepted, then it just needs to send the Accept! message;
+  * This optimization **avoids phase 1 of paxos, so 2 communication steps (1 RTT) are saved**.
 
 ### Coordination Services
 
@@ -45,7 +47,7 @@ Coordination services like Chubby (Google) and Zookeeper (Apache) provide **dist
   * Locks are **leased** and **renewed** periodically - if the lease expires, the lock is released;
   * **Locks are replicated** across multiple nodes for fault tolerance, using **Paxos**;
   * Reads and writes are **linearizable** - **only directed to the leader**;
-  * Clients **cache** the lock state for **performance** - they only need to contact the server when the lock is not cached or the lease expires - **if it expires, the client needs to invalidate its own cache**.
+  * Clients **cache** the lock state for **performance** - they only need to contact the server when the lock is not cached or the lease expires - **if it expires, and Chubby cannot contact the client, the client needs to invalidate its own cache**.
 
 * **Zookeeper:**
   * Clients can read from any replica, but **writes are forwarded to the leader** - **writes are linearizable**;
@@ -79,8 +81,8 @@ Stoppable Paxos is a variant of Paxos that allows **stopping the protocol** and 
   * **Delayed Stop Sign:** instance `i` can only start when values for instances `i-a` and lower are decided;
   * **Padding:** proposer proposes a reconfiguration for instance `i` and a **special null command for instances higher** than `i`;
   * **Brick-wall:** a new **stop** command is added; 
-    * in an instance, if a stop command is accepter, **no other command can be accepted**.
-    * _to be continued..._
+    * in an instance, if a stop command is accepted, **no other command can be accepted**.
+    * if a leader finds out in the read phase that it should adopt a **stop for instance `i` with timestamp `ts`** and some other command (different from stop), in some instance **`j > i`, with timestamp `ts'>ts`, then it ignores the stop command**, because it cannot have been decided in instance `i` yet.
 
 ### Reconfigurable Registers
 
@@ -151,7 +153,11 @@ Database replication involves **replicating a database across multiple nodes** f
 | **Structured Systems**        | -                     | -                      | OceanStore                 |
 
 * **Structured** - the overlay network is **organized** in a **structured way** - **each node has a routing table** that allows it to route messages to the destination node;
+  * Advantages: **efficient routing** and **efficient search**;
+  * Disadvantages: **complexity** and **scalability** - **routing tables grow with the number of nodes**;
 * **Unstructured** - the placement of content is completely **random** - **each node has a list of neighbors** that it can use to route messages to the destination node.
+  * Advantages: **simplicity** and resilience to **node failures**;
+  * Disadvantages: **probabilistic search** and **inefficient routing**.
 
 * **Chord**
   * Mapping of nodes to a **ring** - each node is responsible for a **range of keys**;
@@ -169,10 +175,41 @@ Database replication involves **replicating a database across multiple nodes** f
   * When a node joins the network, it **contacts a node with a similar ID** and **copies its routing table**.
 
 * **Tapestry**
-  * ...
-
-* **OceanStore**
-  * ...
+  * Conceals **DHT** (Distributed Hash Table) with **DOLR** (Distributed Object Location Resolution);
+  * 160-bit GUIDs - replicated resources are published under the same GUID;
+  * Replicas can be placed close to frequent users, to improve performance.
 
 * **Dynamo**
-  * ...
+  * **Key-value store** that uses **consistent hashing** to **partition data** across multiple nodes;
+    * Storage nodes organized in a Chord-like ring;
+  * Keys replicated across multiple nodes;
+  * No Paxos for writes - **eventually consistent** - **last writer wins**;
+  * Each item is stored in the **home node**, and in the next `N-1` successor nodes - **preference list**;
+    * Put operation directed to the home node - acts as the **coordinator**;
+    * Read operations are executed at a read quorum - **R** nodes, and the most recent version is returned; if two versions are found, both are returned, and the client may attempt to resolve the conflict.
+
+
+### Papers
+
+From classes:
+
+* [Paxos Made Simple](https://www.microsoft.com/en-us/research/uploads/prod/2016/12/paxos-simple-Copy.pdf);
+* [Chubby](https://static.googleusercontent.com/media/research.google.com/en//archive/chubby-osdi06.pdf);
+  * [Paxos Made Live](https://www.microsoft.com/en-us/research/uploads/prod/2016/12/paxoslive-1.pdf);
+* [Zookeeper](https://www.usenix.org/legacy/event/usenix10/tech/full_papers/Hunt.pdf);
+* [Reconfiguring a State Machine](https://lamport.azurewebsites.net/pubs/reconfiguration-tutorial.pdf);
+* [Reconfiguring Replicated Atomic Storage - A Tutorial](https://iditkeidar.com/wp-content/uploads/files/ftp/AKMMS-reconfigure.pdf);
+* [Spanner](https://static.googleusercontent.com/media/research.google.com/en//archive/spanner-osdi2012.pdf);
+* [Cure: Strong Semantics Meets High Availability and Low Latency](https://pages.lip6.fr/Marc.Shapiro/papers/Cure-final-ICDCS16.pdf);
+* Eiger - [Stronger Semantics for Low-Latency Geo-Replicated Storage](https://www.cs.cmu.edu/~dga/papers/eiger-nsdi2013.pdf);
+* [Dynamo](https://www.allthingsdistributed.com/files/amazon-dynamo-sosp2007.pdf).
+
+From presentations:
+
+* [Chain Replication for Supporting High Throughput and Availability](https://www.cs.cornell.edu/home/rvr/papers/OSDI04.pdf);
+* [Sparkle: Speculative Deterministic Concurrency Control for Partially Replicated Transactional Stores](https://www.computer.org/csdl/proceedings-article/dsn/2019/005700a164/1cI6ijtMUMg);
+* [High Throughput Replication with Integrated Membership Management](https://www.usenix.org/system/files/atc22-fouto.pdf);
+* [Megastore: Providing Scalable, Highly Available Storage for Interactive Services](https://www.cidrdb.org/cidr2011/Papers/CIDR11_Paper32.pdf);
+* [Antipode: Enforcing Cross-Service Causal Consistency in Distributed Applications](https://www.dpss.inesc-id.pt/~rodrigo/antipode-sosp2023.pdf);
+* [Transactional Causal Consistency for Serverless Computing](https://dl.acm.org/doi/pdf/10.1145/3318464.3389710);
+* [HyParView: a membership protocol for reliable gossip-based broadcast](https://asc.di.fct.unl.pt/~jleitao/pdf/dsn07-leitao.pdf).
