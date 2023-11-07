@@ -17,15 +17,11 @@
 
 ### Consistency Models
 
-* **Linearizability:** every operation occurs instantaneously in a linear order;
-  * property of a **single operation**;
+* **Linearizability:** if a write operation completes before a read operation starts, then the read operation returns the value written by the write operation;
   * includes notion of time;
 * **Serializability:** transactions are executed in a serial order;
-  * property of a **set of operations**;
   * does not include notion of time;
-* **Strict Serializability:** transactions are executed in the same order in all replicas;
-  * property of a **set of operations**;
-  * does not include notion of time.
+* **Strict Serializability:** transactions are executed in the same order, and if a write operation completes before a read operation starts, then the read operation returns the value written by the write operation.
 
 ### Consensus
 
@@ -63,6 +59,7 @@ Guarantees:
 * **Agreement:** **correct** processes deliver the **same sequence (order) of views and messages**;
 * **Uniform Agreement:** if **any** process delivers a view, then **all** correct processes deliver the same view;
 * **Integrity:** if `p` delivers `m`, then `m` was sent by `p` in the corresponding view;
+  * `m` must be delivered in the same view it was sent;
 * **Validity:** correct processes **always deliver messages send**.
 
 Broadcast protocols:
@@ -100,13 +97,22 @@ Database replication involves **replicating a database across multiple nodes** f
   * reads are **performed by any node**;
   * writes are **performed by the primary** and **propagated to the backups**;
 * **Replicated State Machine (RSM):** usage of **Paxos** to **totally order transactions**;
-  * Send transactions via **TOB** to other nodes;
-  * Each node **executes transactions in the same order**.
+  * Send transactions via **TOB** to other nodes - `TOB(m)`;
+  * Each node **executes transactions in the same order** and then commits them - `Exec(m)` and then `Commit(m)`;
 * **Multi-Master:** all nodes are masters, and they can all handle requests, which are then propagated to the other nodes.
   * **Global certification**: only one node executes the transaction, then propagates it using **TOB** to the other nodes;
     * The other nodes certify the transaction and then **commit** it;
-  * **Local certification**: each node executes the transaction and then propagates it using **TOB** to the other nodes;
+    1. `Exec(m)` by the master;
+    2. `TOB(m)` by the master;
+    3. `Certify(m)` by all nodes;
+    4. `Commit(m)` or `Abort(m)` by all nodes.
+  * **Local certification**: only one node executes the transaction and then propagates it using **TOB** to the other nodes;
     * **Only the node that executed the transaction certifies it** and then **commits** it (sending via **URB** to the other nodes, so they can commit it too).
+    1. `Exec(m)` by the master;
+    2. `TOB(m)` by the master;
+    3. `Certify(m)` by the master;
+    4. `Commit(m)` or `Abort(m)` by the master and `URB(m)` by the master;
+    5. `Commit(m)` or `Abort(m)` by the other nodes.
 
 ### Spanner
 
@@ -184,6 +190,7 @@ Database replication involves **replicating a database across multiple nodes** f
     * Storage nodes organized in a Chord-like ring;
   * Keys replicated across multiple nodes;
   * No Paxos for writes - **eventually consistent** - **last writer wins**;
+  * Uses **gossip-based protocol** to **propagate updates**;
   * Each item is stored in the **home node**, and in the next `N-1` successor nodes - **preference list**;
     * Put operation directed to the home node - acts as the **coordinator**;
     * Read operations are executed at a read quorum - **R** nodes, and the most recent version is returned; if two versions are found, both are returned, and the client may attempt to resolve the conflict.
