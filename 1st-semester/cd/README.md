@@ -2,15 +2,16 @@
 
 ## Syllabus
 
-1. Introduction to Data Science;
+1. [Introduction to Data Science](./introduction-to-data-science.md);
+   * Introduction, basic concepts, KDD process and data profiling;
 2. Classification and Bayesians;
-3. Classification and Analogizers;
+3. [Classification and Analogizers](./classification-and-analogizers.md);
 4. Classification and Symbolists;
 5. Ensembles and Feature Engineering;
 6. Connectionists;
 7. Prediction and Forecasting;
 8. Time Series;
-9. Forecasting;
+9.  Forecasting;
 10. Clustering;
 11. Anomaly Detection and Pattern Mining;
 12. AutoML and MLOps;
