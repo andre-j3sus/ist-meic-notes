@@ -32,3 +32,16 @@ Please note that the notes may not have the same formatting, and some of them ma
 * [🧠 **AP-Dei** - Aprendizagem Profunda / Deep Learning](./1st-semester/ap-dei/)
 
 *(section under construction)*
+
+### 📆 2nd Semester
+
+*(section under construction)*
+
+### 💡Other Materials
+
+There are also some notes on other topics that I have studied and that I consider to be important for the course. Some of these topics are taught in other courses, and the notes are intended to be a summary of the most important concepts.
+
+* [📈 **Linear Algebra**](./other-materials/linear-algebra.md)
+* [📊 **Probability and Statistics**](./other-materials/probability-and-statistics.md)
+* [📈 **Optimization**](./other-materials/optimization.md)
+* [🤖 **Machine Learning**](./other-materials/machine-learning.md)

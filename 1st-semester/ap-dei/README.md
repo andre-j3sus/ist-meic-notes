@@ -2,10 +2,4 @@
 
 ## Syllabus
 
-1. Supervised learning;
-2. Multi-layer perceptrons;
-3. Optimization and the backpropagation algorithm;
-4. Deep networks for vision and image processing;
-5. Deep nets for natural language processing;
-6. Deep generative models and unsupervised learning;
-7. Advanced topics: attention and memory mechanisms.
+1. [Introduction to Deep Learning](01-introduction-to-deep-learning.md);
