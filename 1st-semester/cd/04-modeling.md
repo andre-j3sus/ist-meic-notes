@@ -1,6 +1,4 @@
-# Classification and Bayesians
-
-## Modeling
+# Modeling
 
 > **Modeling** is the process of representing a real-world problem in a way that a computer can understand and solve it, in order to **find information or make predictions** in data.
 > 
@@ -27,8 +25,9 @@ According to this categorization, we can present a very simple taxonomy for the 
 **Anomaly Detection** is a fifth task that can not be classified in this taxonomy, because it can be used in both supervised and unsupervised learning.
 
 ---
+---
 
-## Notion of Concept and the Classification Task
+## Classification
 
 > **Concept** is something conceived in the mind, an **abstract/generic idea** generalized from particular instances.
 
@@ -58,7 +57,7 @@ $$
 
 ---
 
-## Classification Tribes
+### Classification Tribes
 
 * **Analogizers** - classify an object by comparing it to **similar known objects** - learning by **analogy**;
   * The most famous algorithms are **k-Nearest Neighbors** and **Support Vector Machines**;
@@ -71,6 +70,7 @@ $$
 * **Evolutionaries** - classify an object by using an **evolutionary algorithm** - learning by **evolution**;
   * The most famous algorithms are **Genetic Algorithms** and **Genetic Programming**.
 
+---
 ---
 
 ## Evaluation Metrics
@@ -156,82 +156,26 @@ There are several strategies to train a model:
   * **One record is used for testing**, and the others are used for training.
 
 ---
+---
 
-## Bayesians and MAP Classifier
+## Forecasting
 
-> **Bayesian Learning** is a method of **statistical inference** in which **Bayes' theorem** is used to **update the probability** for a hypothesis as more evidence or information becomes available.
+> **Forecasting** is the task of automatically learning a function that **predicts the value of a variable of interest** based on other variables.
 
-The **Bayes' theorem** is:
+* Usually, the data to be forecasted is **time-dependent**, and are called **time series**;
+* Against classification, the **target** is a **continuous variable**, and not a class - the result information is called **predictor**;
+* After training the predictor, we can apply it to predict the value of the target in **future time steps**;
+* Considering a function $f$ that maps the **input** to the **output**, and a function $\hat{f}$ that maps the **input** to the **predicted output**;
+  * The best estimation of $\hat{f}$ is the one **closest** to $f$ - **minimizes the square error**;
+  * $MSE = \frac{1}{n} \sum_{i=1}^{n} (y_i - \hat{y_i})^2$;
 
-$$
-P(A|B) = \frac{P(B|A)P(A)}{P(B)}
-$$
+There are several different families of forecasting approaches:
 
-* $A$ is the **hypothesis** and $B$ is the **evidence**;
-* Bayesians classifiers choose the **most probable class** given the evidence (data training);
-* The **MAP (Maximum A Posteriori) Classifier** is a Bayesian classifier that uses the **maximum a posteriori** decision rule to classify a new object:
-
-$$
-x \rightarrow y
-$$
-$$
-\hat{y} = \underset{c_i \in C}{\operatorname{argmax}} P(c_i|x)
-= \underset{c_i \in C}{\operatorname{argmax}} \frac{P(x|c_i)P(c_i)}{P(x)}
-$$
-
-The MAP classifier is:
-
-$$
-\hat{y} = \underset{c_i \in C}{\operatorname{argmax}} P(c_i) \prod_{j=1}^{d} P(a_j|c_i)
-$$
-
-In Bayesian classifiers:
-
-* Records are represented as **tuples** of $d$ values;
-* **Training algorithm** - to compute **prior probabilities** for each class;
-* **Classification procedure** - to estimate likelihood for $Z$ given each class, and then to classify $Z$ as the most probable class;
-* In the case of **equi-probable classes**, the classifier is not able to distinguish between them;
-* **Estimation of prior probabilities** - the probability of each class is estimated by the **relative frequency** of the class in the training set:
-
-$$
-P(c_i) = \frac{\text{n}_i}{\text{n}}
-$$
-
-* **Estimation of likelihood** - the probability of each attribute value given the class is estimated by the **relative frequency** of the attribute value in the class:
-
-$$
-P(x|c_i) = \frac{\text{n}_{x|i}}{\text{n}_i}
-$$
-
-* $n_i$ is the number of records in the class $c_i$;
-* $n$ is the total number of records;
-* $n_{x|i}$ is the number of records in the class $c_i$ with the attribute value $x$.
-
-If we use numeric variables, we can use **probability density functions** to estimate the likelihood:
-
-$$
-P(x|c_i) = f_i(x|\mu_i, \sigma_i)
-$$
-$$
-X_i \sim N(\mu_i, \sigma_i^2)
-$$
-
-Finally, if there are multiple variables, we need to **jointly estimate** the likelihood:
-
-$$
-\vec{X} \sim N(\vec{\mu}, \Sigma^2)
-$$
-$$
-P(\vec{x}|c_i) = f_i(\vec{x}|\vec{\mu}_i, \Sigma_i^2)
-$$
-
-### Naive Bayes Algorithm
-
-> **Naive Bayes Assumption**: all variables are **conditionally independent** given the class.
-
-$$
-\hat{y} = \underset{c_i \in C}{\operatorname{argmax}} P(c_i) \prod_{j=1}^{d} P(a_j|c_i)
-$$
-
-* **Training algorithm** - to compute **prior probabilities** for each class;
-* **Classification procedure** - to estimate likelihood for $Z$ **individual dimensions given each class**, to classify $Z$ as the **most probable** class.
+* **Regression** - the predictor is a **linear function** of the input variables;
+  * The most famous algorithms are **Linear Regression** and **Logistic Regression**;
+* **Extrapolation** - the predictor is a **polynomial function** of the input variables;
+  * The most famous algorithms are **Polynomial Regression** and **Support Vector Regression**;
+* **Markov Models** - the predictor is a **probabilistic function** of the input variables;
+  * The most famous algorithms are **Hidden Markov Models** and **Markov Chains**;
+* **Neural Networks** - the predictor is a **neural network**;
+  * The most famous algorithms are **Multilayer Perceptrons** and **Deep Learning**.

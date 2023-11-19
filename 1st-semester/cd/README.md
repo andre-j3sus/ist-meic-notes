@@ -3,16 +3,18 @@
 ## Syllabus
 
 1. [Introduction to Data Science](./01-introduction-to-data-science.md);
-   * Introduction, basic concepts, KDD process and data profiling;
-2. [Classification and Bayesians](./02-classification-and-bayesians.md);
-3. [Classification and Analogizers](./03-classification-and-analogizers.md);
-4. Classification and Symbolists;
-5. Ensembles and Feature Engineering;
-6. Connectionists;
-7. Prediction and Forecasting;
-8. Time Series;
-9.  Forecasting;
-10. Clustering;
-11. Anomaly Detection and Pattern Mining;
-12. AutoML and MLOps;
-13. Ethical concerns.
+2. [Data Profiling](./02-data-profiling.md);
+3. [Data Preparation](./03-data-preparation.md);
+4. [Modeling](./04-modeling.md);
+   1. Supervised Learning;
+      1. Classification;
+         1. [Bayesians](./04.1.1-bayesians.md);
+         2. [Analogizers](./04.1.2-analogizers.md);
+         3. [Symbolists](./04.1.3-symbolists.md);
+         4. Connectionists;
+      2. Forecasting;
+   2. Unsupervised Learning;
+      1. [Clustering](./04.2.1-clustering.md);
+      2. Pattern Mining;
+
+(To be continued...)
