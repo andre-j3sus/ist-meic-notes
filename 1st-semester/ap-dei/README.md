@@ -34,6 +34,8 @@
   * The **regularization constant** is $\lambda = \frac{\sigma^2}{\tau^2}$;
 * **Binary classification** is a **classification** task with **two classes**;
   * **Logistic regression** is a linear model for **binary classification**: $y = \sigma(w^T x + b)$;
+    * $P_{W}(y | x) = \frac{exp(w_y^T x + b_y)}{\sum_{y' \in Y} exp(w_{y'}^T x + b_{y'})}$, where $W = \{w_y, b_y\}_{y \in Y}$;
+    * Set weights to maximize conditional log-likelihood: $L(W) = \sum_{n=1}^N log P_{W}(y_n | x_n)$;
   * The **perceptron algorithm** is a **linear model** for **binary classification**;
 * **Multi-class classification** is a **classification** task with **more than two classes**, but there are several strategies to **reduce to binary classification**;
   * $\hat{y} = argmax_{y \in Y} (W \phi(x) + b)$, where $W \in \mathbb{R}^{d \times |Y|}$ is a **weight matrix** and $b \in \mathbb{R}^{|Y|}$ is a **bias vector**.

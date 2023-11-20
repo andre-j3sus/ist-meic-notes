@@ -5,6 +5,18 @@
 * Also known as **linear classifiers**;
 * A component of **neural networks**.
 
+Summary:
+
+* [Feature Representations](#feature-representations)
+* [Linear Regression](#linear-regression)
+* [Binary Classification](#binary-classification)
+* [Multiclass Classification](#multiclass-classification)
+* [Logistic Regression](#logistic-regression)
+* [Regularization and Optimization](#regularization-and-optimization)
+* [Non-Linear Models](#non-linear-models)
+
+---
+
 ## Feature Representations
 
 * **Feature representation** is the process of transforming raw data into a set of features that can be used to more effectively train a machine learning model;
@@ -183,3 +195,123 @@ $$
 $$
 \hat{y} = argmax_{y \in Y} (W \phi(x) + b)
 $$
+
+---
+---
+
+## Logistic Regression
+
+* A linear model gives a **score** for each class $y$: $w_y^T \phi(x)$, from which we may compute a **conditional posterior probability** $p(y | x) = \frac{exp(w_y^T \phi(x))}{\sum_{y' \in Y} exp(w_{y'}^T \phi(x))}$;
+  * This is known as **softmax transformation**;
+  * We choose the **most probable class**: $argmax_{y \in Y} p(y | x) = argmax_{y \in Y} (w_y^T \phi(x))$;
+* **Sigmoid transformation**:
+
+$$
+\sigma(z) = \frac{e^u}{1 + e^u}
+$$
+
+* Widely used in neural networks;
+* Maps $\mathbb{R}$ to $[0, 1]$;
+* The output can be interpreted as a **probability**;
+* Positive, bounded and strictly increasing function.
+
+### Multinomial Logistic Regression
+
+* **Multinomial logistic regression** is a **generalization** of logistic regression to **multiple classes**;
+
+$$
+P_{W}(y | x) = \frac{exp(w_y^T \phi(x))}{\sum_{y' \in Y} exp(w_{y'}^T \phi(x))}
+$$
+
+* Maximize the **conditional log-likelihood** of the training data, in order to find the best weights $W$:
+
+$$
+\hat{W} = argmax_{W} \sum_{n=1}^N log P_{W}(y_n | x_n)
+$$
+
+* Function **strictly convex** - any local minimum is also a global minimum;
+* No closed-form solution, but can be solved with **gradient descent**, or other optimization methods.
+
+#### Gradient Descent Recap
+
+* Goal: **minimize** a function $f : \mathbb{R}^d \rightarrow \mathbb{R}$, for differentiable $f$;
+* Take **small steps** in the **negative gradient direction**, until **stopping criterion** is met: $w^{(t+1)} = w^{(t)} - \eta \nabla f(w^{(t)})$.
+
+The **loss function** in logistic regression is:
+
+$$
+L(W; (x, y)) = log \sum_{y' \in Y} exp(w_{y'}^T \phi(x)) - w_y^T \phi(x)
+$$
+
+#### Stochastic Gradient Descent
+
+* **Stochastic gradient descent** (SGD) is a variant of gradient descent, where the **gradient** is **approximated** using a **single data point**;
+* **Monte Carlo approximation** - more frequent updates, which is convenient with large datasets;
+
+1. Set $W^{(0)} = 0$;
+2. Iterate until stopping criterion is met:
+   1. Pick a random data point $(x_n, y_n)$;
+   2. Update $W^{(t+1)} = W^{(t)} - \eta \nabla L(W^{(t)}; (x_n, y_n))$.
+
+* Approximate the gradient with a **single data point**;
+* **Noisy** updates, but **faster**;
+* **Mini-batch SGD**: use a **small batch** of data points to approximate the gradient.
+
+---
+---
+
+## Regularization
+
+* **Regularization** is a technique to **reduce overfitting** - when the model is too complex for the data;
+
+$$
+\hat{w} = argmin_{w} \sum_{n=1}^N L(y_n - w^T \phi(x_n)) + \lambda \Omega(w)
+$$
+
+* $\Omega(w)$ is the **regularization term**, and $\lambda$ is the **regularization constant** that controls the weight of the regularization term;
+* $l_2$ regularization: $\Omega(w) = ||w||^2_2 = \sum_{i=1}^d w_i^2$ - promotes **smaller weights**;
+* $l_1$ regularization: $\Omega(w) = ||w||_1 = \sum_{i=1}^d |w_i|$ - promotes **smaller and sparse weights**.
+
+---
+---
+
+## Non-Linear Models
+
+* **Linear models** are **limited** to linear decision boundaries - data must be **linearly separable**;
+* **Non-linear models** can learn **non-linear decision boundaries**;
+* There are several approaches to **non-linear models**:
+  * **Feature engineering** - manually define non-linear features;
+  * **Kernel methods** - implicitly map data to a higher-dimensional space;
+  * **Neural networks** - learn non-linear features.
+
+There are two main ways of building machine learning systems:
+
+1. **Feature-based** - describe object properties (features) and build a model that uses these features - **feature engineering**;
+2. **Similarity-based** - define a similarity measure between objects and build a model that uses this similarity - **kernel methods**, **knn**.
+
+---
+
+### KNN (K-Nearest Neighbors) Classifier
+
+* **KNN** is a **non-parametric** classifier;
+* No training is required, just **memorize** the training data;
+* Given a new input $x$, find the $k$ **closest** training examples $x_n$ and **predict** the **majority label** among them: $\hat{y(x)} = y_n, where n = argmin ||x - x_i||$; 
+* **Disadvantage**: **expensive** at test time - must compute the distance to all training examples.
+
+---
+
+### Kernel Methods
+
+* A kernel is a **similarity function** $k : X \times X \rightarrow \mathbb{R}$, that is **symmetric and positive semi-definite**;
+* Given dataset $D = \{(x_n, y_n)\}_{n=1}^N$, we can define the **Gram matrix** $K \in \mathbb{R}^{N \times N}$, where $K_{ij} = k(x_i, x_j)$;
+  * **Symmetric** - $K_{ij} = K_{ji}$;
+  * **Positive semi-definite** - $v^T K v \geq 0$ for all $v \in \mathbb{R}^N$;
+* **Mercer's theorem**: a function $k$ is a valid kernel if and only if $K$ is a valid Gram matrix;
+* **Kernel trick**: take a feature-based algorithm (e.g. linear regression) and replace the dot product $x^T x'$ with a kernel $k(x, x')$. The resulting algorithm is a **non-linear** algorithm that operates in the **feature space** - many models can be **kernelized**.
+
+There are several popular kernels:
+
+* **Polynomial kernel**: $k(x, x') = (x^T x' + c)^d$;
+* **Gaussian radial basis function (RBF)**: $k(x, x') = exp(-\frac{||x - x'||^2}{2 \sigma^2})$;
+* **String kernels**;
+* **Tree kernels**.
