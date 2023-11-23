@@ -71,7 +71,9 @@ Data preparation is composed of several steps:
 ## Variables Encoding - Dealing with Inconsistencies
 
 * **Inconsistent data** occurs when there is some value that is **incoherent** with the rest of the data, but from a **record perspective** - **noise is from a variable perspective**;
-* **Dummification**, also known as **one-hot encoding**, is the process of **transforming symbolic variables** into **binary variables**.
+* **Dummification**, also known as **one-hot encoding**, is the process of **transforming symbolic variables** into **binary variables** - transforming **symbolic** variables into **numerical** variables;
+  * **Binary** - each value is represented by a **single** binary variable;
+  * **One-hot** - each value is represented by a **set** of binary variables;
 
 ---
 
