@@ -12,6 +12,7 @@
 ## Syllabus
 
 1. [Linear Models](./01-linear-models.md);
+2. [Neural Networks](./02-neural-networks.md);
 
 *section in progress...*
 
