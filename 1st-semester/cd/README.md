@@ -5,6 +5,7 @@
 1. [Introduction to Data Science](./01-introduction-to-data-science.md);
 2. [Data Profiling](./02-data-profiling.md) - Dimensionality, Distribution, Granularity and Sparsity;
 3. [Data Preparation](./03-data-preparation.md) - Selection, Integration, Cleansing and Feature Engineering;
+   *  [Feature Engineering](./03.1-feature-engineering.md);
 4. [Modeling](./04-modeling.md);
    1. Supervised Learning;
       1. Classification - classifying records into classes;
@@ -16,5 +17,6 @@
       2. Forecasting - predicting the value of a variable;
    2. Unsupervised Learning;
       1. [Clustering](./04.2.1-clustering.md) - grouping similar records;
-      2. Pattern Mining;
+      2. [Pattern Mining](./04.2.2-pattern-mining.md) - finding rules that describe the data;
+   3. [Anomaly Detection](./04.3-anomaly-detection.md);
 5. Ethical Concerns.
