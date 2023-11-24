@@ -82,7 +82,7 @@ $$
 ### Properties
 
 * **Associativity**: $(AB)C = A(BC)$;
-* It is **not commutative**: $AB \neq BA$;
+* It is **not commutative**: $AB \neq BA$ - unless $A$ or $B$ is a scalar;
 * **Transpose of a product**: $(AB)^T = B^T A^T$;
 * **Transpose of sum**: $(A + B)^T = A^T + B^T$.
 
@@ -118,12 +118,12 @@ $$
 
 ---
 
-## Eigendecomposition
+## [Eigendecomposition](https://www.youtube.com/watch?v=PFDu9oVAE-g)
 
-* **Eigenvector** of a matrix $A \in \mathbb{R}^{n \times n}$ is a nonzero vector $x \in \mathbb{R}^n$ such that $Ax = \lambda x$ for some scalar $\lambda \in \mathbb{R}$ - **eigenvalue**:
+* **Eigenvector** of a matrix $A \in \mathbb{R}^{n \times n}$ is a nonzero vector $\vec{v} \in \mathbb{R}^n$ such that $A \vec{v} = \lambda \vec{v}$ for some scalar $\lambda \in \mathbb{R}$;
 
 $$
-Ax = \lambda x \quad \Leftrightarrow \quad (A - \lambda I) x = 0
+Ax = \lambda \vec{v} \quad \Leftrightarrow \quad (A - \lambda I) \vec{v} = 0
 $$
 
 * The eigenvalues of a diagonal matrix are its diagonal elements;
@@ -152,12 +152,32 @@ Properties:
 
 ---
 
-## Quadratic Form and Positive Semidefinite Matrices
+## [Quadratic Form](https://www.youtube.com/watch?v=0yEiCV-xEWQ) and Positive Semidefinite Matrices
 
-A **quadratic form** is a function $f: \mathbb{R}^n \rightarrow \mathbb{R}$ such that:
+Given a matrix $A \in \mathbb{R}^{n \times n}$ and a vector $x \in \mathbb{R}^n$, the **quadratic form** is:
 
 $$
-f(x) = x^T A x = \sum_{i=1}^n \sum_{j=1}^n A_{ij} x_i x_j \quad \text{where} \quad A \in \mathbb{R}^{n \times n}
+x^T A x = \sum_{i=1}^n \sum_{j=1}^n A_{ij} x_i x_j \quad \text{where} \quad A \in \mathbb{R}^{n \times n}
+$$
+
+This can be written as:
+
+$$
+\begin{bmatrix}
+    x_1 & x_2 & \dots & x_n
+\end{bmatrix}
+\begin{bmatrix}
+    A_{11} & A_{12} & \dots & A_{1n} \\
+    A_{21} & A_{22} & \dots & A_{2n} \\
+    \vdots & \vdots & \ddots & \vdots \\
+    A_{n1} & A_{n2} & \dots & A_{nn}
+\end{bmatrix}
+\begin{bmatrix}
+    x_1 \\
+    x_2 \\
+    \vdots \\
+    x_n
+\end{bmatrix}
 $$
 
 * A **positive semidefinite matrix** is a symmetric matrix $A \in \mathbb{R}^{n \times n}$ such that $x^T A x \geq 0$ for all $x \in \mathbb{R}^n$;

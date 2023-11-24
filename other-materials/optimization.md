@@ -28,6 +28,8 @@ $$
 
 ## Gradients and Minimization
 
+* A **gradient** represents the slope of the function in each dimension;
+* The gradient points in the direction of the **greatest rate of increase of the function**;
 * Given $f: \real^n \rightarrow \real$, the **gradient** of $f$ is the vector of partial derivatives:
 
 $$
@@ -38,6 +40,8 @@ $$
 
 ## Hessians and Convexity
 
+* The **Hessian** is a matrix of second partial derivatives - the **gradient of the gradient**;
+* The Hessian is a **measure of curvature** of the function;
 * Given $f: \real^n \rightarrow \real$, the **Hessian** of $f$ is the matrix of second partial derivatives:
 
 $$
@@ -58,8 +62,8 @@ $$
 
 ## More on Gradients
 
-* Gradient of **quadratic form** $f(x) = x^T A x$: $\nabla f(x) = (A + A^T) x$;
-* If $A$ is **symmetric**, then $\nabla f(x) = 2 A x$;
+* Gradient of **quadratic form** $\nabla x^T A x = (A + A^T) x$;
+* If $A$ is **symmetric**, then $\nabla x^T A x = 2 A x$;
 * Particular case: $f(x) = x^T x = ||x||^2$, then $\nabla f(x) = 2 x$.
 * If $f(x) = x^T b = b^T x$, then $\nabla f(x) = b$.
 * If $g(x) = f(Ax), then \nabla g(x) = A^T \nabla f(Ax)$.
@@ -70,7 +74,8 @@ $$
 > **Gradient descent** is an iterative algorithm that starts with an initial guess $x_0$ and repeatedly moves in the direction of the negative gradient $\nabla f(x)$ until convergence.
 
 $$
-x^{(t+1)} = x^{(t)} - \alpha \nabla f(x^{(t)})
+x^{(t+1)} = x^{(t)} - \eta \nabla f(x^{(t)})
 $$
 
-* $\alpha$ is the **step size** or **learning rate** - crucial for convergence and performance.
+* $\eta$ is the **step size** or **learning rate** - crucial for convergence and performance;
+* **Stochastic gradient descent** is a variant of gradient descent that uses a **random sample** of the data at each iteration - a **mini-batch** - to estimate the gradient - it is **noisier**, but **faster**.

@@ -26,12 +26,12 @@ Steps of a machine learning:
 ## Types of Learning
 
 * **Supervised learning**: pairs $(x, y)$ are provided at training time;
-  * **Classification**: $y$ is discrete;
-  * **Regression**: $y$ is continuous;
+  * **Classification** - binary or multi-class;
+  * **Regression**;
 * **Unsupervised learning**: only $x$ is provided at training time;
-  * **Clustering**: $y$ is discrete;
-  * **Association**;
-  * **Dimensionality reduction**: $y$ is continuous;
+  * **Clustering**;
+  * **Pattern mining**;
+  * **Dimensionality reduction**;
 * **Self-supervised learning**: $x$ is provided at training time, but it is generated from $y$;
 * **Reinforcement learning**: the agent interacts with the environment and receives rewards;
 * **Active learning**: the learner can query the teacher to obtain the label of a data point.
