@@ -17,7 +17,7 @@
          6. [Ensembles](./04.1.6-ensembles.md) - combining multiple models - Bagging (Random Forests) and Boosting (Gradient Boosting);   
       2. Forecasting - predicting the value of a variable;
          1. [Time Series](./04.2.1-time-series.md);
-         2. Forecasting Models - ARIMA, SARIMA Smoothing, Matrix Profile, etc;
+         2. [Forecasting Models](./04.2.2-forecasting-models.md) - ARIMA, SARIMA Smoothing, Matrix Profile;
    2. Unsupervised Learning;
       1. [Clustering](./04.2.1-clustering.md) - grouping similar records;
       2. [Pattern Mining](./04.2.2-pattern-mining.md) - finding rules that describe the data;
@@ -28,6 +28,4 @@
 ### TODO
 
 * Connectionists - SVMs and Kernels;
-* Logistic Regression;
-* Forecasting Models;
 * AutoML;
