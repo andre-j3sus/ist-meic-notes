@@ -14,7 +14,7 @@
          3. [Symbolists](./04.1.3-symbolists.md) - Decision Trees;
          4. [Connectionists](./04.1.4-connectionists.md) - Neural Networks (Deep Learning);
          5. [Evolutionaries](./04.1.5-evolutionaries.md) - Genetic Algorithms;
-         6. [Ensembles](./04.1.6-ensembles.md) - combining multiple classifiers;
+         6. [Ensembles](./04.1.6-ensembles.md) - combining multiple models - Bagging (Random Forests) and Boosting (Gradient Boosting);   
       2. Forecasting - predicting the value of a variable;
          1. Time Series;
          2. Forecasting Models;
