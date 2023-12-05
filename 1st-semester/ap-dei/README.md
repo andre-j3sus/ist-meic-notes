@@ -13,10 +13,14 @@
 
 1. [Linear Models](./01-linear-models.md) - linear regression, perceptron, logistic regression, regularization;
 2. [Neural Networks](./02-neural-networks.md);
-3. [Representing Learning](./03-representing-learning.md);
+3. [Representation Learning](./03-representation-learning.md);
 4. [Convolutional Neural Networks](./04-convolutional-neural-networks.md);
-
-*section in progress...*
+5. Recurrent Neural Networks and LSTMs;
+6. Sequence-to-Sequence Models and Attention Mechanisms;
+7. Transformers;
+8. Self-Supervised Learning;
+9. Generative Models;
+10. Interpretability and Fairness.
 
 ---
 ---
@@ -117,4 +121,14 @@ The following is a summary of the course's contents.
   * $\omega(\theta)$ is the **regularization term**;
   * $l(f(x_n; \theta), y_n)$ is the **loss function**;
   * We use **stochastic gradient descent** to **minimize the loss function**: $\nabla_{\theta} L(\theta) = \lambda \nabla_{\theta} \omega(\theta) + \frac{1}{N} \sum_{n=1}^N \nabla_{\theta} l(f(x_n; \theta), y_n)$;
-  * **Backpropagation** is a technique used to **compute the gradients** of the **loss function** with respect to the **parameters** - **chain rule**;
+  * **Backpropagation** is a technique used to **compute the gradients** of the **loss function** with respect to the **parameters** - **chain rule**.
+
+---
+
+### Representation Learning
+
+* Neural networks can be used to learn **representations** of the data;
+* Distributed representations are exponentially more compact than one-hot representations;
+* Deeper networks exhibit hierarchical compositionality: **higher layers** represent **higher-level concepts**;
+* **Auto-encoders** are a class of **neural networks** that are used to **learn representations** of the data;
+* **Word embeddings** are a type of **representation** used to **represent words** as **vectors**.
