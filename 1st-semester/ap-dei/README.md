@@ -13,6 +13,8 @@
 
 1. [Linear Models](./01-linear-models.md) - linear regression, perceptron, logistic regression, regularization;
 2. [Neural Networks](./02-neural-networks.md);
+3. [Representing Learning](./03-representing-learning.md);
+4. [Convolutional Neural Networks](./04-convolutional-neural-networks.md);
 
 *section in progress...*
 
@@ -114,4 +116,5 @@ The following is a summary of the course's contents.
   * $\lambda$ is the **regularization constant**;
   * $\omega(\theta)$ is the **regularization term**;
   * $l(f(x_n; \theta), y_n)$ is the **loss function**;
-  * We use **stochastic gradient descent** to **minimize the loss function**: $\nabla_{\theta} L(\theta) = \lambda \nabla_{\theta} \omega(\theta) + \frac{1}{N} \sum_{n=1}^N \nabla_{\theta} l(f(x_n; \theta), y_n)$.
+  * We use **stochastic gradient descent** to **minimize the loss function**: $\nabla_{\theta} L(\theta) = \lambda \nabla_{\theta} \omega(\theta) + \frac{1}{N} \sum_{n=1}^N \nabla_{\theta} l(f(x_n; \theta), y_n)$;
+  * **Backpropagation** is a technique used to **compute the gradients** of the **loss function** with respect to the **parameters** - **chain rule**;

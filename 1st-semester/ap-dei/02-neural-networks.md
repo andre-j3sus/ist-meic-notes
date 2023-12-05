@@ -95,7 +95,7 @@ Training a neural network means **finding the right parameters** for the **weigh
 * Goal: choose parameters $\theta := {(W^{(l)}, b^{(l)})}_{l=1}^{L+1}$ that **minimize the empirical risk**:
 
 $$
-\mathcal{L}(\theta) := \lambda \omega(\theta) + \frac{1}{N} \sum_{n=1}^N L(f(x_i; \theta), y_i)
+\mathcal{L}(\theta) := \lambda \Omega(\theta) + \frac{1}{N} \sum_{n=1}^N L(f(x_i; \theta), y_i)
 $$
 
 * ${x_i, y_i}_{i=1}^N$ is the **training set**;
@@ -136,3 +136,160 @@ We need to find a **procedure** to **compute the gradients** of the **loss funct
 $$
 h(x) = f(g(x)) \Rightarrow \frac{dh}{dx} = \frac{df}{dg} \frac{dg}{dx}
 $$
+
+---
+
+### Automatic Differentiation
+
+* **Automatic differentiation** is a **technique** for **computing derivatives** of **functions**;
+* Forward propagation can be represented as a **computation graph** - a **directed acyclic graph** (DAG) that represents the **computation** of the **function**;
+  * Each box can be an object with a `fprop` method that computes the **forward pass**;
+  * Calling the `fprop` method of each box in the **topological order** of the graph computes the **forward pass**;
+* **Backpropagation** is also implemented as a **computation graph** - a **directed acyclic graph** (DAG) that represents the **computation** of the **gradients**;
+  * Each box can be an object with a `bprop` method that computes the **loss gradient** w.r.t. its parents, given the **loss gradient** w.r.t. to the output of the box;
+  * Calling the `bprop` method of each box in the **reverse topological order** of the graph computes the **backward pass**.
+
+There are several **Autodiff** strategies:
+
+* **Symbol-to-Number Differentiation**
+  * Take a computational graph and numerical inputs;
+  * Returns a set of numerical outputs describing the gradient at those inputs;
+  * **Advantage**: simpler to implement and debug;
+  * **Disadvantage**: only works for first-order derivatives;
+  * **Example**: Caffe, Torch, PyTorch, ...
+* **Symbol-to-Symbol Differentiation**
+  * Take a computational graph and add additional nodes to the graph that provide a symbolic description of the gradient;
+  * **Advantage**: works for higher-order derivatives;
+  * **Disadvantage**: more complex to implement and debug;
+  * **Example**: Theano, TensorFlow, ...
+
+---
+
+### Regularization
+
+Recall the **empirical risk minimization** problem:
+
+$$
+\mathcal{L}(\theta) := \lambda \Omega(\theta) + \frac{1}{N} \sum_{n=1}^N L(f(x_i; \theta), y_i)
+$$
+
+* It remains to define the **regularizer** $\Omega(\theta)$ and its **gradient** $\nabla_{\theta} \Omega(\theta)$;
+
+#### $\mathcal{l}_2$ Regularization
+
+* Only the **weights** are regularized: $\Omega(\theta) = \sum_{l=1}^{L+1} ||W^{(l)}||^2$;
+* Equivalent to **Gaussian prior** on the weights;
+* **Gradient of the regularizer** w.r.t. the **weights**: $\nabla_{W^{(l)}} \Omega(\theta) = W^{(l)}$;
+* **Weight decay effect**: the **weights** are **shrunk** towards **zero**: $W^{(l)} \leftarrow (1 - \eta \lambda) W^{(l)}$;
+
+#### $\mathcal{l}_1$ Regularization
+
+* Only the **weights** are regularized: $\Omega(\theta) = \sum_{l} ||W^{(l)}||_1 = \sum_{l} \sum_{i,j} |W_{ij}^{(l)}|$;
+* Equivalent to **Laplace prior** on the weights;
+* **Gradient of the regularizer** w.r.t. the **weights**: $\nabla_{W^{(l)}} \Omega(\theta) = sign(W^{(l)})$;
+* Promotes **sparsity** in the weights: **many weights** are **zeroed out**.
+
+#### Dropout Regularization
+
+* During training, **randomly drop** some of the **neurons** in the **hidden layers**;
+* Each hidden unit output is set to zero with probability $p$ - this prevents hidden units to **co-adapt** to each other, forcing them to be more generally useful;
+* At test time, keep all units with the **outputs multiplied by $1 - p$**;
+* Usually implemented using **random binary masks**;
+* The hidden layer activations becomes: $h^{(\mathcal{l})}(x) = g(z^{(\mathcal{l})}(x)) \odot m^{(\mathcal{l})}$, where $m^{(\mathcal{l})} \in \{0, 1\}^{K^{(\mathcal{l})}}$ is a **random binary mask** with $p$ probability of being $1$;
+
+---
+---
+
+## Tricks of the Trade
+
+#### Initialization
+
+* **Biases**: set to zero;
+* **Weights**:
+  * Cannot be zero with **tanh** activation function;
+  * Cannot be all the same value - use **random initialization** - **Gaussian** or **uniform**;
+  * For **ReLU**, the mean should be a small positive number;
+  * Variance cannot be too high;
+
+#### Training, Validation and Test Sets
+
+* **Training set**: used to **train** the model;
+* **Validation set**: used to **tune** the **hyperparameters** (e.g. learning rate, regularization constant, etc.);
+  * **Grid search** specify a set of values to test for each hyperparameter, and try all combinations;
+  * **Random search** specify a distribution for each hyperparameter, and sample from it;
+  * **Bayesian optimization** specify a prior distribution for each hyperparameter, and update it after each experiment;
+* **Test set**: used to **evaluate** the **final model**.
+
+> **Early stopping** is a **regularization technique** that stops training when the **validation error** starts to **increase**, in order to prevent **overfitting**.
+
+#### Input Normalization
+
+* Subtract the mean and divide by the standard deviation;
+* It makes each input dimension have **zero mean** and **unit variance**;
+* It **speeds up** the **training**;
+* Does not work for **sparse data**;
+
+#### Decaying the Learning Rate
+
+* **Learning rate** $\eta$ is a **hyperparameter** that controls the **step size** in the **gradient descent** algorithm;
+* In SGD, as we get closer to the minimum, we want to **reduce the step size**:
+  * Start with a large learning rate (e.g. $0.1$);
+  * Keep it fixed while the **validation error** is **decreasing**;
+  * Divide by $2$ and repeat.
+
+#### Mini-Batches
+
+* Instead of updating after a single sample, update after a **mini-batch** of samples (e.g. $50-200$ samples), and compute the average gradient for the entire mini-batch;
+* Less noisy than SGD;
+* Can leverage matrix-matrix computations.
+
+#### Gradient Checking
+
+* If the training loss is **not decreasing**, there might be a **bug** in the **gradient computation**;
+* To debug, we can compute the **numerical gradient** and compare it with the **analytical gradient**:
+
+$$
+\frac{\partial f}{\partial x} \approx \frac{f(x + \epsilon) - f(x - \epsilon)}{2 \epsilon}
+$$
+
+---
+---
+
+## Better Optimization
+
+There are several improvements to basic **gradient descent** and **stochastic gradient descent**:
+
+* **Momentum**;
+* **Adaptive gradient** (AdaGrad);
+* **Root mean square propagation** (RMSProp);
+* **Adaptive moment estimation** (Adam).
+
+### Momentum
+
+* **Momentum** is a **technique** that **accelerates** **gradient descent** in the **relevant direction** and **dampens** oscillations;
+* It means: remember the **previous gradients** and use them to **update** the **current gradient**: $\theta_{t} = \theta_{t-1} - \alpha_t g(\theta_{t-1}) + \gamma_t (\theta_{t-1} - \theta_{t-2})$;
+  * $g(\theta_t)$ is the **gradient estimate** at time $t$;
+* **Advantages**: reduces the update in irrelevant directions and accelerates the update in relevant directions.
+
+### Adaptive Gradient (AdaGrad)
+
+* **AdaGrad** is a **technique** that **adapts** the **learning rate** to the **parameters**, performing **smaller updates** for **frequent** parameters and **larger updates** for **infrequent** parameters;
+* Scale the update of each component ($\epsilon$ for numerical stability): $\theta_{j, t} = \theta_{j, t-1} - \frac{\alpha}{\sqrt{G_{j, t-1} + \epsilon}} g_{j}(\theta_{t-1})$;
+  * $G_{j, t}$ is the **sum of squares of the gradients** w.r.t. $\theta_j$ up to time $t$: $G_{j, t} = \sum_{i=1}^t g_{j, i}^2$;
+* **Advantages**: robust to choice of $\alpha$ and **learning rate decay**;
+* **Disadvantages**: step size vanishes, because $G_{j, t}$ is monotonically increasing.
+
+### Root Mean Square Propagation (RMSProp)
+
+* **RMSProp** addresses the **vanishing learning issue**;
+* Same scaled update for each component: $\theta_{j, t} = \theta_{j, t-1} - \frac{\alpha}{\sqrt{G_{j, t-1} + \epsilon}} g_{j}(\theta_{t-1})$;
+* Use a **forgetting factor** $\gamma$ to **decay** the **sum of squares of the gradients** (typically $\gamma = 0.9$): $G_{j, t} = \gamma G_{j, t-1} + (1 - \gamma) g_{j, t}^2$ - now the **sum of squares of the gradients** is **decaying**.
+
+### Adaptive Moment Estimation (Adam)
+
+* **Adam** is a **combination** of **momentum** and **RMSProp**;
+* Separate moving averages of gradient and squared gradient;
+* **Bias correction** is used to initialize the moving averages to zero;
+* **Hyperparameters**: $\alpha$, $\beta_1$, $\beta_2$, $\epsilon$;
+* **Advantages**: computationally efficient, low memory requirements, well suited for problems with large datasets and/or parameters;
+* **Disadvantages**: possible convergence issues and noisy gradient estimates.
