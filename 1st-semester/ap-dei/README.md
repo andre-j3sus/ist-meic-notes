@@ -132,3 +132,11 @@ The following is a summary of the course's contents.
 * Deeper networks exhibit hierarchical compositionality: **higher layers** represent **higher-level concepts**;
 * **Auto-encoders** are a class of **neural networks** that are used to **learn representations** of the data;
 * **Word embeddings** are a type of **representation** used to **represent words** as **vectors**.
+
+---
+
+### Convolutional Neural Networks
+
+* **Convolutional neural networks (CNNs)** are a class of **deep neural networks** that are **specialized** for **processing data** that has a **grid-like topology**, such as **images**.
+* **Convolution layers** are alternated with **pooling layers** - **convolution** is a **linear operation** that **preserves the grid-like topology** of the input.
+  
