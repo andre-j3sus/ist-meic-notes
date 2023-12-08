@@ -15,7 +15,7 @@
 2. [Neural Networks](./02-neural-networks.md);
 3. [Representation Learning](./03-representation-learning.md);
 4. [Convolutional Neural Networks](./04-convolutional-neural-networks.md);
-5. Recurrent Neural Networks and LSTMs;
+5. [Recurrent Neural Networks](./05-recurrent-neural-networks.md)
 6. Sequence-to-Sequence Models and Attention Mechanisms;
 7. Transformers;
 8. Self-Supervised Learning;
@@ -140,3 +140,12 @@ The following is a summary of the course's contents.
 * **Convolutional neural networks (CNNs)** are a class of **deep neural networks** that are **specialized** for **processing data** that has a **grid-like topology**, such as **images**.
 * **Convolution layers** are alternated with **pooling layers** - **convolution** is a **linear operation** that **preserves the grid-like topology** of the input.
   
+---
+
+### Recurrent Neural Networks
+
+* RRNs allow to take advantage of **sequential data**;
+* Used to generate, tag and classify sequences, and are trained using **backpropagation through time**;
+* Standard RNNs suffer from vanishing and exploding gradients;
+* LSTMs and other gated units are more complex variants of RNNs that avoid vanishing gradients;
+* They can be extended to other structures like trees, images and graphs.
