@@ -16,8 +16,8 @@
 3. [Representation Learning](./03-representation-learning.md);
 4. [Convolutional Neural Networks](./04-convolutional-neural-networks.md);
 5. [Recurrent Neural Networks](./05-recurrent-neural-networks.md)
-6. Sequence-to-Sequence Models and Attention Mechanisms;
-7. Transformers;
+6. [Sequence-to-Sequence Models](./06-sequence-to-sequence-models.md)
+7. Attention Mechanisms and Transformers;
 8. Self-Supervised Learning;
 9. Generative Models;
 10. Interpretability and Fairness.
