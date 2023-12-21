@@ -19,7 +19,7 @@
 6. [Sequence-to-Sequence Models](./06-sequence-to-sequence-models.md) - introduction to Attention Mechanisms;
 7. [Attention Mechanisms and Transformers](./07-attention-mechanisms-and-transformers.md);
 8. [Self-Supervised Learning and Large Pretrained Models](./08-self-supervised-learning-and-large-pretrained-models.md);
-9. Generative Models;
+9. [Deep Generative Models](./09-deep-generative-models.md);
 10. Interpretability and Fairness.
 
 ---
