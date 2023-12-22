@@ -52,11 +52,13 @@ Data preparation is composed of several steps:
   * **Ignore** records with missing values;
     * Can be bad if the number of records with missing values is high;
   * **Fill** missing values;
-    * **Constant** value - value `NA` or `0` for example;
-    * **Mean/mode** value - usually, the variable becomes less relevant;
+    * **Constant** value - value `NA` or `0` for example - value to describe the absence of a value;
+    * **Mean/median/mode** value - usually, the variable becomes less relevant;
+      * If the mean is used, the **distribution** of the variable is **preserved**;
     * **Conditional mean** value - mean value of the records with the same class;
     * **Most probable value** - value with the highest probability of occurring, using a probability distribution, or a model.
-  
+    * However, filling missing values can **bias** the data.
+
 ---
 
 ## Discretization - Dealing with Noise
@@ -74,16 +76,20 @@ Data preparation is composed of several steps:
 * **Dummification**, also known as **one-hot encoding**, is the process of **transforming symbolic variables** into **binary variables** - transforming **symbolic** variables into **numerical** variables;
   * **Binary** - each value is represented by a **single** binary variable;
   * **One-hot** - each value is represented by a **set** of binary variables;
+* Dummification should be used with **caution**:
+  * **Curse of dimensionality** - the number of variables increases exponentially;
+  * **Correlation** - the variables are highly correlated.
 
 ---
 
 ## Scaling
 
 * **Difference of magnitude between variables scales** can create **inconsistencies**;
-* **Scale all variables** to the **same range**;
+* Solutions: **Scale all variables** to the **same range**;
   * **Normalization** - scale all variables to the **same range**; a common range is $[0, 1]$;
+    * **Drawback** - out-of-bounds error can happen if a value cannot be mapped to the range;
   * **Standardization** - computes a transformation that **centers** the data around the **mean** and **scales** it to the **variance**.
-    * $z = \frac{X - \mu}{\sigma}$
+    * $z = \frac{X - \mu}{\sigma}$ - **z-score**;
     * **negative** if $z < mean$;
     * **positive** if $z > mean$;
     * More **robust** to **outliers** than normalization.
@@ -95,7 +101,10 @@ Data preparation is composed of several steps:
 * A dataset is **unbalanced** if the **number of samples** in each **class** is **not similar** - this can **bias** the **model**;
 * To solve this situation there are two approaches:
   * **Weighing** - **increase** the **weight** of the **minority class**;
-  * **ReSampling** - **reduce** the **number of samples** of the **majority class**;
+  * **Resampling** - **change** the **number of samples** in each **class**;
     * **Undersampling** - **remove** samples from the **majority class**;
+      * Not recommended when the minority class is too small, since it can lead to **information loss**;
     * **Oversampling** - **duplicate** samples from the **minority class**.
-      * **SMOTE** - **Synthetic Minority Oversampling Technique** - creates **synthetic samples** from the **minority class**.
+      * **SMOTE** - **Synthetic Minority Oversampling Technique** - creates **synthetic samples** from the **minority class** - for each sample in the minority class, it finds its **nearest neighbors** and **creates** a **new sample** that is a **linear combination** of the **original sample** and its **nearest neighbors**.
+        * Should be applied when the minority samples are too similar, and we need to enlarge the space covered by them;
+    * **Hybrid** - **remove** samples from the **majority class** and **duplicate** samples from the **minority class**.

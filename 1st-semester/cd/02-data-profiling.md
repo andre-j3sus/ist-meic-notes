@@ -70,6 +70,7 @@ We usually consider four **perspectives** of analysis:
     * $IQR = Q3 - Q1$;
   * **5-Number Summary** - the minimum, first quartile, median, third quartile and maximum;
   * **Boxplot** - a graphical representation of the 5-number summary.
+* **Skewed distribution** - when the mean is not equal to the median.
 
 ---
 
