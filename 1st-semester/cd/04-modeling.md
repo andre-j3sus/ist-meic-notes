@@ -80,13 +80,7 @@ $$
   * **Accuracy**;
   * **Simplicity** and **Interpretability**;
 
-$$
-\text{accuracy} = \frac{\text{Number of correct predictions}}{\text{Number of predictions}}
-$$
-
-$$
-\text{error rate} = 1 - \text{accuracy}
-$$
+> **Occam's Razor**: the simplest explanation is usually the correct one.
 
 * The goal is to **minimize the error rate** - **error minimization**;
 * **Generalization Error** is the error rate of the model in **unseen data** and is expected to decrease as the model is trained with more data;
@@ -105,14 +99,16 @@ $$
 | **Predicted Negatives** | False Negatives  | True Negatives   |
 
 $$
-\text{accuracy} = \frac{\text{TP} + \text{TN}}{\text{TP} + \text{TN} + \text{FP} + \text{FN}}
+\text{accuracy} = \frac{\text{TP} + \text{TN}}{\text{All}}
 $$
 
 $$
 \text{error rate} = 1 - \text{accuracy} = \frac{\text{FP} + \text{FN}}{\text{All}}
 $$
 
-**Recall** is the **proportion of actual positives** that was **correctly identified**. Also known as **TP rate**, **sensitivity**, hit rate, or true positive rate:
+Accuracy and error rate are **global metrics**. We can also use **local metrics**:
+
+**Recall/Coverage** is the **proportion of actual positives** that was **correctly identified**. Also known as **TP rate**, **sensitivity**, hit rate, or true positive rate:
 
 $$
 \text{recall} = \frac{\text{TP}}{\text{TP} + \text{FN}}
@@ -122,6 +118,12 @@ $$
 
 $$
 \text{precision} = \frac{\text{TP}}{\text{TP} + \text{FP}}
+$$
+
+**F-measure** is the **harmonic mean** of **recall** and **precision**:
+
+$$
+\text{F-measure} = \frac{2 \times \text{recall} \times \text{precision}}{\text{recall} + \text{precision}}
 $$
 
 **Specificity** is the opposite of recall, and is the **proportion of actual negatives** that was **correctly identified**. Also known as **selectivity**, **true negative rate**, or **TN rate**:
@@ -136,7 +138,7 @@ $$
 
 **ROC (Receiver Operating Characteristic) charts** are used to **evaluate the performance** of a classifier, by plotting the **TP rate** against the **FP rate**.
 
-<!--TODO: Put ROC chart here-->
+* The **area under the curve** (**AUC**) is a **global metric** that measures the **overall performance** of the classifier - **higher is better**;
 
 ---
 
