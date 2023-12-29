@@ -138,14 +138,88 @@ The following is a summary of the course's contents.
 ### Convolutional Neural Networks
 
 * **Convolutional neural networks (CNNs)** are a class of **deep neural networks** that are **specialized** for **processing data** that has a **grid-like topology**, such as **images**.
-* **Convolution layers** are alternated with **pooling layers** - **convolution** is a **linear operation** that **preserves the grid-like topology** of the input.
+* **Convolution layers** are alternated with **pooling layers** - **convolution** is a **linear operation** that **preserves the grid-like topology** of the input;
+* **Activation maps** are the **output** of a **convolutional layer**;
+* **Stride** is the **step size** of the **convolution** - $S$;
+* **N of Channels** - $K$;
+* **N of Filters** - $M$;
+* **Padding** is the **number of zeros** added to the **input** - $P$;
+  * A common padding size is $P = \frac{F - 1}{2}$, which preserves the input size;
+* Given an $N \times N \times D$ input, a $F \times F \times D$ filter, a stride $S$ and padding $P$, the output will be a $M \times M \times K$ activation map, where $M = \frac{N - F + 2P}{S} + 1$;
+* **Number of units** in a **convolutional layer**: $M^2 \times K$;
+* **Number of trainable parameters** in a **convolutional layer**: $M \times ((N^2 \times K) + bias)$;
+* Properties of CNNs:
+  * **Invariance** - the output is **invariant** to **small translations** of the input;
+  * **Locality** - the output is **only affected** by a **small region** of the input;
+  * **Sparse interactions** - each output value is the result of a **small number of interactions** with the input;
+  * **Parameter sharing** - the **same parameters** are used for **different parts** of the input.
   
 ---
 
 ### Recurrent Neural Networks
 
-* RRNs allow to take advantage of **sequential data**;
+* RRNs allow to take advantage of **sequential data** - words in text, DNA sequences, sound waves, etc;
+  * $h_t = g(V x_t + U h_{t-1} + c)$ - $h_t$ is the **hidden state** at time $t$;
+  * $\hat{y}_t = W h_t + b$ - $\hat{y}_t$ is the **output** at time $t$;
 * Used to generate, tag and classify sequences, and are trained using **backpropagation through time**;
-* Standard RNNs suffer from vanishing and exploding gradients;
-* LSTMs and other gated units are more complex variants of RNNs that avoid vanishing gradients;
-* They can be extended to other structures like trees, images and graphs.
+  * Parameters $V$, $U$, $W$, $c$ and $b$ are **shared** across **time steps** - **parameter sharing**;
+* Applications:
+  * **Sequence generation** - generate a sequence of words - **auto-regressive models**;
+  * **Sequence tagging** - assign a label to each element in a sequence;
+  * **Pooled classification** - classify a sequence as a whole;
+* Standard RNNs suffer from vanishing and exploding gradients - alternative parameterizations like **LSTMs** and **GRUs** are used to avoid this problem;
+* **Gated Recurrent Units (GRUs)** are a type of **recurrent neural network** that are **simpler** than **LSTMs** and **perform better** than **standard RNNs** - idea is to create some **shortcuts** in the **standard RNN**;
+  * $u_t = \sigma(V_u x_t + U_u h_{t-1} + b_u)$ - **update gate**;
+  * $r_t = \sigma(V_r x_t + U_r h_{t-1} + b_r)$ - **reset gate**;
+  * $\tilde{h}_t = tanh(v x_t + U (r_t \odot h_{t-1}) + b)$ - **candidate hidden state**;
+  * $h_t = (1 - z_t) \odot h_{t-1} + z_t \odot \tilde{h}_t$ - **hidden state**;
+* **Long Short-Term Memory (LSTM)** is a type of **recurrent neural network** that are **more complex** than **GRUs** and **perform better** than **standard RNNs** - idea is to use **memory cells $c_t$** to **store information**;
+  * $i_t = \sigma(V_i x_t + U_i h_{t-1} + b_i)$ - **input gate**;
+  * $f_t = \sigma(W_f x_t + U_f h_{t-1} + b_f)$ - **forget gate**;
+  * $o_t = \sigma(W_o x_t + U_o h_{t-1} + b_o)$ - **output gate**;
+  * $\tilde{c}_t = tanh(W_c x_t + U_c h_{t-1} + b)$ - **candidate cell state**;
+  * $c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t$ - **cell state**;
+  * $h_t = o_t \odot tanh(c_t)$ - **hidden state**.
+
+---
+
+### Sequence-to-Sequence Models
+
+* **Sequence-to-sequence models** are a class of **neural networks** that are used to **map sequences** to **sequences** - **encoder-decoder** architecture;
+  * Used for **machine translation**, **speech recognition**, **image captioning**, etc;
+* A **Neural Machine Translation (NMT)** system is a **sequence-to-sequence model** that is used to **translate** a **sequence** in one **language** to a **sequence** in another **language** - **encoder-decoder** architecture;
+  * **Encoder** RNN encodes source sentence into a **vector state** - $h_t = f(x_t, h_{t-1})$;
+  * **Decoder** RNN decodes the **vector state** into a **target sentence** - $y_t = g(y_{t-1}, s_t)$;
+* Representing the **input sequence** as a **single vector** is a **bottleneck** - **attention mechanisms** are used to **improve performance** - focus on different parts of the input.
+
+---
+
+### Attention Mechanisms and Transformers
+
+* Encoders/decoders can be RNNs, CNNs or **self-attention layers**;
+* **Self-attention** is a **linear operation** that **maps** a **sequence** of **vectors** to a **sequence** of **vectors** - **encoder-decoder** architecture;
+  * **Query** vector $q_t$;
+  * **Key** vectors $k_1, k_2, \dots, k_n$;
+  * **Value** vectors $v_1, v_2, \dots, v_n$;
+  * **Attention weights** $\alpha_{t, i} = \frac{exp(q_t^T k_i)}{\sum_{j=1}^n exp(q_t^T k_j)}$;
+  * **Output** vector $o_t = \sum_{i=1}^n \alpha_{t, i} v_i$;
+* **Transformers**: **encoder-decoder** architecture with **self-attention** layers instead of **RNNs**;
+  * **Encoder**: **self-attention** layers;
+  * **Decoder**: **self-attention** layers + **encoder-decoder attention** layers;
+* **Multi-head attention** is a **self-attention** layer with **multiple heads** - **parallel** self-attention layers;
+  * **Query** vectors $q_t$;
+  * **Key** vectors $k_1, k_2, \dots, k_n$;
+  * **Value** vectors $v_1, v_2, \dots, v_n$;
+  * **Attention weights** $\alpha_{t, i} = \frac{exp(q_t^T k_i)}{\sum_{j=1}^n exp(q_t^T k_j)}$;
+  * **Output** vector $o_t = \sum_{i=1}^n \alpha_{t, i} v_i$.
+
+---
+
+### Self-Supervised Learning and Large Pretrained Models
+
+* Pretraining large models and fine-tuning them to a specific task is a common practice in deep learning:
+  * **Pretraining** is a technique used to **initialize** the **parameters** of a **neural network** - **self-supervised learning**;
+  * **Fine-tuning** is a technique used to **adapt** the **parameters** of a **neural network** to a **specific task**;
+* Models: ELMo, BERT, GPT, etc;
+* **Adapters** and **prompting** are other strategies more parameter-efficient than fine-tuning;
+* Current models exhibit **few-shot learning** capabilities - can be trained with **few examples**.
