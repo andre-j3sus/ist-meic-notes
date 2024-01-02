@@ -67,3 +67,7 @@ Art. 9 of the GDPR establishes that is prohibited the processing of personal dat
 8. Design your data and systems for auditability;
 9. Engage with the broader consequences of data and analysis practices;
 10. Know when to break these rules.
+
+> **Transfer Learning** - the process of transferring knowledge from one domain to another, and it is a way to incorporate domain knowledge in the process.
+
+> **Data Leakage** - when information from outside the training dataset is used to create the model, and it is a way to incorporate domain knowledge in the process.

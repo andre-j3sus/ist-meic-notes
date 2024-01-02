@@ -73,7 +73,7 @@ Data preparation is composed of several steps:
 ## Variables Encoding - Dealing with Inconsistencies
 
 * **Inconsistent data** occurs when there is some value that is **incoherent** with the rest of the data, but from a **record perspective** - **noise is from a variable perspective**;
-* **Dummification**, also known as **one-hot encoding**, is the process of **transforming symbolic variables** into **binary variables** - transforming **symbolic** variables into **numerical** variables;
+* **Dummification**, also known as **one-hot encoding**, is the process of **transforming symbolic variables** into **binary variables** - transforming **symbolic** variables into **numerical** variables - **dummy variables**;
   * **Binary** - each value is represented by a **single** binary variable;
   * **One-hot** - each value is represented by a **set** of binary variables;
 * Dummification should be used with **caution**:
@@ -92,7 +92,9 @@ Data preparation is composed of several steps:
     * $z = \frac{X - \mu}{\sigma}$ - **z-score**;
     * **negative** if $z < mean$;
     * **positive** if $z > mean$;
-    * More **robust** to **outliers** than normalization.
+    * More **robust** to **outliers** than normalization;
+* Do not change the results of distance-based algorithms, such as kNN, since the distance between points is preserved;
+  * Do not affect kNN, decision trees, and random forests;
 
 ---
 

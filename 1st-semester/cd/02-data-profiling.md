@@ -130,4 +130,6 @@ We usually consider four **perspectives** of analysis:
 
 * **Jaccard Similarity** - the ratio between the size of the intersection and the size of the union of two sets;
   * More useful in presence of **asymmetric (unbalanced) variables**.
-  * $sim(x,y) = \frac{|x \cap y|}{|x \cup y|}$
+  * $sim(x,y) = \frac{|x \cap y|}{|x \cup y|}$;
+
+> **Dummy variables** are used to **represent** the **presence** or **absence** of a **categorical variable**.

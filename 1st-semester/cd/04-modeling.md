@@ -90,6 +90,9 @@ $$
   * **Variance** is the **variability** of the **predicted** values;
 * **Underfitting** is when the model is **too simple** and **does not capture the data** - **High bias and low variance**;
 * **Overfitting** is when the model is **too complex** and **captures the noise** - **Low bias and high variance**;
+  * Model starts to **memorize the training data** instead of **learning the concept**;
+  * Training error decreases;
+  * Test error increases.
 
 **Confusion Matrix** is a matrix that shows the **number of correct and incorrect predictions** for each class.
 
