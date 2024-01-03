@@ -158,7 +158,7 @@ The following is a summary of the course's contents.
 
 ### Recurrent Neural Networks
 
-* RRNs allow to take advantage of **sequential data** - words in text, DNA sequences, sound waves, etc;
+* RNNs allow to take advantage of **sequential data** - words in text, DNA sequences, sound waves, etc;
   * $h_t = g(V x_t + U h_{t-1} + c)$ - $h_t$ is the **hidden state** at time $t$;
   * $\hat{y}_t = W h_t + b$ - $\hat{y}_t$ is the **output** at time $t$;
 * Used to generate, tag and classify sequences, and are trained using **backpropagation through time**;

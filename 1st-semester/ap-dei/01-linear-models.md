@@ -49,10 +49,10 @@ To represent information about $x$, a typical approach is to define a **feature 
 The **least squares** approach is to find $w$ and $b$ that minimize the **mean squared error** (MSE):
 
 $$
-min_{w, b} \sum_{n=1}^N (y_n - (w x_n + b)^2
+min_{w, b} \sum_{n=1}^N (y_n - \hat{y}_n)^2 = min_{w, b} \sum_{n=1}^N (y_n - (w^T x_n + b))^2
 $$
 
-$w x_n + b$ is the **prediction** - $\hat{y}_n$.
+* **Maximum likelihood estimate** (MLE) of $w$ and $b$.
 
 ### Closed-Form Solution
 
@@ -122,11 +122,11 @@ $$
 \hat{w}_{ridge} = argmin_{w} ||X w - y||^2 + \lambda ||w||^2_2
 $$
 
-* $l_2$ regularization is also known as **weight decay** , or penalized least squares.
+* $l_2$ regularization is also known as **weight decay**, or penalized least squares.
 
 ### Maximum A Posteriori (MAP)
 
-* **Maximum a posteriori** (MAP) is a **Bayesian** approach to learning;
+* **Maximum a posteriori** (MAP) is a **Bayesian** approach to learning the parameters of a model;
 * Assuming that we have a **prior distribution** $w \sim \mathcal{N}(0, \tau^2 I)$, we can find the **maximum a posteriori** estimate of $w$:
 
 $$
