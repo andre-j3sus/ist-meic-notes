@@ -9,6 +9,7 @@
 * $w$ is a $d$-dimensional vector of **weights**;
 * $b$ is a **bias** - usually included in $w$ as a constant feature $x_0 = 1$;
 * Given **training data** $D = \{(x_n, y_n)\}_{n=1}^N$, we want to find the **best** $w$ and $b$, so we use want to fit the model, i.e. find the best $w$ and $b$, **minimizing the loss function** - usually, the **squared loss**: $\hat{w} = argmin_{w} \frac{1}{2} \sum_{n=1}^N (y_n - (w^T x_n + b))^2$;
+  * $MSE = \frac{1}{N} \sum_{n=1}^N (y_n - \hat{y}_n)^2$;
 * **Closed-form solution**: $w = (X^T X)^{-1} X^T y$, where $X = \left[ \begin{matrix} x_1^T \\ x_2^T \\ \vdots \\ x_N^T \end{matrix} \right]$ and $y = \left[ \begin{matrix} y_1 \\ y_2 \\ \vdots \\ y_N \end{matrix} \right]$;
 * **Regularization** is a technique used to **reduce overfitting** by **constraining** the **weights** of the model;
   * If $X^T X$ is not invertible, we can add a regularization term to the loss function - **ridge regression**;
@@ -212,7 +213,7 @@ There are some variants of auto-encoders:
 * **Number of channels** is the **number of filters** used in each layer - $K$;
 * The **output** of a **convolutional layer** is of size $M \times M \times K$, where:
   * $M = \frac{N - F + 2P}{S} + 1$;
-* **Number of trainable parameters** in a **convolutional layer**: $M \times ((N^2 \times K) + bias)$;
+* **Number of trainable parameters** in a **convolutional layer**: $K \times ((F \times F \times D) + 1)$;
 * Properties of CNNs:
   * **Invariance** - the output is **invariant** to **small translations** of the input;
   * **Locality** - the output is **only affected** by a **small region** of the input;
@@ -272,7 +273,10 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
   * Used for **machine translation**, **speech recognition**, **image captioning**, etc;
 * A **Neural Machine Translation (NMT)** system is a **sequence-to-sequence model** that is used to **translate** a **sequence** in one **language** to a **sequence** in another **language** - **encoder-decoder** architecture;
   * **Encoder** RNN encodes source sentence into a **vector state** - $h_t = f(x_t, h_{t-1})$;
+    * e.g. $h1 = relu(W_{hx} x_1 + W_{hh} h_0 + b_h)$, where $h_0 = 0$, $W_{hx}$ is the **input weight matrix**, $W_{hh}$ is the **hidden weight matrix** and $b_h$ is the **bias vector**;
   * **Decoder** RNN decodes the **vector state** into a **target sentence** - $y_t = g(y_{t-1}, s_t)$;
+    * e.g. $y_1 = argmax(W_{yh} h_1 + b_y)$, where $W_{yh}$ is the **output weight matrix** and $b_y$ is the **bias vector**;
+
 * Representing the **input sequence** as a **single vector** is a **bottleneck** - **attention mechanisms** are used to **improve performance** - focus on different parts of the input.
 
 ---
@@ -295,10 +299,20 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
   * **Value** vectors $v_1, v_2, \dots, v_n$;
   * **Attention weights** $\alpha_{t, i} = \frac{exp(q_t^T k_i)}{\sum_{j=1}^n exp(q_t^T k_j)}$;
   * **Output** vector $o_t = \sum_{i=1}^n \alpha_{t, i} v_i$.
+* **Positional encoding** is a technique used to **encode the position** of each **word** in a **sequence**;
+  * Without positional encodings, the self-attention in transformers is insensitive to the word positions being queried: permuting the words leads to a similar permutation in the self-attention responses. In order for transformers to be sensitive to the word order, each word embedding is augmented with a positional embedding
 
 ---
 
-## Large Pretrained Models
+## Self-Supervised Learning and Large Pretrained Models
+
+* **Contextualized representations** are **embeddings** that **depend on the context**;
+* Words can have different meanings depending on the context;
+* **ELMo** is a model that learned **context-dependent embeddings**;
+  * **E**mbeddings from **L**anguage **Mo**dels;
+  * **ELMo** is a **bidirectional** **LSTM** model - BiLSTM;
+  * Save all parameters at all layers;
+  * Then, for your downstream task, tune a scalar parameter for each layer. and pass the entire sentence through this encoder.
 
 * Pretraining large models and fine-tuning them to a specific task is a common practice in deep learning:
   * **Pretraining** is a technique used to **initialize** the **parameters** of a **neural network** - **self-supervised learning**;

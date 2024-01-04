@@ -94,7 +94,8 @@ Data preparation is composed of several steps:
     * **positive** if $z > mean$;
     * More **robust** to **outliers** than normalization;
 * Do not change the results of distance-based algorithms, such as kNN, since the distance between points is preserved;
-  * Do not affect kNN, decision trees, and random forests;
+  * Does not affect kNN, decision trees, and random forests;
+  * Does not affect Naive Bayes, since it is based on probabilities;
 
 ---
 
