@@ -17,6 +17,18 @@
     * **Closed-form solution**: $\hat{w_{ridge}} = (X^T X + \lambda I)^{-1} X^T y$;
     * $l_2$ regularization is also known as **weight decay**, or penalized least squares.
 
+> #### Reduce Overfitting
+>
+> * **Regularization** is a technique used to **reduce overfitting** by **constraining** the **weights** of the model;
+> * **Early stopping** is a technique used to **reduce overfitting** by **stopping the training** when the **validation error** starts to **increase**;
+> * **Dropout** is a technique used to **reduce overfitting** by **randomly dropping neurons** during **training** - **ensemble** of **smaller networks** - **regularizes** the **network**;
+> * **Data augmentation** is a technique used to **reduce overfitting** by **increasing the size** of the **training set** - **artificially generate new data** - **regularizes** the **network**.
+>
+> In case of **underfitting**, we can:
+> * **Increase the model capacity** - **increase the number of parameters**;
+> * **Decrease the regularization** - **decrease the regularization constant**;
+> * **Increase the training time** - **increase the number of epochs**.
+
 ### Maximum A Posteriori Estimation
 
 * A **Bayesian** approach to **linear regression**;
@@ -72,10 +84,17 @@
 * **Pre-activation**: $z(x) = w^T x + b = \sum_{i=1}^d w_i x_i + b$;
 * **Activation**: $h(x) = g(z(x))$; $g$ can be:
   * **Linear**: $g(z) = z$ - linear regression;
+    * Derivative: $\frac{d}{dz} linear(z) = 1$;
   * **Sigmoid**: $g(z) = \frac{1}{1 + e^{-z}}$ - logistic regression;
+    * Derivative: $\frac{d}{dz} sigmoid(z) = sigmoid(z) (1 - sigmoid(z))$;
   * **Rectified Linear Unit (ReLU)**: $g(z) = max(0, z)$ - most used because it is **fast** to compute;
+    * Derivative: $\frac{d}{dz} ReLU(z) = \begin{cases} 1, & if  z > 0 \\ 0, & if  z \leq 0 \end{cases}$;
   * **Hyperbolic Tangent (tanh)**: $g(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$;
+    * Derivative: $\frac{d}{dz} tanh(z) = 1 - tanh^2(z)$;
   * **Softmax**: $g(z) = \frac{e^{z_i}}{\sum_{j=1}^k e^{z_j}}$ - used for **multi-class classification**;
+    * Derivative: $\frac{d}{dz} softmax(z)_i = softmax(z)_i (1 - softmax(z)_i)$;
+
+> ReLUs are significantly simpler and have a much simpler derivative than the sigmoid, leading to faster computation times. Also, sigmoids are easy to saturate and, when that happens, the corresponding gradients are only residual, making learning slower. ReLUs saturate only for negative inputs, and have constant gradient for positive inputs, often exhibiting faster learning
 
 ### Feed-forward Neural Networks
 
@@ -97,7 +116,7 @@
 * $\omega(\theta)$ is the **regularization term**;
 * $L(f(x_n; \theta), y_n)$ is the **loss function**;
   * **Mean squared error**: $L(f(x_n; \theta), y_n) = \frac{1}{2} (f(x_n; \theta) - y_n)^2$ - used for **regression**;
-  * **Cross-entropy loss** (negative log-likelihood): $L(f(x_n; \theta), y_n) = - \sum_{i=1}^k y_{n,i} log(f(x_n; \theta)_i) = - log((softmax(z(x))_y))$ - used for **classification**;
+  * **Cross-entropy loss** (negative log-likelihood): $L(f(x_n; \theta), y_n) = - \sum_{i=1}^k y_{n,i} log(f(x_n; \theta)_i) = - log((softmax(z(x))_y))$ - used for **classification**, usually **logistic regression**;
 * **Backpropagation** is a technique used to **compute the gradients** of the **loss function** with respect to the **parameters** - **chain rule**.
 
 <p align="center">
@@ -143,10 +162,13 @@
 ## Representing Learning - Auto-encoders
 
 * **Auto-encoders** are feed-forward NNs trained to reproduce its input at its output layer;
+  * Useful for **dimensionality reduction** and **unsupervised pre-training**;
 * **Encoder** - maps input to a hidden representation : $h = g(Wx + b)$;
 * **Decoder** - maps hidden representation to a reconstruction : $\hat{x} = W^Th(x) + c$;
 * **Loss function** - $\mathcal{L}(\hat{x}, x) = \frac{1}{2}||\hat{x} - x||^2$;
 * **Objective** - $\hat{W} = argmin_W \sum_{i} || W^Tg(Wx_i) - x_i||^2$ - drop the bias term $b$.
+
+> Auto-encoders are networks that are trained to learn the identify function, i.e., to reconstruct in the output what they see in the input. This is done by imposing some form of constraint in the hidden representations (e.g. lower dimensional or sparse). They are useful to learn good representations of data in an unsupervised manner, for example to capture a lower-dimensional manifold that approximately contains the data.
 
 ### Single Value Decomposition (SVD)
 
@@ -182,7 +204,8 @@ There are some variants of auto-encoders:
   * Instead of minimizing $\frac{1}{2}||\hat{x} - x||^2$, we minimize $\frac{1}{2}||\hat{x} - \tilde{x}||^2$;
   * This is a form of implicit regularization that ensures **smoothness**: it forces the system to represent well not only the data points, but also their perturbations;
 * **Stacked auto-encoders** - several layers of auto-encoders stacked together;
-* Variational auto-encoders - learn a **latent variable model** of the data.
+* Variational auto-encoders - learn a **latent variable model** of the data;
+  * They maximize the **evidence lower bound (ELBO)** of the **data likelihood** - GANs do not.
 
 #### Regularized Auto-Encoders
 
@@ -194,6 +217,15 @@ There are some variants of auto-encoders:
   * Regularizing the derivatives: $\Omega(h, x) = \lambda \sum_{i} ||\nabla_x h_i||^2$.
 
 > One use of auto-encoders is **unsupervised pre-training** of **deep neural networks**.
+
+### Word Embeddings
+
+* **Word embeddings** are a **representation** of a **word** in a **vector space** - **distributed representation**;
+* **word2vec** is a **neural network** that learns **word embeddings** - **unsupervised** - considers a context window around each word in the sentence; it comes with two variantes:
+  * **skip-gram**: given a word, predict the words around it;
+  * **continuous bag-of-words (CBOW)**: given the words around a word, predict the word;
+* **Global Vectors (GloVe)** is a **neural network** that learns **word embeddings** - **unsupervised** - considers the **co-occurrence matrix** of words in the corpus;
+* **Contextualized word embeddings** are **word embeddings** that are **context-dependent** - **ELMo** and **BERT**.
 
 ---
 
@@ -244,7 +276,10 @@ $$
 * Used to generate, tag and classify sequences, and are trained using **backpropagation through time**;
   * Parameters $V$, $U$, $W$, $c$ and $b$ are **shared** across **time steps** - **parameter sharing**;
   * **Exploding gradients** are a problem - **gradient clipping** is used to avoid this problem;
-  * **Vanishing gradients** are a problem - **LSTMs** and **GRUs** are used to avoid this problem.
+  * **Vanishing gradients** are a problem - **LSTMs** and **GRUs** are used to avoid this problem;
+    * Vanishing gradients problem of RNNs: the **gradient** of the **loss function** with respect to the **parameters** **vanishes** as the **sequence length** increases;
+    * GRUs solve this problem by **skipping** the **hidden state** - **gating mechanism**;
+    * LSTMs solve this problem by using **memory cells** (propagated additively) and **gating functions** that control how much information is propagated from the previous state to the current and how much input influences the current state.
 
 Applications:
   * **Sequence generation** - generate a sequence of words - **auto-regressive models**;
@@ -264,6 +299,11 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
   * $\tilde{c}_t = tanh(W_c x_t + U_c h_{t-1} + b)$ - **candidate cell state**;
   * $c_t = f_t \odot c_{t-1} + i_t \odot \tilde{c}_t$ - **cell state**;
   * $h_t = o_t \odot tanh(c_t)$ - **hidden state**.
+  * A **Bidirectional LSTM (BiLSTM)** is a **recurrent neural network** that **processes** the **input sequence** **forward** and **backward** and **concatenates** the **outputs** - **encoder-decoder** architecture;
+    * $h_t = \overrightarrow{h_t} \oplus \overleftarrow{h_t}$ - $\oplus$ is the **concatenation** operator;
+    * $c_t = \overrightarrow{c_t} \oplus \overleftarrow{c_t}$ - $\oplus$ is the **concatenation** operator;
+    * It is used for **sequence tagging** and **sequence classification**;
+    * Better than **standard LSTMs** because they can **access future information**.
 
 ---
 
@@ -277,30 +317,61 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
   * **Decoder** RNN decodes the **vector state** into a **target sentence** - $y_t = g(y_{t-1}, s_t)$;
     * e.g. $y_1 = argmax(W_{yh} h_1 + b_y)$, where $W_{yh}$ is the **output weight matrix** and $b_y$ is the **bias vector**;
 
-* Representing the **input sequence** as a **single vector** is a **bottleneck** - **attention mechanisms** are used to **improve performance** - focus on different parts of the input.
+* Representing the **input sequence** as a **single vector** is a **bottleneck** - **attention mechanisms** are used to **improve performance** - focus on different parts of the input;
+* **Greedy decoding** is a **decoding strategy** that **greedily** picks the **most likely** output at each step;
+* **Exposure bias** is the tendency of sequence-to-sequence models to be exposed only to correct target sequence prefixes at training time, and never to their own predictions. This makes them having trouble to recover from their own incorrect predictions at test time, if they are produced early on in the sequence. Exposure bias is caused by auto-regressive teacher forcing, where models are trained to maximize the probability of target sequences and are always assigned the previous target symbols as context;
+* Sentences are **sorted** by **length** to **improve performance** - **batching**;
+  * Within the same batch, all sequences must have the same length, and for this reason they must be padded with padding symbols for making them as long as the longest sentence in the batch. Since in NLP sentences can have very different lengths, if we don’t sort sentences by length, we can end up with very unbalanced batches, where some sentences are very short and others are very long, which makes it necessary to add a lot of padding symbols. This process is inefficient and can make training more time consuming. For this reason, sentences are usually sorted by length, which makes each batch more balanced.
+
+
 
 ---
 
 ## Attention Mechanisms and Transformers
 
+* We want to **automatically weight** input relevance, to improve performance, reduce the number of parameters, faster training and inference (easy parallelization);
 * Encoders/decoders can be RNNs, CNNs or **self-attention layers**;
 * **Self-attention** is a **linear operation** that **maps** a **sequence** of **vectors** to a **sequence** of **vectors** - **encoder-decoder** architecture;
-  * **Query** vector $q_t$;
-  * **Key** vectors $k_1, k_2, \dots, k_n$;
-  * **Value** vectors $v_1, v_2, \dots, v_n$;
-  * **Attention weights** $\alpha_{t, i} = \frac{exp(q_t^T k_i)}{\sum_{j=1}^n exp(q_t^T k_j)}$;
-  * **Output** vector $o_t = \sum_{i=1}^n \alpha_{t, i} v_i$;
+  * **Query** vector $q_t$ - $Q = X W_q$ - $W_q$ is the **query weight matrix**;
+  * **Key** vectors $k_1, k_2, \dots, k_n$ - $K = X W_k$ - $W_k$ is the **key weight matrix**;
+  * **Value** vectors $v_1, v_2, \dots, v_n$ - $V = X W_v$ - $W_v$ is the **value weight matrix**;
+  * **Attention weights** $P = softmax(\frac{Q K^T}{\sqrt{d_k}})$ - $d_k$ is the **dimensionality** of the **query** and **key** vectors;
+  * **Output** vector $Z = P V$;
+  * Or it can be written without matrix multiplication:
+    * $e_{i, j} = \frac{x_i^T x_j}{\sqrt{d_k}}$ - **score**;
+    * $\alpha_{i, j} = \frac{exp(e_{i, j})}{\sum_{j=1}^n exp(e_{i, j})}$ - **attention weights**;
+    * $z_i = \sum_{j=1}^n \alpha_{i, j} v_j$ - **output**;
+
+> Self-attention encoders are better than RNN encoders, since they can better capture long-range relations between elements of a sequence, since information does not propagate sequentially, but in parallel. This makes them more efficient and easier to parallelize - faster training and inference.
+
 * **Transformers**: **encoder-decoder** architecture with **self-attention** layers instead of **RNNs**;
   * **Encoder**: **self-attention** layers;
   * **Decoder**: **self-attention** layers + **encoder-decoder attention** layers;
+  * They need **causal masking** at training time to avoid **cheating** - **mask** the **future**;
+  * _The self-attention in transformers allows any word to attend to any other word, both in the source and on the target. When the model is generating a sequence left-to-right it cannot attend at future words, which have not been generated yet. At training time, causal masking is needed in the decoder self-attention to mask future words, to reproduce test time conditions._
+* **Scaled dot-product attention** is a **self-attention** layer with **multiple heads**:
+  * **Scores** given by $z = \frac{Xq}{\sqrt{d_k}}$; $d_k$ is the **dimensionality** of the **query** and **key** vectors;
+  * Apply **softmax** to get **attention probabilities**: $\alpha = softmax(z)$;
+  * The **output** vector is $c = X^T \alpha$;
 * **Multi-head attention** is a **self-attention** layer with **multiple heads** - **parallel** self-attention layers;
-  * **Query** vectors $q_t$;
-  * **Key** vectors $k_1, k_2, \dots, k_n$;
-  * **Value** vectors $v_1, v_2, \dots, v_n$;
-  * **Attention weights** $\alpha_{t, i} = \frac{exp(q_t^T k_i)}{\sum_{j=1}^n exp(q_t^T k_j)}$;
-  * **Output** vector $o_t = \sum_{i=1}^n \alpha_{t, i} v_i$.
+  * **Query** vectors $q_t$ - $Q = X W_q$ - $W_q$ is the **query weight matrix**;
+  * **Key** vectors $k_1, k_2, \dots, k_n$ - $K = X W_k$ - $W_k$ is the **key weight matrix**;
+  * **Value** vectors $v_1, v_2, \dots, v_n$ - $V = X W_v$ - $W_v$ is the **value weight matrix**;
+  * **Attention weights** $P = softmax(\frac{Q K^T}{\sqrt{d_k}})$ - $d_k$ is the **dimensionality** of the **query** and **key** vectors;
+  * **Output** vector $Z = P V$;
+  * Or it can be written without matrix multiplication:
+    * $e_{i, j}^{(h)} = \frac{(W_q^{(h)} x_i)^T (W_k^{(h)} x_j)}{\sqrt{d_k}}$ - **score**;
+    * $\alpha_{i, j}^{(h)} = \frac{exp(e_{i, j}^{(h)})}{\sum_{j=1}^n exp(e_{i, j}^{(h)})}$ - **attention weights**;
+    * $z_i^{(h)} = \sum_{j=1}^n \alpha_{i, j}^{(h)} (W_v^{(h)} x_j)$ - **output**;
+    * $z_i = concat(z_i^{(1)}, z_i^{(2)}, \dots, z_i^{(H)}) W_o$ - **output**;
 * **Positional encoding** is a technique used to **encode the position** of each **word** in a **sequence**;
   * Without positional encodings, the self-attention in transformers is insensitive to the word positions being queried: permuting the words leads to a similar permutation in the self-attention responses. In order for transformers to be sensitive to the word order, each word embedding is augmented with a positional embedding
+
+> #### Self-attention vs. Multi-head attention
+>
+> * **Self-attention** is a **linear operation** that **maps** a **sequence** of **vectors** to a **sequence** of **vectors** - **encoder-decoder** architecture;
+> * **Multi-head attention** is a **self-attention** layer with **multiple heads** - **parallel** self-attention layers;
+> * **Scaled dot-product attention** is a **self-attention** layer with **multiple heads**.
 
 ---
 
@@ -318,8 +389,21 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
   * **Pretraining** is a technique used to **initialize** the **parameters** of a **neural network** - **self-supervised learning**;
   * **Fine-tuning** is a technique used to **adapt** the **parameters** of a **neural network** to a **specific task**;
 * Models: ELMo, BERT, GPT, etc;
+  * **GPT-3** - decoder-only transformer;
+    * **Few-shot learning** - can be trained with **few examples**;
+    * ChatGPT is a **chatbot** based on GPT-3;
+  * **BERT (Bidirectional Encoder Representations from Transformers)** - encoder-only transformer, learn contextyualized word representations;
+  * **T5** - encoder-decoder transformer;
+    * Span corruption as an auxiliary task (replace a span of text with a mask token and train to predict the original span);
 * **Adapters** and **prompting** are other strategies more parameter-efficient than fine-tuning;
+  * Adapters are small modules that are plugged into a pretrained model and trained on a specific task;
 * Current models exhibit **few-shot learning** capabilities - can be trained with **few examples**.
+
+---
+
+## Deep Generative Models
+
+...
 
 ---
 ---
@@ -361,3 +445,10 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
 * If $f(x) = x^T b = b^T x$, then $\nabla f(x) = b$.
 * If $g(x) = f(Ax), then \nabla g(x) = A^T \nabla f(Ax)$.
 * If $g(x) = f(a \cdot x)$, then $\nabla g(x) = a \cdot \nabla f(a \cdot x)$.
+
+---
+---
+
+## Algorithmic Complexities
+
+...
