@@ -24,6 +24,10 @@ We usually consider four **perspectives** of analysis:
   * e.g. how many missing values;
 * **Dimensionality** - the number of variables.
 
+> **False predictor** is a variable that is **highly correlated** with the target variable, but it is not available at the time of prediction.
+>
+> Removing false predictors from the model is important to avoid **overfitting**, and improve hte model performance.
+
 ---
 
 ## Granularity
