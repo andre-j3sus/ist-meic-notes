@@ -108,7 +108,7 @@
   * **Hidden layer pre-activation**: $z^{(l)}(x) = W^{(l)} h^{(l-1)}(x) + b^{(l)}$;
   * **Hidden layer activation**: $h^{(l)}(x) = g(z^{(l)}(x))$;
   * **Output layer activation**: $f(x) = h^{(L)}(x)$;
-* **Universal approximation theorem**: a **feed-forward neural network** with a **single hidden layer** can **approximate any function** - given enough **neurons**;
+* **Universal approximation theorem**: a **feed-forward neural network** with a **single hidden layer** and **non-linear** activation can **approximate any function** - given enough **neurons**;
 
 ### Training Neural Networks
 
@@ -248,7 +248,8 @@ There are some variants of auto-encoders:
   * $M = \frac{N - F + 2P}{S} + 1$;
 * **Number of trainable parameters** in a **convolutional layer**: $K \times ((F \times F \times D) + 1)$;
 * Properties of CNNs:
-  * **Invariance** - the output is **invariant** to **small translations** of the input;
+  * Pooling layers are **Invariant** - the output is **invariant** to **small translations** of the input;
+  * Convolution layers provide **translation and scale equivariance** but not **rotation equivariance**  - the output features appear in the same relative positions and scale as the input features;
   * **Locality** - the output is **only affected** by a **small region** of the input;
   * **Sparse interactions** - each output value is the result of a **small number of interactions** with the input;
   * **Parameter sharing** - the **same parameters** are used for **different parts** of the input.
@@ -463,4 +464,16 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
 
 ## Algorithmic Complexities
 
-...
+$M_1 \in \mathbb{R}^{N \times D}$ and $M_2 \in \mathbb{R}^{D \times M}$, so $M_1M_2 \in \mathbb{R}^{N \times M} $,  has time complexity $O(N D M)$.
+
+**Inner Product** or **Dot Product** is a matrix multiplication when vectors are expanded so that $M_1 \in \mathbb{R}^{1 \times D}$ and $M_2 \in \mathbb{R}^{D \times 1}$.
+
+**Outer product** is a matrix multiplication when vectors are expanded so that $M_1 \in \mathbb{R}^{N \times 1}$ and $M_2 \in \mathbb{R}^{1 \times M}$.
+
+$M^{\top}, M \in \mathbb{R}^{N \times D}$ has time complexity $O(N D)$.
+
+$diag(M), M \in \mathbb{R}^{N \times M}$ has time complexity $O(min(N, M))$ for diagonal extraction and $O(N M)$ for diagonal matrix creation.
+
+**Hadamard product** = **elementwise multiplication** = $M \odot N, M, N \in \mathbb{R}^{N \times M}$ has time complexity $O(N M)$.
+
+All other elementwise operations, such as $exp(M)$ $\text{softmax}(M)$, etc.. for $M \in \mathbb{R}^{N \times M}$ have time complexity $O(N M)$.
