@@ -89,6 +89,7 @@
     * Derivative: $\frac{d}{dz} sigmoid(z) = sigmoid(z) (1 - sigmoid(z))$;
   * **Rectified Linear Unit (ReLU)**: $g(z) = max(0, z)$ - most used because it is **fast** to compute;
     * Derivative: $\frac{d}{dz} ReLU(z) = \begin{cases} 1, & if  z > 0 \\ 0, & if  z \leq 0 \end{cases}$;
+    * Mitigates the **vanishing gradient problem**;
   * **Hyperbolic Tangent (tanh)**: $g(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$;
     * Derivative: $\frac{d}{dz} tanh(z) = 1 - tanh^2(z)$;
   * **Softmax**: $g(z) = \frac{e^{z_i}}{\sum_{j=1}^k e^{z_j}}$ - used for **multi-class classification**;
@@ -256,6 +257,8 @@ There are some variants of auto-encoders:
     <img src="./imgs/cnn.png" width="400">
 </p>
 
+> For linear layers, the number of parameters is $input flat size \times outputs + outputs$.
+
 ### Residual Networks (ResNets)
 
 * **Residual networks** are a class of **neural networks** that **skip connections** - tend to lead to more stable learning;
@@ -280,6 +283,10 @@ $$
     * Vanishing gradients problem of RNNs: the **gradient** of the **loss function** with respect to the **parameters** **vanishes** as the **sequence length** increases;
     * GRUs solve this problem by **skipping** the **hidden state** - **gating mechanism**;
     * LSTMs solve this problem by using **memory cells** (propagated additively) and **gating functions** that control how much information is propagated from the previous state to the current and how much input influences the current state.
+* They have **unbounded memory** - **recurrent connections** allow information to persist - however, for long sequences, they have a tendency to remember less accurately the initial words they have generated;
+* **Bidirectional RNNs** combine **left-to-right RNN** (encoder) and **right-to-left RNN** (decoder) - **encoder-decoder** architecture;
+  * Used as sequence encoders, and their main advantage is that each state contains **contextual information coming from both sides**;
+  * Unlike **standard RNNs**, they have the same focus on the beginning and the end of the input sequence.
 
 Applications:
   * **Sequence generation** - generate a sequence of words - **auto-regressive models**;
@@ -346,8 +353,9 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
 
 * **Transformers**: **encoder-decoder** architecture with **self-attention** layers instead of **RNNs**;
   * **Encoder**: **self-attention** layers;
-  * **Decoder**: **self-attention** layers + **encoder-decoder attention** layers;
-  * They need **causal masking** at training time to avoid **cheating** - **mask** the **future**;
+  * **Decoder**: **self-attention** layers (**masked needed**) + **encoder-decoder attention** layers;
+    * They need **causal masking** at training time to avoid **cheating** - **mask** the **future** - reproduce test time conditions;
+    * The difference between self-attention and masked self-attention is that in the latter the **attention weights** are **masked** to **avoid cheating** - **mask** the **future**;
   * _The self-attention in transformers allows any word to attend to any other word, both in the source and on the target. When the model is generating a sequence left-to-right it cannot attend at future words, which have not been generated yet. At training time, causal masking is needed in the decoder self-attention to mask future words, to reproduce test time conditions._
 * **Scaled dot-product attention** is a **self-attention** layer with **multiple heads**:
   * **Scores** given by $z = \frac{Xq}{\sqrt{d_k}}$; $d_k$ is the **dimensionality** of the **query** and **key** vectors;
@@ -392,11 +400,15 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
   * **GPT-3** - decoder-only transformer;
     * **Few-shot learning** - can be trained with **few examples**;
     * ChatGPT is a **chatbot** based on GPT-3;
+    * Pretrained with causal language modeling;
   * **BERT (Bidirectional Encoder Representations from Transformers)** - encoder-only transformer, learn contextyualized word representations;
+    * Pretrained on **masked language modeling** and **next sentence prediction**;
   * **T5** - encoder-decoder transformer;
     * Span corruption as an auxiliary task (replace a span of text with a mask token and train to predict the original span);
+    * Suitable for classification and  generation tasks;
 * **Adapters** and **prompting** are other strategies more parameter-efficient than fine-tuning;
-  * Adapters are small modules that are plugged into a pretrained model and trained on a specific task;
+  * Adapters are small modules that are plugged into a pretrained model and trained on a specific task; their advantage over fine-tuning is that they require fewer parameters and less training time;
+  * Prompting is usually done with models such as GPT, which are trained with a causal language modeling objective;
 * Current models exhibit **few-shot learning** capabilities - can be trained with **few examples**.
 
 ---
