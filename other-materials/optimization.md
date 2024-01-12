@@ -6,12 +6,12 @@
 
 * **Minimization** is the process of finding the input that results in the smallest value of the function;
 * Given a function $f(x)$, the goal is to find the value of $x$ that minimizes $f$.
-* **Global minimum** is the smallest value of the function over its entire domain: for any $x \in \real^n$, $f(x^*) \leq f(x)$;
+* **Global minimum** is the smallest value of the function over its entire domain: for any $x \in \mathbb{R}^{n}$, $f(x^*) \leq f(x)$;
 * **Local minimum** is the smallest value of the function over some small region of the domain: for any $||x - x^*|| \leq \epsilon$, $f(x^*) \leq f(x)$.
 
 ## Convex Functions
 
-* Function $f: \real^n \rightarrow \real$ is **convex** if the line segment between any two points on the graph of the function lies on or above the graph:
+* Function $f: \mathbb{R}^{n} \rightarrow \mathbb{R}$ is **convex** if the line segment between any two points on the graph of the function lies on or above the graph:
 
 $$
 f(\lambda x + (1 - \lambda)x') \leq \lambda f(x) + (1 - \lambda)f(x')
@@ -30,7 +30,7 @@ $$
 
 * A **gradient** represents the slope of the function in each dimension;
 * The gradient points in the direction of the **greatest rate of increase of the function**;
-* Given $f: \real^n \rightarrow \real$, the **gradient** of $f$ is the vector of partial derivatives:
+* Given $f: \mathbb{R}^{n} \rightarrow \mathbb{R}$, the **gradient** of $f$ is the vector of partial derivatives:
 
 $$
 \nabla f(x) = \left[ \frac{\partial f(x)}{\partial x_1}, \frac{\partial f(x)}{\partial x_2}, \dots, \frac{\partial f(x)}{\partial x_n} \right]^T
@@ -42,7 +42,7 @@ $$
 
 * The **Hessian** is a matrix of second partial derivatives - the **gradient of the gradient**;
 * The Hessian is a **measure of curvature** of the function;
-* Given $f: \real^n \rightarrow \real$, the **Hessian** of $f$ is the matrix of second partial derivatives:
+* Given $f: \mathbb{R}^{n} \rightarrow \mathbb{R}$, the **Hessian** of $f$ is the matrix of second partial derivatives:
 
 $$
 H_{ij} = \frac{\partial^2 f(x)}{\partial x_i \partial x_j}

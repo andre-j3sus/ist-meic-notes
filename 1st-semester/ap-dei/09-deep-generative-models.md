@@ -3,7 +3,7 @@
 * Modelling **high-dimensional** data is **hard**;
 * Deep generation models are **unsupervised** models that **learn** the **distribution** of the **data**;
 * Supervised learning: $p(x, y)$, while **unsupervised learning**: $p(x)$;
-* **Generative models** use latent (random) variables $h$ such that: $ P(x) = \sum_h P(x, h)$;
+* **Generative models** use latent (random) variables $h$ such that: $P(x) = \sum_h P(x, h)$;
 * Examples of **deep generative models**:
   * **Restricted Boltzmann machines**;
   * **Variational auto-encoders (VAE)**;
@@ -17,7 +17,7 @@
 ## Boltzmann Machines
 
 * **Energy-based model** over binary vectors;
-  * The probability distribution via an **energy function** $E(x, h; \theta)$ is $P_{\theta}(x, h) = \frac{exp(-E(x, h; \theta))}{Z(\theta)}$, where $Z(\theta) = \sum_{x, h} exp(-E(x, h; \theta))$ is the **partition function** - `maximizing** probability corresponds to **minimizing** energy;
+  * The probability distribution via an **energy function** $E(x, h; \theta)$ is $P_{\theta}(x, h) = \frac{exp(-E(x, h; \theta))}{Z(\theta)}$, where $Z(\theta) = \sum_{x, h} exp(-E(x, h; \theta))$ is the **partition function** - **maximizing** probability corresponds to **minimizing** energy;
 * $v$ are **observed** variables, while $h$ are **hidden/latent** variables:
 * $P_{\theta}(v, h) = \frac{exp(-E(v, h; \theta))}{Z(\theta)}$;
 * Energy function: $E(v, h; \theta) = - v^T R v - v^T W h - h^T S h - v^T b - h^T c$;
