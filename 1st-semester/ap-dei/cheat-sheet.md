@@ -85,13 +85,24 @@
 * **Activation**: $h(x) = g(z(x))$; $g$ can be:
   * **Linear**: $g(z) = z$ - linear regression;
     * Derivative: $\frac{d}{dz} linear(z) = 1$;
+    * No squashing of the input;
+    * Useful to project the input to a lower dimension;
   * **Sigmoid**: $g(z) = \frac{1}{1 + e^{-z}}$ - logistic regression;
     * Derivative: $\frac{d}{dz} sigmoid(z) = sigmoid(z) (1 - sigmoid(z))$;
+    * Squashes the input to the range $[0, 1]$;
+    * Positive, bounded and strictly increasing;
+    * Combining layers of sigmoid units increases expressiveness - logistic regression is a network with a single sigmoid unit;
   * **Rectified Linear Unit (ReLU)**: $g(z) = max(0, z)$ - most used because it is **fast** to compute;
     * Derivative: $\frac{d}{dz} ReLU(z) = \begin{cases} 1, & if  z > 0 \\ 0, & if  z \leq 0 \end{cases}$;
     * Mitigates the **vanishing gradient problem**;
+    * Non-negative, increasing but not upper bounded;
+    * Not differentiable at $z = 0$;
+    * Leads to **sparse representations** - **sparsity** is a **desirable property** of **representations**;
   * **Hyperbolic Tangent (tanh)**: $g(z) = \frac{e^z - e^{-z}}{e^z + e^{-z}}$;
     * Derivative: $\frac{d}{dz} tanh(z) = 1 - tanh^2(z)$;
+    * Squashes the input to the range $[-1, 1]$;
+    * Bounded and strictly increasing;
+    * Combining layers of tanh units increases expressiveness;
   * **Softmax**: $g(z) = \frac{e^{z_i}}{\sum_{j=1}^k e^{z_j}}$ - used for **multi-class classification**;
     * Derivative: $\frac{d}{dz} softmax(z)_i = softmax(z)_i (1 - softmax(z)_i)$;
 
@@ -117,6 +128,7 @@
 * $\omega(\theta)$ is the **regularization term**;
 * $L(f(x_n; \theta), y_n)$ is the **loss function**;
   * **Mean squared error**: $L(f(x_n; \theta), y_n) = \frac{1}{2} (f(x_n; \theta) - y_n)^2$ - used for **regression**;
+    * The $\frac{1}{2}$ factor is included for **convenience**, so that the derivative of the loss function is $y - \hat{y}$.
   * **Cross-entropy loss** (negative log-likelihood): $L(f(x_n; \theta), y_n) = - \sum_{i=1}^k y_{n,i} log(f(x_n; \theta)_i) = - log((softmax(z(x))_y))$ - used for **classification**, usually **logistic regression**;
 * **Backpropagation** is a technique used to **compute the gradients** of the **loss function** with respect to the **parameters** - **chain rule**.
 
@@ -235,24 +247,33 @@ There are some variants of auto-encoders:
 * **Convolutional neural networks (CNNs)** are a class of **deep neural networks** that are **specialized** for **processing data** that has a **grid-like topology**, such as **images**;
 * Equivalent to **translations** of the **input**;
 * Convolutional and pooling layers exploit the fact that the same feature may appear in different **parts of the image**;
+  * **Pooling layer** provides **invariance** - this means that the **output** is **invariant** to **small translations/shifts** of the input; They also make the representation **smaller** and **easier to process**; **Max pooling** is the most common, and offers **scaling, shifting and rotation invariance**;
 * Lower layers of a CNN learn **local features** (e.g. edges), while higher layers learn **global features** (e.g. objects);
 * **Convolution layers** are alternated with **pooling layers** - **convolution** is a **linear operation** that **preserves the grid-like topology** of the input;
 * **Activation maps** are the **output** of a **convolutional layer**;
-* Image of size $N \times N \times D$ is represented as a **3D tensor**;
-* **Filter/kernel** is a **small matrix** that is **convolved** with the **input** to produce an **activation map** - $F \times F \times D$;
-* **Stride** is the **step size** of the **convolution** - $S$;
-* **Padding** is the **number of zeros** added to the **input** - $P$;
-  * A common padding size is $P = \frac{F - 1}{2}$, which preserves the spatial size of the input $M = N$;
-* **Number of channels** is the **number of filters** used in each layer - $K$;
-* The **output** of a **convolutional layer** is of size $M \times M \times K$, where:
-  * $M = \frac{N - F + 2P}{S} + 1$;
-* **Number of trainable parameters** in a **convolutional layer**: $K \times ((F \times F \times D) + 1)$;
 * Properties of CNNs:
-  * Pooling layers are **Invariant** - the output is **invariant** to **small translations** of the input;
+  * Pooling layers are **Invariant** - the output is **invariant** to **small translations/shifts** of the input;
   * Convolution layers provide **translation and scale equivariance** but not **rotation equivariance**  - the output features appear in the same relative positions and scale as the input features;
   * **Locality** - the output is **only affected** by a **small region** of the input;
   * **Sparse interactions** - each output value is the result of a **small number of interactions** with the input;
   * **Parameter sharing** - the **same parameters** are used for **different parts** of the input.
+
+### Size and Complexity
+
+* Given an image of size $N \times N \times D$,
+* A **Filter/kernel** is a **small matrix** that is **convolved** with the **input** to produce an **activation map** - $F \times F \times D$;
+  * **Number of channels** is the **number of filters/kernels** - $K$;
+* **Stride** is the **step size** of the **convolution** - $S$;
+* **Padding** is the **number of zeros** added to the **input** - $P$;
+  * A common padding size is $P = \frac{F - 1}{2}$, which preserves the spatial size of the input $M = N$;
+* The **output** of a **convolutional layer** is of size $M \times M \times K$, where:
+  * $M = \frac{N - F + 2P}{S} + 1$;
+* **Number of trainable weights**: $NumberOfFilters \times (FilterHeight \times FilterWidth \times NumberOfChannels + Bias)$;
+  * Other formula: $KernelSize^2 \times NumberOfInputChannels \times NumberOfOutputChannels$;
+  * If we have a **FeedForward NN**, the number of parameters is: $NumberOfUnits \times ((InputWidth \times InputHeight \times InputChannels) + Bias)$;
+* **Number of biases**: $NumberOfInputChannels$;
+* **Number of units within a layer**: $M \times M \times K$;
+
 
 <p align="center">
     <img src="./imgs/cnn.png" width="400">
@@ -270,6 +291,11 @@ $$
 \frac{\partial L}{\partial x} = \frac{\partial L}{\partial H} \frac{\partial H}{\partial x} = \frac{\partial L}{\partial H} \left( \frac{\partial \mathcal{F}}{\partial x} + \lambda \right)
 $$
 
+> A Residual Neural Network is a deep learning model in which the weight layers learn residual functions with reference to the layer inputs. A Residual Network is a network with skip connections that perform identity mappings, merged with the layer outputs by addition. This enables deep learning models with tens or hundreds of layers to train easily and approach better accuracy when going deeper.
+>
+> They are used to allow gradients to flow through a network directly, without passing through non-linear activation functions. Non-linear activation functions, by nature of being non-linear, cause the gradients to explode or vanish (depending on the weights).
+
+
 ---
 
 ## Recurrent Neural Networks
@@ -277,10 +303,11 @@ $$
 * RNNs allow to take advantage of **sequential data** - words in text, DNA sequences, sound waves, etc;
   * $h_t = g(V x_t + U h_{t-1} + c)$ - $h_t$ is the **hidden state** at time $t$;
   * $\hat{y}_t = W h_t + b$ - $\hat{y}_t$ is the **output** at time $t$;
-* Used to generate, tag and classify sequences, and are trained using **backpropagation through time**;
+* Used to generate, tag and classify sequences, and are trained using **backpropagation through time - BPTT**;
   * Parameters $V$, $U$, $W$, $c$ and $b$ are **shared** across **time steps** - **parameter sharing**;
-  * **Exploding gradients** are a problem - **gradient clipping** is used to avoid this problem;
+  * **Exploding gradients** are a problem - **gradient clipping** is used to avoid this problem (truncating the gradient if it exceeds some magnitude);
   * **Vanishing gradients** are a problem - **LSTMs** and **GRUs** are used to avoid this problem;
+    * More frequent and hard to deal with;
     * Vanishing gradients problem of RNNs: the **gradient** of the **loss function** with respect to the **parameters** **vanishes** as the **sequence length** increases;
     * GRUs solve this problem by **skipping** the **hidden state** - **gating mechanism**;
     * LSTMs solve this problem by using **memory cells** (propagated additively) and **gating functions** that control how much information is propagated from the previous state to the current and how much input influences the current state.
@@ -290,11 +317,17 @@ $$
   * Unlike **standard RNNs**, they have the same focus on the beginning and the end of the input sequence.
 
 Applications:
-  * **Sequence generation** - generate a sequence of words - **auto-regressive models**;
-  * **Sequence tagging** - assign a label to each element in a sequence;
-  * **Pooled classification** - classify a sequence as a whole;
 
-Standard RNNs suffer from vanishing and exploding gradients - alternative parameterizations like **LSTMs** and **GRUs** are used to avoid this problem;
+* **Sequence generation** - generate a sequence of words - **auto-regressive models**;
+  * Generating each word depends on all the previous words, but this doesn’t scale well, we would need too many parameters. One solution is to use limited memory with an order-m Markov model (n-grams). Alternative: consider all the history, but compress it into a vector (this is what RNNs do). Sequence generataion RNNs are typically trained with maximum likelihood estimation (cross-entropy), so it intuitively measures how ”perplexed/surprised” the model is.
+  * We can also have an RNN over characters instead of words. Advantage: can generate any combination of characters, not just words in a closed vocabulary and much smaller set of output symbols; Disadvantage: need to remember deeper back in history;
+  * **Teacher forcing** is a technique used to train **sequence generation** models - **feed the correct previous word** to the **decoder** at each step;
+    * Causes **exposure bias** at run time: the model will have trouble recovering from mistakes early on, since it generates histories that it has never observed before.
+* **Sequence tagging** - assign a label to each element in a sequence - use Bidirectional RNN;
+* **Pooled classification** - classify a sequence as a whole;
+
+> Standard RNNs suffer from vanishing and exploding gradients - alternative parameterizations like **LSTMs** and **GRUs** are used to avoid this problem;
+
 * **Gated Recurrent Units (GRUs)** are a type of **recurrent neural network** that are **simpler** than **LSTMs** and **perform better** than **standard RNNs** - idea is to create some **shortcuts** in the **standard RNN**;
   * $u_t = \sigma(V_u x_t + U_u h_{t-1} + b_u)$ - **update gate**;
   * $r_t = \sigma(V_r x_t + U_r h_{t-1} + b_r)$ - **reset gate**;
@@ -331,11 +364,23 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
 * Sentences are **sorted** by **length** to **improve performance** - **batching**;
   * Within the same batch, all sequences must have the same length, and for this reason they must be padded with padding symbols for making them as long as the longest sentence in the batch. Since in NLP sentences can have very different lengths, if we don’t sort sentences by length, we can end up with very unbalanced batches, where some sentences are very short and others are very long, which makes it necessary to add a lot of padding symbols. This process is inefficient and can make training more time consuming. For this reason, sentences are usually sorted by length, which makes each batch more balanced.
 
+### RNN and Sequence-to-Sequence Models Exam Exercises
 
+* Calculate $z_t = W_{hh} h_{t-1} + W_{hx} x_t + b_h$;
+* Calculate $h_t = tanh(z_t)$;
+* $LabelProbabilities = softmax(z_t)$;
+* $CrossEntropyLoss = log(LabelProbabilities) \cdot y_t$;
 
 ---
 
 ## Attention Mechanisms and Transformers
+
+> **Translation model** - models how words are translated - learn from parallel data.
+>  * **Encoder** - encodes the source sentence into a vector state;
+>  * **Decoder** - decodes the vector state into a target sentence;
+>  * **Beam search** is a **decoding strategy** that **keeps track** of the **$k$ most likely** output sequences at each step - **greedy search/decoding** is a special case of **beam search** with $k = 1$;
+>
+> **Language model** - models how words are generated - learn from monolingual data - learning this requires a large amount of data, and can be done with a markov model n-gram or a neural network.
 
 * We want to **automatically weight** input relevance, to improve performance, reduce the number of parameters, faster training and inference (easy parallelization);
 * Encoders/decoders can be RNNs, CNNs or **self-attention layers**;
@@ -353,6 +398,7 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
 > Self-attention encoders are better than RNN encoders, since they can better capture long-range relations between elements of a sequence, since information does not propagate sequentially, but in parallel. This makes them more efficient and easier to parallelize - faster training and inference.
 
 * **Transformers**: **encoder-decoder** architecture with **self-attention** layers instead of **RNNs**;
+  * Uses **scaled dot-product attention** and **multi-head attention**;
   * **Encoder**: **self-attention** layers;
   * **Decoder**: **self-attention** layers (**masked needed**) + **encoder-decoder attention** layers;
     * They need **causal masking** at training time to avoid **cheating** - **mask** the **future** - reproduce test time conditions;
@@ -382,6 +428,15 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
 > * **Multi-head attention** is a **self-attention** layer with **multiple heads** - **parallel** self-attention layers;
 > * **Scaled dot-product attention** is a **self-attention** layer with **multiple heads**.
 
+### Computational Cost
+
+| Layer Type | Complexity per Layer | Sequential Operations | Maximum Path Length |
+| ---------- | -------------------- | --------------------- | ------------------- |
+| Self-attention | $O(n^2 d_k)$ | $O(1)$ | $O(1)$ |
+| Recurrent | $O(n d^2)$ | $O(n)$ | $O(n)$ |
+| Convolutional | $O(k^2 d)$ | $O(1)$ | $O(log_k n)$ |
+| Self-attention restricted | $O(r n d_k)$ | $O(1)$ | $O(n/r)$ |
+
 ---
 
 ## Self-Supervised Learning and Large Pretrained Models
@@ -397,6 +452,14 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
 * Pretraining large models and fine-tuning them to a specific task is a common practice in deep learning:
   * **Pretraining** is a technique used to **initialize** the **parameters** of a **neural network** - **self-supervised learning**;
   * **Fine-tuning** is a technique used to **adapt** the **parameters** of a **neural network** to a **specific task**;
+    * **Limitations**: fine-tuning a large model to several tasks can be very expensive and requires a copy of the model for each task;
+* **Dangers of large pretrained models**:
+  * For many existing models, data was not properly curated or representative of the world’s population;
+  * Current models are English-centric; other languages are poorly represented;
+  * They may propagate biases and discriminate against minorities;
+  * They may disclose private information (maybe some private information was in the training data, and models can expose it);
+  * Their output is uncontrolled – it can be toxic or offensive;
+  * They can provide misleading information with unpredictable consequences;
 * Models: ELMo, BERT, GPT, etc;
   * **GPT-3** - decoder-only transformer;
     * **Few-shot learning** - can be trained with **few examples**;
@@ -446,6 +509,26 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
 * The **chain rule** is a **formula** for computing the **derivative** of the **composition** of **two or more functions**;
 * If $y = f(u)$ and $u = g(x)$, then $\frac{dy}{dx} = \frac{dy}{du} \frac{du}{dx}$.
 
+### Squared Loss Derivative
+
+
+$$
+\nabla_w L(y,\hat{y}) = \nabla_w \frac{1}{2} (y - \hat{y})^2 \\= \frac{1}{2} \cdot 2(y - \hat{y}) \nabla_w (y - \hat{y}) \\= (y - \hat{y}) \nabla_w (y - w^T x) \\= (y - \hat{y}) (\nabla_w y - \nabla_w w^T x)\\ = (y - \hat{y}) (-x)\\ = x (\hat{y} - y)
+$$
+
+### Cross-Entropy Loss Derivative
+
+The sum was omitted, because it doesn’t change the process of taking the derivative (the derivative is a linear transformation). A sigmoid activation function is assumed here:
+
+$$
+\nabla_W y log(\sigma(W^T x)) + \nabla_W (1 - y)log(1 - \sigma(W^Tx)) = \\
+= y \nabla_W \sigma(W^T x) \sigma(W^T x) + (1 - y) \nabla_W (1 - \sigma(W^T x)) 1 - \sigma(W^T x) = \\
+= y \sigma(W^T x) (1 - \sigma(W^T x)) x \sigma(W^T x) + (1 - y) (- \nabla_W \sigma(W^T x)) 1 - \sigma(W^T x) = \\
+= y \sigma(W^T x) (1 - \sigma(W^T x)) x \sigma(W^T x) - (1 - y) \sigma(W^T x) (1 - \sigma(W^T x)) x 1 - \sigma(W^T x) = \\
+= y (1 - \sigma(W^T x)) x - (1 - y) \sigma(W^T x) x = \\
+= x (y - \sigma(W^T x))
+$$
+
 ### Gradient
 
 * The **gradient** of a **scalar function** $f: \mathbb{R}^n \rightarrow \mathbb{R}$ is the **vector of partial derivatives** of $f$ with respect to each of its **input variables**;
@@ -464,7 +547,7 @@ Standard RNNs suffer from vanishing and exploding gradients - alternative parame
 
 ## Algorithmic Complexities
 
-$M_1 \in \mathbb{R}^{N \times D}$ and $M_2 \in \mathbb{R}^{D \times M}$, so $M_1M_2 \in \mathbb{R}^{N \times M} $,  has time complexity $O(N D M)$.
+$M_1 \in \mathbb{R}^{N \times D}$ and $M_2 \in \mathbb{R}^{D \times M}$, so $M_1M_2 \in \mathbb{R}^{N \times M}$,  has time complexity $O(N D M)$.
 
 **Inner Product** or **Dot Product** is a matrix multiplication when vectors are expanded so that $M_1 \in \mathbb{R}^{1 \times D}$ and $M_2 \in \mathbb{R}^{D \times 1}$.
 
