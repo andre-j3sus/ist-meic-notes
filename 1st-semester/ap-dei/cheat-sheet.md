@@ -262,16 +262,16 @@ There are some variants of auto-encoders:
 
 * Given an image of size $N \times N \times D$,
 * A **Filter/kernel** is a **small matrix** that is **convolved** with the **input** to produce an **activation map** - $F \times F \times D$;
-  * **Number of channels** is the **number of filters/kernels** - $K$;
+  * **Number of output channels** is the **number of filters/kernels** - $K$;
 * **Stride** is the **step size** of the **convolution** - $S$;
 * **Padding** is the **number of zeros** added to the **input** - $P$;
   * A common padding size is $P = \frac{F - 1}{2}$, which preserves the spatial size of the input $M = N$;
 * The **output** of a **convolutional layer** is of size $M \times M \times K$, where:
   * $M = \frac{N - F + 2P}{S} + 1$;
-* **Number of trainable weights**: $NumberOfFilters \times (FilterHeight \times FilterWidth \times NumberOfChannels + Bias)$;
+* **Number of trainable weights**: $NumberOfFilters \times (FilterHeight \times FilterWidth \times NumberOfInputChannels)$;
   * Other formula: $KernelSize^2 \times NumberOfInputChannels \times NumberOfOutputChannels$;
-  * If we have a **FeedForward NN**, the number of parameters is: $NumberOfUnits \times ((InputWidth \times InputHeight \times InputChannels) + Bias)$;
-* **Number of biases**: $NumberOfInputChannels$;
+  * If we have a **FeedForward NN**, the number of parameters is: $NumberOfUnits \times ((InputWidth \times InputHeight \times InputChannels))$;
+* **Number of biases**: $NumberOfOutputChannels$;
 * **Number of units within a layer**: $M \times M \times K$;
 
 
