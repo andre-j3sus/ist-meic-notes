@@ -35,6 +35,12 @@ Please note that the notes may not have the same formatting, and some of them ma
 
 ### 📆 2nd Semester
 
+* 💬 **CCEIC II** - Comunicação e Competências para Engenharia Informática e de Computadores II / Communication and Skills for Computer Science and Computer Engineering II;
+* [🔀 **CPD** - Computação Paralela e Distribuída / Parallel and Distributed Computing](./2nd-semester/cpd/)
+* [🔒 **SEC** - Sistemas de Elevada Confiabilidade / Highly Dependable Systems](./2nd-semester/sec/)
+* [☁️ **CNV** - Computação na Nuvem e Virtualização / Cloud Computing and Virtualization](./2nd-semester/cnv/)
+* [📱 **CMU** - Computação Móvel e Ubíqua / Mobile and Ubiquitous Computing](./2nd-semester/cmu/)
+
 *(section under construction)*
 
 ### 💡Other Materials
