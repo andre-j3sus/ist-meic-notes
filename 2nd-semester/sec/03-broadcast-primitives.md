@@ -1,0 +1,72 @@
+# Broadcast Primitives
+
+We will consider three forms of reliability for a broadcast primitive:
+
+* **Best-effort broadcast**: the sender sends the message, and the system does its best to deliver it, but it may fail;
+* **Reliable broadcast in the crash fault model**: the system guarantees that if the sender is correct, then all correct processes will deliver the message;
+* **Reliable broadcast in the arbitrary fault model**: the system guarantees that if the sender is correct, then all correct processes will deliver the message.
+
+---
+
+## Best-Effort Broadcast
+
+The best-effort broadcast is the simplest form of broadcast. The sender sends the message, and the system does its best to deliver it, but it may fail. The system does not guarantee that the message will be delivered, but it does not guarantee that it will not be delivered either.
+
+Properties:
+
+* **Validity**: if `pi` and `pj` are correct, then every message broadcast by `pi` is eventually delivered by `pj`;
+* **No duplication**: no message is delivered more than once;
+* **No creation**: no message is delivered unless it was sent.
+
+All these properties are the same as the ones for the **perfect link**.
+
+---
+
+## Reliable Broadcast in the Crash Fault Model
+
+The reliable broadcast in the crash fault model guarantees that if the sender is correct, then all correct processes will deliver the message.
+
+The properties are the same as the ones for the best-effort broadcast, with the addition of:
+
+* **Agreement**: if a correct process delivers a message `m`, then all correct processes deliver `m`.
+
+---
+
+## Reliable Broadcast in the Arbitrary (Byzantine) Fault Model
+
+* A **byzantine process** may:
+  * broadcast messages different from the ones sent by applications;
+  * forge messages so that they look as originated by other processes;
+  * send different messages to different processes;
+* **Authenticated perfect links** are a useful tool, disallowing byzantine processes from forging messages;
+* **Digital signatures** are a useful tool, allowing processes to sign messages, and other processes to verify the signature.
+
+We consider two variants of reliable broadcast in the arbitrary fault model:
+
+* **Byzantine Consistent Broadcast**;
+  * If the sender is correct, then all correct processes deliver the same message;
+  * If the sender is byzantine, then all correct processes deliver the same message, **if they deliver any**;
+* **Byzantine Reliable Broadcast**;
+  * If a correct process delivers `m`, then all correct processes deliver `m` - **indepedently of the sender**.
+
+### Byzantine Consistent Broadcast
+
+Specification:
+
+* **Validity**: if a correct process `p` broadcasts a message `m`, then every correct process eventually delivers `m`;
+* **No duplication**: no message is delivered more than once by any correct process;
+* **Integrity**: if a correct process `p` delivers a message `m` with sender `s`, and `s` is correct, then `m` was broadcast by `s`;
+* **Consisency**: if a correct process `p` delivers a message `m`, then every correct process delivers `m`.
+
+There are two algorithms:
+
+* **Authenticated Echo Broadcast**: uses authenticated perfect links, but it requires exchanges a quadratic number of messages;
+* **Signed Echo Broadcast**: uses digital signatures - costly;
+
+So **Byzantine quorums** are used:
+* In the crash failure model, **majority** is enough (`N/2 + 1`) - intersection of two majorities is not empty;
+* In Byzantine quorums, at least one **correct** process is guaranteed to be in the intersection of any two quorums;
+  * Quorum of size - `Q`
+  * Faulty processes - `f`
+  * `N = 3f + 1` - number of processes
+  * `Q = 2f + 1` - size of the quorum
