@@ -8,8 +8,7 @@
 ## Syllabus
 
 * [Parallel Architectures](01-parallel-architectures.md): Shared and Distributed Memory;
-* Program Analysis: Data and Functional Parallelism;
-* OpenMP - Shared Memory Parallelism;
+* [Parallel Programming with **OpenMP**](02-parallel-programming-openmp.md);
 * MPI - Distributed Memory Parallelism;
   * Partitioning, Communication, Agglomeration, Mapping, and Load Balancing;
 * Analysis of Parallel Programs;
