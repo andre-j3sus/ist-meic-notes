@@ -61,7 +61,11 @@ Specification:
 There are two algorithms:
 
 * **Authenticated Echo Broadcast**: uses authenticated perfect links, but it requires exchanges a quadratic number of messages;
+  * 1st round: sender disseminates msg to all processes;
+  * 2nd round: processes echo the message to all processes;
+  * Deliver only when received more than a quorum of echoes;
 * **Signed Echo Broadcast**: uses digital signatures - costly;
+  * Witnesses authenticate a request not by sending an echo, but by signing the request.
 
 So **Byzantine quorums** are used:
 * In the crash failure model, **majority** is enough (`N/2 + 1`) - intersection of two majorities is not empty;
@@ -70,3 +74,12 @@ So **Byzantine quorums** are used:
   * Faulty processes - `f`
   * `N = 3f + 1` - number of processes
   * `Q = 2f + 1` - size of the quorum
+
+### Byzantine Reliable Broadcast
+
+Specification:
+
+The first 4 properties are the same as the ones for the Byzantine Consistent Broadcast, with the addition of:
+
+* **Totality**: if some message is delivered by any correct process, every correct process eventually delivers a message.
+  * Totality + Consistency are equivalent to Agreement of the Reliable Broadcast in the crash fault model.
