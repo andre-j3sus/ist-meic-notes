@@ -88,7 +88,49 @@ There are several types of **OpenMP** directives:
   * `firstprivate(list)` - variables are private, but initialized with the value of the original variable;
   * `lastprivate(list)` - variables are private, but the value of the last iteration is copied to the original variable;
 * **Synchronization** directives:
-  * Critical section: `#pragma omp critical`;
-  * Atomic operation: `#pragma omp atomic`;
-  * Barrier: `#pragma omp barrier`;
-  * Ordered: `#pragma omp ordered`.
+  * Critical section: `#pragma omp critical` - ensures that only one thread at a time can execute the code inside the block;
+    * Uses locks implicitly - OpenMP provides a way to define locks explicitly: `omp_init_lock`, `omp_destroy_lock`, `omp_set_lock`, `omp_unset_lock`;
+    * Explicit use of locks is less clean, but more prone than critical sections, but is more flexible;
+  * Atomic operation: `#pragma omp atomic` - ensures that the operation is executed atomically - read and write operations are atomic;
+  * Barrier: `#pragma omp barrier` - all threads wait for the others to reach the barrier;
+  * Ordered: `#pragma omp ordered`;
+  * Master: `#pragma omp master` - only the master thread executes the code inside the block;
+  * Single: `#pragma omp single` - only one thread executes the code inside the block;
+
+There is also the **reduction** clause, which is used to perform a reduction operation on a variable:
+
+```c
+#pragma omp parallel for reduction(+:sum)
+for (i = 0; i < N; i++) {
+    sum += a[i];
+}
+```
+
+* The `reduction` clause specifies the operation to be performed on the variable;
+* `reduction(op:variable)` - `op` is the reduction operation (`+`, `-`, `*`, `&`, `|`, `^`, `&&`, `||`, `min`, `max`), and `variable` is the variable to be reduced;
+
+The `schedule` clause is used to specify how the iterations of a loop are divided among the threads:
+
+```c
+#pragma omp parallel for schedule(static, chunk)
+for (i = 0; i < N; i++) {
+    a[i] = b[i] + c[i];
+}
+```
+
+* `schedule(static, chunk)` - divides the iterations into chunks of size `chunk`, and assigns each chunk to a thread;
+* `schedule(dynamic, chunk)` - assigns a chunk of iterations to a thread, and when the thread finishes, it gets another chunk;
+* `schedule(guided, chunk)` - similar to `dynamic`, but the chunk size decreases over time;
+* `schedule(runtime)` - the schedule type and chunk size are determined at runtime - can be set with the `OMP_SCHEDULE` environment variable;
+* `schedule(auto)` - the compiler determines the schedule type and chunk size;
+
+The `collapse` clause is used to collapse nested loops into a single loop:
+
+```c
+#pragma omp parallel for collapse(2)
+for (i = 0; i < N; i++) {
+    for (j = 0; j < M; j++) {
+        a[i][j] = b[i][j] + c[i][j];
+    }
+}
+```
