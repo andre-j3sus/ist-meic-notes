@@ -134,3 +134,32 @@ for (i = 0; i < N; i++) {
     }
 }
 ```
+
+---
+
+### Tasks
+
+* There are two main work sharing directives:
+  * `parallel for`
+  * `parallel sections`
+  * These directives always occur within a `parallel` region, and are both **synchronous**;
+  * This do not create new threads, just divides the execution of the enclosed code region among the members of the team;
+* The `task` directive allows for the definition of tasks to be performed which are **added to a pool and eventually executed by a thread**;
+* The execution order is not guaranteed, but is possible to specify a `priority` clause;
+* Tasks are guaranteed to have completed at:
+  * Thread barriers;
+  * **Task barriers**: `#pragma omp taskwait`;
+* Contrary to other directives, variables in scope become `firstprivate` for the task;
+* A `depend` clause can be used to **specify dependencies** between tasks:
+  * `(out: x)` indicates that the task produces a variable `x`;
+  * `(in: y,z)` task can be executed after the tasks that produce variables `y` and `z` have completed;
+  * `(inout: k)`: tasks reads and writes to variable `k` and cannot be executed in parallel with any other task that also produces `k`.
+
+---
+
+### OpenMP Efficiency Rules
+
+* Optimization for **scalability and performance**:
+  * Minimize forks/joins;
+  * Minimize synchronization;
+  * Maximize private/independent data;

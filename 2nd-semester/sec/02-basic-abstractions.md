@@ -4,6 +4,12 @@
 
 A distributed systems model is a combination of **processes**, **communication channels**, and **timing assumptions**. We also need to consider **failure detection** and **leader election**.
 
+Abstractions are used to simplify the complexity of the system, and to allow for the development of dependable services:
+
+* Processes - abstraction of computation;
+* Channels - abstraction of networks;
+* Failure detectors/leader election - abstracting time.
+
 ## Processes
 
 * **Processes**: entities that execute code and communicate with each other;
@@ -66,7 +72,8 @@ upon event <Event1, attr1, attr2, ...> do
 ### Authenticated Perfect Links
 
 * Now we move to the Byzantine model main challenge: Byzantine processes may forge messages, pretending to be other processes. We need to ensure that the sender of a message is who it claims to be;
-* Rely on **Message Authentication Codes (MACs)** to ensure that a message was sent by the claimed sender;
+* Rely on **Message Authentication Codes (MACs)** or **digital signatures** - `sign(m)` and `verify(m, sign(m))`;
+ 
 * **Reliable delivery**: if a correct process `pi` sends a message `m` to a correct process `pj`, then `pj` eventually delivers `m`;
 * **No duplication**: no message is delivered more than once;
 * **Authenticity**: if a correct process `pi` sends a message `m` to a correct process `pj`, then `pj` is sure that `m` was sent by `pi`.
@@ -82,7 +89,12 @@ upon event <Event1, attr1, attr2, ...> do
 * **Eventually synchronous**: the time assumptions hold eventually;
 * **Asynchronous**: no timing assumptions are made.
 
----
+## Abstracting Time
+
+* Many distributed algorithms rely on timing assumptions only to detect
+faulty processes - **timeout-based failure detectors**;
+* **Failure detectors** are abstractions that provide information about the state of the system, on which processes are **faulty** and which are **correct**;
+* **Leader election** identifies a **correct** process to **coordinate** the others.
 
 ## Failure Detection
 
@@ -97,7 +109,10 @@ upon event <Event1, attr1, attr2, ...> do
 * **Eventually perfect failure detector**:
   * **Strong completeness**;
   * **Eventually strong accuracy**: no correct process is suspected eventually;
-  * Implemented by a **heartbeat** mechanism - processes periodically send messages to each other with a timeout; if a process does not receive a heartbeat from another process, it suspects it has crashed.
+  * Implemented by a **heartbeat** mechanism - processes periodically send messages to each other with a timeout; if a process does not receive a heartbeat from another process, it suspects it has crashed;
+  * Can be implemented in an **eventually synchronous** system.
+
+> Detecting arbitrary faults is much harder than detecting crash faults, so failure detectors are usually implemented in the context of crash faults.
 
 ---
 
@@ -105,15 +120,32 @@ upon event <Event1, attr1, attr2, ...> do
 
 * **Leader**: a process that is responsible for coordinating the others;
 * Identifies a correct process;
-* Properties;
-  * **Eventual detection**: every correct process is eventually elected as leader;
-  * **Accuracy**: if a process is a leader, then all previously elected leaders have crashed.
+* Properties:
+  * **Eventual detection**: either there is no correct process, or some correct process is eventually elected as leader;
+  * **Accuracy**: if a process is a leader, then all previously elected leaders have crashed;
+* Leader election is impossible to implement using eventually perfect failure detectors, since if a leader is falsely suspected, a new leader is elected, and **accuracy** is violated;
+* **Eventual leader election**:
+  * **Eventual accuracy**: there is a time after which every correct process trusts some correct process;
+  * **Eventual agreement**: there is a time after which no two correct processes trust different correct processes.
 
 ### Byzantine Leader Election
 
-* **Eventual succession**: if more than `f` correct processes that trust some process `p` complain about `p`, then `p` is eventually not elected as leader;
-* **Putsch resistance**: a correct process does not trust a new leader unless at least one correct process has complained against the previous leader;
-* **Eventual agreement**: there is a time after which no two correct processes trust different processes.
+* Heartbeat-based leader election is not enough to ensure **accuracy** in the Byzantine model, since a Byzantine process can lie about its state;
+* **Trust but verify** approach:
+  * Other processes monitor the leader's behavior and complain if it is not correct, or do not achieved the desired goal after a certain time;
+* Properties:
+  * **Eventual succession**: if more than `f` correct processes that trust some process `p` complain about `p`, then `p` is eventually not elected as leader;
+  * **Putsch resistance**: a correct process does not trust a new leader unless at least one correct process has complained against the previous leader;
+  * **Eventual agreement**: there is a time after which no two correct processes trust different processes.
+
+#### Rotating Byzantine Leader Election
+
+* Uses authenticated perfect links;
+* Assumes `N` processes, `f` of which are Byzantine: `N > 3f`;
+* Algorithm advances in rounds `r`;
+* Leader at round `r` is process having rank `r mod N`;
+  * When a process receives more than `2f` complaints about the leader, it starts a new round;
+* **Eventual agreement**: all correct processes must eventually stop complaining about a correct leader.
 
 ---
 
