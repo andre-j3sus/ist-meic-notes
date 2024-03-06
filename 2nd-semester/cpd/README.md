@@ -7,13 +7,13 @@
 
 ## Syllabus
 
-* [Parallel Architectures](01-parallel-architectures.md): Shared and Distributed Memory;
-* [Parallel Programming with **OpenMP**](02-parallel-programming-openmp.md);
-* MPI - Distributed Memory Parallelism;
-  * Partitioning, Communication, Agglomeration, Mapping, and Load Balancing;
-* Analysis of Parallel Programs;
-  * Performance Metrics, Debugging and Fundamental limitations;
-* Case Studies;
+1. [Parallel Architectures](01-parallel-architectures.md): Shared and Distributed Memory;
+2. [Parallel Programming with **OpenMP**](02-parallel-programming-openmp.md);
+3. MPI - Distributed Memory Parallelism;
+   1. Partitioning, Communication, Agglomeration, Mapping, and Load Balancing;
+4. Analysis of Parallel Programs;
+   1. Performance Metrics, Debugging and Fundamental limitations;
+5. Case Studies;
 
 ---
 
