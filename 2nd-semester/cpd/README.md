@@ -9,11 +9,11 @@
 
 1. [Parallel Architectures](01-parallel-architectures.md): Shared and Distributed Memory;
 2. [Parallel Programming with **OpenMP**](02-parallel-programming-openmp.md);
-3. MPI - Distributed Memory Parallelism;
-   1. Partitioning, Communication, Agglomeration, Mapping, and Load Balancing;
-4. Analysis of Parallel Programs;
+3. [Methodology for Distributed Computing](03-methodology-distributed-computing.md);
+4. [**MPI** Basics](04-mpi-basics.md);
+5. Analysis of Parallel Programs;
    1. Performance Metrics, Debugging and Fundamental limitations;
-5. Case Studies;
+6. Case Studies;
 
 ---
 
