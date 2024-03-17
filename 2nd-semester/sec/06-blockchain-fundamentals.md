@@ -1,4 +1,4 @@
-# Permissionless Blockchains
+# Blockchain Fundamentals
 
 ### Distributed Ledgers
 

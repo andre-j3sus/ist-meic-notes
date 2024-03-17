@@ -7,6 +7,7 @@
 3. [Broadcast Primitives](03-broadcast-primitives.md) - best-effort, reliable, byzantine reliable broadcast;
 4. [Read/Write Protocols](04-read-write-protocols.md) - atomic and regular registers;
 5. [Consensus Protocols](05-consensus-protocols.md) - paxos (crash model) and byzantine fault-tolerant consensus;
-6. [Permissionless Blockchains](06-permissionless-blockchains.md):
+6. [Blockchain Fundamentals](06-blockchain-fundamentals.md) - distributed ledgers, PoW, and PoS;
    1. [Bitcoin](06.1-bitcoin.md) - PoW, transactions, and blocks;
-   2. [Ethereum](06.2-ethereum.md);
+   2. [Ethereum](06.2-ethereum.md) - PoS, account model, gas, EVM;
+   3. [Solidity](06.3-solidity.md) - smart contracts;
