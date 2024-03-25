@@ -11,3 +11,4 @@
    1. [Bitcoin](06.1-bitcoin.md) - PoW, transactions, and blocks;
    2. [Ethereum](06.2-ethereum.md) - PoS, account model, gas, EVM;
    3. [Solidity](06.3-solidity.md) - smart contracts;
+7. [Trusted Hardware](07-trusted-hardware.md) -smart cards, TPMs, SGX, TEEs and TDEs;
