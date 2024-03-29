@@ -120,8 +120,9 @@ int main(int argc, char *argv[]) {
 * `MPI_COMM_WORLD` is the default communicator;
 * There are different collective operations:
   * `MPI_Bcast` is used to broadcast a message from one task to all tasks in the communicator;
-  * `MPI_Scatter` is used to distribute the elements of an array to all tasks in the communicator;
-  * `MPI_Gather` is used to gather the elements of an array from all tasks in the communicator;
+  * `MPI_Scatter` is used to distribute the elements of an array to all tasks in the communicator; each process receives a different part of the array;
+  * `MPI_Gather` is used to gather the elements of an array from all tasks in the communicator; each process sends a different part of the array;
+  * `MPI_Allgather` is used to gather the elements of an array from all tasks in the communicator and broadcast the result;
   * `MPI_Reduce` is used to reduce the elements of an array from all tasks in the communicator; `MPI_Allreduce` is used to reduce and broadcast the result; some predefined operations are available: `MPI_SUM`, `MPI_MAX`, `MPI_MIN`, etc;
   * `MPI_Alltoall` is used to exchange data between all tasks in the communicator;
   * `MPI_Barrier` is used to synchronize all tasks in the communicator - no process can leave the barrier until all processes have entered it.

@@ -1,19 +1,15 @@
 # [Parallel and Distributed Computing](https://fenix.tecnico.ulisboa.pt/disciplinas/CPD23/2023-2024/2-semestre)
 
-## Recap
-
-* Computer Architecture;
-* Analysis of Algorithms;
-
 ## Syllabus
 
 1. [Parallel Architectures](01-parallel-architectures.md): Shared and Distributed Memory;
 2. [Parallel Programming with **OpenMP**](02-parallel-programming-openmp.md);
-3. [Methodology for Distributed Computing](03-methodology-distributed-computing.md);
+3. [Methodology for Distributed Computing](03-methodology-distributed-computing.md) - Foster's Methodology;
 4. [**MPI** Basics](04-mpi-basics.md);
-5. Analysis of Parallel Programs;
-   1. Performance Metrics, Debugging and Fundamental limitations;
-6. Case Studies;
+5. [Analysis of Parallel Programs](05-analysis-parallel-programs.md) - performance analysis, matrix-vector multiplication;
+6. [**MPI** Advanced Topics](06-mpi-advanced-topics.md) - OpenMP and MPI hybrid programming, load balancing and termination detection;
+7. [Parallel Numerical Algorithms](07-parallel-numerical-algorithms.md);
+8. [Search, Monte Carlo and Sorting Algorithms](08-search-monte-carlo-sorting.md).
 
 ---
 

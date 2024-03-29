@@ -82,11 +82,12 @@ There are several types of **OpenMP** directives:
   * Parallel task: `#pragma omp task`;
 * **Data environment** directives (in OpenMP, all variables are shared by default, and are visible to all threads, with some exceptions):
   * Shared data: `#pragma omp shared` - specifies that a variable is shared;
-  * Private data: `#pragma omp private` - creates a private copy of the variable for each thread;
+  * Private data: `#pragma omp private` - creates a private copy of the variable for each thread - the value **undefined**;
+  * `firstprivate(list)` - variables are private, but **initialized** with the value of the original variable;
+  * `lastprivate(list)` - variables are private, but the value of the last iteration is **copied to the original variable**;
   * Thread-local data: `#pragma omp threadprivate` - creates a private copy of the variable for each thread, but the variable is shared between all threads - `copyin` clause can be used to initialize the variable;
   * Reduction: `#pragma omp reduction`;
-  * `firstprivate(list)` - variables are private, but initialized with the value of the original variable;
-  * `lastprivate(list)` - variables are private, but the value of the last iteration is copied to the original variable;
+  
 * **Synchronization** directives:
   * Critical section: `#pragma omp critical` - ensures that only one thread at a time can execute the code inside the block;
     * Uses locks implicitly - OpenMP provides a way to define locks explicitly: `omp_init_lock`, `omp_destroy_lock`, `omp_set_lock`, `omp_unset_lock`;
@@ -96,6 +97,10 @@ There are several types of **OpenMP** directives:
   * Ordered: `#pragma omp ordered`;
   * Master: `#pragma omp master` - only the master thread executes the code inside the block;
   * Single: `#pragma omp single` - only one thread executes the code inside the block;
+    * The `nowait` clause can be used to avoid the implicit barrier at the end of the block;
+    * The `copyprivate(list)` clause can be used to update all copies of the variables in the list with the value of the original variable;
+
+* **Conditional Parallelism**: `#pragma omp if` - specifies a condition that must be true for the parallel region to be created; 
 
 There is also the **reduction** clause, which is used to perform a reduction operation on a variable:
 
@@ -109,6 +114,8 @@ for (i = 0; i < N; i++) {
 * The `reduction` clause specifies the operation to be performed on the variable;
 * `reduction(op:variable)` - `op` is the reduction operation (`+`, `-`, `*`, `&`, `|`, `^`, `&&`, `||`, `min`, `max`), and `variable` is the variable to be reduced;
 
+### Load Balancing - Scheduling
+
 The `schedule` clause is used to specify how the iterations of a loop are divided among the threads:
 
 ```c
@@ -119,6 +126,7 @@ for (i = 0; i < N; i++) {
 ```
 
 * `schedule(static, chunk)` - divides the iterations into chunks of size `chunk`, and assigns each chunk to a thread;
+  * If `chunk` is not specified, the compiler determines the chunk size: `chunk = ceil(N / number_of_threads)`;
 * `schedule(dynamic, chunk)` - assigns a chunk of iterations to a thread, and when the thread finishes, it gets another chunk;
 * `schedule(guided, chunk)` - similar to `dynamic`, but the chunk size decreases over time;
 * `schedule(runtime)` - the schedule type and chunk size are determined at runtime - can be set with the `OMP_SCHEDULE` environment variable;

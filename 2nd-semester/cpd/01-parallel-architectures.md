@@ -17,6 +17,14 @@
 
 * Memory should be **fast**, **large**, and **cheap**;
   * Solution: **Memory Hierarchy** - A set of storage devices with different capacities, costs, and access times;
+
+| Memory Level    | Access Time | Capacity |
+| --------------- | ----------- | -------- | 
+| **Registers**   | < 1 ns      | 1 KB     | 
+| **Cache**       | 2 ns        | 1 MB     |
+| **Main Memory** | 10 ns       | 1 GB     |
+| **Disk**        | 10 ms       | 1 TB     | 
+
 * **Registers** - Fastest, smallest, and most expensive;
   * Store the **operands** and **results** of the instructions;
 * **Cache** - Faster, smaller, and more expensive;
