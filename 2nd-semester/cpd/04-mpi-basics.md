@@ -127,6 +127,15 @@ int main(int argc, char *argv[]) {
   * `MPI_Alltoall` is used to exchange data between all tasks in the communicator;
   * `MPI_Barrier` is used to synchronize all tasks in the communicator - no process can leave the barrier until all processes have entered it.
 
+| Collective Operation | Complexity  |
+| -------------------- | ----------- |
+| `MPI_Bcast`          | $O(\log p)$ |
+| `MPI_Scatter`        | $O(p)$      |
+| `MPI_Gather`         | $O(p)$      |
+| `MPI_Allgather`      | $O(p)$      |
+| `MPI_Reduce`         | $O(\log p)$ |
+| `MPI_Allreduce`      | $O(\log p)$ |
+
 ---
 
 ## Benchmarking Code

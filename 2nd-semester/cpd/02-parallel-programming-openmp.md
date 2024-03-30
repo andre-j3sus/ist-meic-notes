@@ -78,6 +78,7 @@ There are several types of **OpenMP** directives:
 * **Parallelization** directives:
   * Parallel region: `#pragma omp parallel` -  creates N parallel threads, that execute the code inside the block, and wait for the other threads to finish at the end of the block;
   * Parallel loop: `#pragma omp parallel for [clauses]` - parallelizes the execution of a loop; each thread executes a subset of the iterations, and all threads synchronize at the end of the loop;
+    * `nowait` clause can be used to avoid the implicit barrier at the end of the loop;
   * Parallel sections: `#pragma omp parallel sections` - divides the code into sections, each executed by a different thread;
   * Parallel task: `#pragma omp task`;
 * **Data environment** directives (in OpenMP, all variables are shared by default, and are visible to all threads, with some exceptions):
@@ -93,6 +94,7 @@ There are several types of **OpenMP** directives:
     * Uses locks implicitly - OpenMP provides a way to define locks explicitly: `omp_init_lock`, `omp_destroy_lock`, `omp_set_lock`, `omp_unset_lock`;
     * Explicit use of locks is less clean, but more prone than critical sections, but is more flexible;
   * Atomic operation: `#pragma omp atomic` - ensures that the operation is executed atomically - read and write operations are atomic;
+    * Usually faster than critical sections, but only supports simple operations;
   * Barrier: `#pragma omp barrier` - all threads wait for the others to reach the barrier;
   * Ordered: `#pragma omp ordered`;
   * Master: `#pragma omp master` - only the master thread executes the code inside the block;
@@ -171,3 +173,5 @@ for (i = 0; i < N; i++) {
   * Minimize forks/joins;
   * Minimize synchronization;
   * Maximize private/independent data;
+
+> **False Sharing**: occurs when **different threads modify different variables that happen to be on the same cache block**, causing the cache block to be **invalidated and reloaded**, even though the variables are independent.
