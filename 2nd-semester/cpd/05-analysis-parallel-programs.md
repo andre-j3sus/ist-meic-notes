@@ -59,12 +59,10 @@
 * **Scalability** of a parallel system measures the ability to **increase performance as the number of processors increases**;
 * A scalable system **maintains efficiency** as the number of processors increases;
 * **Isoefficiency** is a way to **measure scalability**;
-* **Total overhead**: $\T0(n, p) = (p - 1) \cdot \sigma(n) + p \cdot \kappa(n, p)$;
+* **Total overhead**: $T0(n, p) = (p - 1) \cdot \sigma(n) + p \cdot \kappa(n, p)$;
 * **Efficiency**: $\epsilon(n, p) = \frac{speedup(n, p)}{p}$;
 * **Isoefficiency relation**: To **maintain the same level of efficiency**, as the **number of processors increases**, the **problem size must increase** such that: $T(n, 1) \geq T0(n, p) \cdot C(n, p)$;
   * $T(n, 1)$ is the **execution time** for a **single processor**;
   * $C(n, p) = \frac{\epsilon(n, p)}{1 - \epsilon(n, p)}$;
 * **Scalability function** indicates how **memory usage per processor must increase** to **maintain the same level of efficiency**: $M(CT0(n, p)) / p$;
-  * $M(n)$ is the **memory usage** for a **single processor**;
-  * If is **constant**, the system is **perfectly scalable**;
-  * If **increases**, the system is **not scalable**.
+  * $M(n)$ is the **memory usage** for a **single processor**.

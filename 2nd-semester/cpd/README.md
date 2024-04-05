@@ -26,7 +26,7 @@
 * **Memory coherence**: all processors see the same value for a memory location - **access behavior of a single memory location**;
   * **Cache coherence** protocols keep track of the state of the shared blocks of data;
     * **Directory-based**: state of each shared block kept in a centralized location; state can be **uncached**, **exclusive** or **shared**;
-    * **Snooping**: each cache has the sharing status of each block it stores, and monitors (snoops) the bus for changes; **invalidate protocol** (where the block is invalidated in all caches except the one that has the most recent copy) or **update protocol** (where the block is updated in all caches - **broadcast**);
+    * **Snooping**: each cache has the sharing status of each block it stores, and monitors (snoops) the bus for changes; **invalidate protocol** (processor updates the block and sends an invalidate message to all other caches) or **update protocol** (processor updates the block and **broadcasts** the update to all other caches); **invalidate** is more efficient because of the lower bandwidth required;
 * **Memory consistency**: all processors see the same order of memory accesses - **interaction between different memory locations**;
   * Sequential consistency: all processors see the same order of writes;
 * **Principle of locality**: programs tend to access a small portion of the address space at any given time - **caches are used to exploit this principle**;
@@ -74,7 +74,7 @@ There are two main types of parallel architectures:
     * `copyprivate`: data is private to each thread, but initialized with the value of the original data;
     * `#pragma omp master`: only the master thread executes the block of code;
     * ⚠️ Can cause **deadlocks** if not used correctly, e.g. use a parallel for inside a single or master block;
-  * `#pragma omp task`: create a task that can be executed **asynchronously**; the task is added to a queue/pool and executed by a thread - **flexible parallelism**;
+  * `#pragma omp task`: create a task that can be executed **asynchronously**; the task is added to a queue/pool and executed by a thread - **flexible way for irregular parallelism**;
     * ⚠️ Order not guaranteed;
     * `#pragma omp taskwait`: wait for all tasks to finish;
     * Contrary to other directives, variables inside the task are **firstprivate** by default;
@@ -171,39 +171,41 @@ There are two main types of parallel architectures:
 * $n$: problem size;
 * $p$: number of processors;
 * $\sigma(n)$: **serial** time to solve a problem of size $n$;
-* $\theta(n)$: **parallel** time to solve a problem of size $n$;
+* $\phi(n)$: **parallel** time to solve a problem of size $n$;
 * $\kappa(n, p)$: **communication** time to solve a problem of size $n$ on $p$ processors;
 * $T(n, p)$: **total** time to solve a problem of size $n$ on $p$ processors.
-  * $T(n, p) = \sigma(n) + \frac{\theta(n)}{p} + \kappa(n, p)$.
-  * $T(n, 1) = \sigma(n) + \theta(n)$ - **sequential execution**.
+  * $T(n, p) = \sigma(n) + \frac{\phi(n)}{p} + \kappa(n, p)$.
+  * $T(n, 1) = \sigma(n) + \phi(n)$ - **sequential execution**.
 
 * **Speedup**: measure how much faster a program runs on `p` processors compared to `1` processor - sequential execution.
-  * $\psi(n, p) = \frac{T(n, 1)}{T(n, p)} = \frac{\sigma(n) + \theta(n)}{\sigma(n) + \frac{\theta(n)}{p} + \kappa(n, p)}$;
+  * $\psi(n, p) = \frac{T(n, 1)}{T(n, p)} = \frac{\sigma(n) + \phi(n)}{\sigma(n) + \frac{\phi(n)}{p} + \kappa(n, p)}$;
 * **Efficiency**: measure the utilization of the available processors;
   * $\epsilon(n, p) = \frac{\psi}{p}$;
   * $0 \leq \epsilon(n, p) \leq 1$;
 * **Amdahl's Law**: speedup is **limited** by the fraction of the program that **cannot be parallelized**;
-  * $f$: fraction of the program that cannot be parallelized - $f = \frac{\sigma(n)}{\sigma(n) + \theta(n)}$;
+  * $f$: fraction of the program that cannot be parallelized - $f = \frac{\sigma(n)}{\sigma(n) + \phi(n)}$;
   * $\psi(n, p) \leq \frac{1}{(f) + \frac{1 - f}{p}}$;
   * **Optimistic** - neglects parallelization overheads;
   * **Strong scaling** - **problem size is fixed**, and the number of processors is increased;
-  * **Ahmdal's Effect**: $k(n,p)$ has in general lower complexity than $\theta(n) / p$, so as $n$ increases, speedup increases;
+  * **Ahmdal's Effect**: $k(n,p)$ has in general lower complexity than $\phi(n) / p$, so as $n$ increases, speedup increases;
 * **Gustafson-Barsis' Law**: speedup is **limited** by the fraction of the program that **can be parallelized**;
-  * $s$: fraction of the program that can be parallelized - $s = 1 - f = \frac{\sigma(n)}{\sigma(n) + \frac{\theta(n)}{p}}$;
+  * $s$: fraction of the program that can be parallelized - $s = 1 - f = \frac{\sigma(n)}{\sigma(n) + \frac{\phi(n)}{p}}$;
   * $\psi(n, p) \leq p + s(1 - p)$;
   * **Weak scaling** - **problem size is increased** proportionally to the number of processors - **scaled speedup**;
   
 > ⚠️ Both **Amdahl's Law** and **Gustafson-Barsis' Law** calculate the same speedup, but from different perspectives.
 
 * **Karp-Flatt Metric**: measures the **scalability** of a parallel algorithm;
-  * **Experimentally determined serial fraction** represents the fraction of the original program that cannot be parallelized with respect to the sequential execution time: $e(n, p) = \frac{\sigma(n) + \kappa(n, p)}{\sigma(n) + \theta(n)} = \frac{\frac{1}{\psi(n, p)} - \frac{1}{p}}{1 - \frac{1}{p}}$;
+  * **Experimentally determined serial fraction** represents the fraction of the original program that cannot be parallelized with respect to the sequential execution time: $e(n, p) = \frac{\sigma(n) + \kappa(n, p)}{\sigma(n) + \phi(n)} = \frac{\frac{1}{\psi(n, p)} - \frac{1}{p}}{1 - \frac{1}{p}}$;
   * If its constant - **large serial fraction**;
   * If increases - **overhead not negligible**.
 * **Isoefficiency**: measure the **scalability** of a parallel algorithm;
   * **Scalability**: the ability of a parallel algorithm to solve larger problems in the same time, or the same problem in less time, as the number of processors increases;
   * **Isoefficiency relation**: to maintain the same level of efficiency as the number of processors increases, the problem size must increase such that: $T(n, 1) \geq C \cdot T0(n, p)$, where $C$ is a constant;
   * $C = \frac{\epsilon(n, p)}{1 - \epsilon(n, p)}$;
-  * **Scalability function**: $\frac{M(C \cdot T0(n, p))}{p}$ indicates how memory usage per processor must increase to maintain the same level of efficiency.
+  * $T0(n, p) = (p - 1) \cdot \sigma(n) + p \cdot \kappa(n, p)$;
+  * Simplify until $n \geq f(p)$;
+  * **Scalability function**: $\frac{M(f(p))}{p}$ indicates how memory usage per processor must increase to maintain the same level of efficiency.
 
 ### Other Stuff
 
