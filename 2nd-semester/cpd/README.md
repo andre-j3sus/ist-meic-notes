@@ -211,8 +211,16 @@ There are two main types of parallel architectures:
 
 #### Load Balancing
 
-* **Static load balancing**: workload is divided at the beginning and does not change;
-* **Dynamic load balancing**: workload is divided at runtime and can change; can be **centralized** one process (master) is responsible for assigning tasks from a **queue**, or **decentralized** each process is responsible for assigning tasks;
+* **Static load balancing**: workload is divided at the **beginning** and **does not change**;
+* **Dynamic load balancing**: workload is divided at runtime and can change; 
+  * **Centralized**: one process (master) is responsible for assigning tasks from a **queue**: **work poll** model;
+  * **Decentralized**: all processes are equal;
+    * Can be implemented from extending the work pool with a **tree** model, where a global master distributes tasks to **second-level masters**, that distribute tasks to workers; more levels means more decentralization;
+    * **Fully distributed work pool**: each process starts with a given number of tasks, but may send/receive tasks;
+      * **Receiver-initiated**: processes request tasks from other processes, when as a few or no tasks are left;
+      * **Sender-initiated**: processes send tasks to other processes, when they have too many tasks.
+
+> **Dynamic load balancing** is used when the **workload is not known in advance** or when the **workload changes over time**, however, it has **higher overhead** due to task management.
 
 #### Termination Detection
 
