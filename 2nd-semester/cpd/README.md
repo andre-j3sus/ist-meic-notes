@@ -149,7 +149,8 @@ There are two main types of parallel architectures:
   * `MPI_Testall(count, requests, flag, statuses)`: test if all requests have completed;
   * `MPI_Cancel(request)`: cancel a request;
   * `MPI_Waitany`, `MPI_Testany`, `MPI_Waitsome`, `MPI_Testsome` are also available;
-  * `MPI_Probe(source, tag, status)`: blocks until the message is received, but still needs the `MPI_Recv` to receive the message; `MPI_Iprobe` is the non-blocking version;
+  * `MPI_Probe(source, tag, status)`: blocks until the message is received, but still needs the `MPI_Recv` to receive the message - similar to `MPI_Wait`, but does not receive the message; 
+  *  `MPI_Iprobe` is the non-blocking version - similar to `MPI_Test`;
 * **Collective operations**:
   * `MPI_Bcast(buffer, count, datatype, root, comm)` - broadcast data to all processes; root indicates which process sends the data (from `buffer`);
   * `MPI_Scatter(sendbuffer, sendcount, senddatatype, recvbuffer, recvcount, recvdatatype, root, comm)` - scatter data from one process to all processes; root indicates which process sends the data (from `sendbuffer`);
@@ -163,6 +164,19 @@ There are two main types of parallel architectures:
     * `MPI_Oper` can be `MPI_SUM`, `MPI_PROD`, `MPI_MIN`, `MPI_MAX`...
     * `MPI_Allreduce(indata, outdata, count, type, op, comm)`;
 * `MPI_Barrier` is s synchronization barrier.
+
+The following is a table containing the complexity of the MPI collective operations.
+Consider that $n$ is the number of elements in the send buffer, $p$ is the number of processes, and $\alpha$ is the latency of the network, and $\beta$ is the cost of sending one byte (bandwidth).
+
+| Collective Operation | Complexity                      |
+| -------------------- | ------------------------------- |
+| `MPI_Bcast`          | $O(\alpha \log{p} + \beta n)$   |
+| `MPI_Reduce`         | $O(\alpha \log{p} + \beta n)$   |
+| `MPI_Allreduce`      | $O(\alpha \log{p} + \beta n)$   |
+| `MPI_Scatter`        | $O(\alpha \log{p} + \beta p n)$ |
+| `MPI_Gather`         | $O(\alpha \log{p} + \beta p n)$ |
+| `MPI_Allgather`      | $O(\alpha \log{p} + \beta p n)$ |
+| `MPI_Alltoall`       | $O(p(\alpha + \beta n))$        |
 
 ### Performance Analysis
 
@@ -183,13 +197,13 @@ There are two main types of parallel architectures:
   * $\epsilon(n, p) = \frac{\psi}{p}$;
   * $0 \leq \epsilon(n, p) \leq 1$;
 * **Amdahl's Law**: speedup is **limited** by the fraction of the program that **cannot be parallelized**;
-  * $f$: fraction of the program that cannot be parallelized - $f = \frac{\sigma(n)}{\sigma(n) + \phi(n)}$;
+  * $f$: **sequential fraction of a serial program** - $f = \frac{\sigma(n)}{\sigma(n) + \phi(n)}$;
   * $\psi(n, p) \leq \frac{1}{(f) + \frac{1 - f}{p}}$;
   * **Optimistic** - neglects parallelization overheads;
   * **Strong scaling** - **problem size is fixed**, and the number of processors is increased;
   * **Ahmdal's Effect**: $k(n,p)$ has in general lower complexity than $\phi(n) / p$, so as $n$ increases, speedup increases;
 * **Gustafson-Barsis' Law**: speedup is **limited** by the fraction of the program that **can be parallelized**;
-  * $s$: fraction of the program that can be parallelized - $s = 1 - f = \frac{\sigma(n)}{\sigma(n) + \frac{\phi(n)}{p}}$;
+  * $s$: **sequential fraction of a parallel program** - $s = 1 - f = \frac{\sigma(n)}{\sigma(n) + \frac{\phi(n)}{p}}$;
   * $\psi(n, p) \leq p + s(1 - p)$;
   * **Weak scaling** - **problem size is increased** proportionally to the number of processors - **scaled speedup**;
   
@@ -206,6 +220,14 @@ There are two main types of parallel architectures:
   * $T0(n, p) = (p - 1) \cdot \sigma(n) + p \cdot \kappa(n, p)$;
   * Simplify until $n \geq f(p)$;
   * **Scalability function**: $\frac{M(f(p))}{p}$ indicates how memory usage per processor must increase to maintain the same level of efficiency.
+
+#### Matrix-Vector Multiplication
+
+* **Row-wise decomposition**: each process gets a row of the matrix;
+  * **Allgather** used;
+* **Column-wise decomposition**: each process gets a column of the matrix;
+  * **Alltoall** used;
+* **Checkerboard decomposition**: each process gets a block of the matrix;
 
 ### Other Stuff
 
