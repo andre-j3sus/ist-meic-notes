@@ -209,7 +209,7 @@ Consider that $n$ is the number of elements in the send buffer, $p$ is the numbe
   
 > ⚠️ Both **Amdahl's Law** and **Gustafson-Barsis' Law** calculate the same speedup, but from different perspectives.
 
-* **Karp-Flatt Metric**: measures the **scalability** of a parallel algorithm;
+* **Karp-Flatt Metric**: measures the **scalability** of a parallel algorithm - helps to **determine the cause of the parallel inefficiency**;
   * **Experimentally determined serial fraction** represents the fraction of the original program that cannot be parallelized with respect to the sequential execution time: $e(n, p) = \frac{\sigma(n) + \kappa(n, p)}{\sigma(n) + \phi(n)} = \frac{\frac{1}{\psi(n, p)} - \frac{1}{p}}{1 - \frac{1}{p}}$;
   * If its constant - **large serial fraction**;
   * If increases - **overhead not negligible**.
