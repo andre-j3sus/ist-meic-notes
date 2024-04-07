@@ -234,11 +234,14 @@ There are two main types of parallel architectures:
 ### Parallel Numerical Algorithms
 
 * Methods to solve linear systems:
-  * **Direct methods**: **Gaussian elimination** and **LU decomposition**;
-  * **Iterative methods**: Relaxation methods, **Jacobi** and **Gauss-Seidel**;
+  * **Direct methods**: solution is sought directly, at once;
+    * **Gaussian elimination** and **LU decomposition**;
+  * **Iterative methods**: give an initial guess and improve it iteratively;
+    * Relaxation methods, **Jacobi** and **Gauss-Seidel**;
+    * Gauss-Seidel converges faster than Jacobi;
 * Linear second-order PDEs:
   * **Finite Difference Method**;
-  * Ghost points.
+  * **Ghost points** - memory locations used to store redundant copies of data, held by neighboring processors, to facilitate communication between processors;
 
 ### Combinatorial Search, Monte Carlo Methods and Parallel Sort
 
@@ -251,13 +254,13 @@ There are two main types of parallel architectures:
 * **Monte Carlo methods**: solve a problem using statistical sampling; **randomness** is used to solve deterministic problems; **random sampling** is used to estimate the solution of a problem;
 
 * Parallel Sort
-  * **Hyperquicksort**: parallel version of quicksort;
+  * **Hyperquicksort**: parallel version of quicksort, where **elements are sorted before broadcasting the pivot**;
     * Sort elements in each process;
     * Select median as pivot element and broadcast it;
     * Each process in the upper half swaps with a partner in the lower half;
     * Recursively sort the two halves;
     * **Problem**: **load imbalance** causes low efficiency;
-    * **PSRS** gets sample values from all processes before choosing a median;
+    * **PSRS** **gets sample values from all processes before choosing a median;**
   * **Parallel Sorting by Regular Sampling (PSRS)** - better than hyperquicksort;
     * Each process sorts its share of elements;
     * Each process selects regular samples of sorted list;
