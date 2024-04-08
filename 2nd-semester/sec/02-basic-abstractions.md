@@ -2,7 +2,7 @@
 
 > **Complexity** is masked via abstractions for building dependable services.
 
-A distributed systems model is a combination of **processes**, **communication channels**, and **timing assumptions**. We also need to consider **failure detection** and **leader election**.
+A **distributed systems model** is a combination of **processes**, **communication channels**, and **timing assumptions**. We also need to consider **failure detection** and **leader election**.
 
 Abstractions are used to simplify the complexity of the system, and to allow for the development of dependable services:
 
