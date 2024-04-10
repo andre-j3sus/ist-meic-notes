@@ -33,20 +33,20 @@
     * **Error** - activated by a fault, and if propagates it can lead to a system failure; e.g. code with bug executed;
     * **Failure** - service deviates from correct service; e.g. node crashed;
   * Means:
-    * **Fault prevention** - prevent occurrence of faults;
-    * **Fault prediction** - predict components that can originate faults;
-    * **Fault removal** - reduce number and severity of faults - testing, verification, etc;
+    * **Fault prevention/avoidance** - prevent occurrence of faults;
+    * **Fault prediction/forecasting** - predict components that can originate faults;
+    * **Fault removal** - reduce number and severity of faults - testing, verification, fault injection, ecc;
     * **Fault treatment** - avoid service failures in the presence of faults.
 
 * **Cryptographic primitives**:
-  * **Symmetric primitives** - symmetric cipher and **MACs** (integrity and authenticity);
+  * **Symmetric primitives** - symmetric cipher (confidentiality) and **MACs** (integrity and authenticity);
     * Use of a symmetric/secret key;
-  * **Asymmetric primitives** - asymmetric cipher and **digital signatures** (more costly, but more safe - also ensure **non-repudiation**; also can be verified by third parties);
+  * **Asymmetric primitives** - asymmetric cipher (confidentiality) and **digital signatures** (more costly, but more safe - also ensure **non-repudiation**; also can be verified by third parties);
     * Need of a PKI, with public and private keys;
     * Nowadays, signatures are much faster than in 1999 due to **faster processors** and the use of methods like **elliptic curves**;
   * **Hash**:
-    * One-way - its computational infeasible to revert an hash;
-    * Collision resistant - its computation infeasible to find a pair of different plain texts with the same hash. 
+    * **One-way** - its computational infeasible to revert an hash;
+    * **Collision resistant** - its computation infeasible to find a pair of different plain texts with the same hash. 
 
 > **Safety** - nothing bad should happen; if a **finite trace** does not obey the property, than **no extension** of that will obey;
 >
@@ -84,7 +84,7 @@
 * **Eventual Leader Election**:
   * **Eventual accuracy** - there is a time after which every correct process trusts some correct process;
   * **Eventual agreement** - if a correct process trusts a correct process, then every correct process trusts the same process;
-* **Byzantine Leader Election**:
+* **Byzantine Leader Election** - processes **complain** about the leader, and if more than f processes complain, then the leader is suspected;
   * **Eventual succession** - if more thant f processes suspect a process, then eventually every correct process suspects it;
   * **Putsch resistance** - a correct process does not trust a leader unless at least one correct process has complained about the previous leader;
   * **Eventual agreement** - if a correct process trusts a correct process, then every correct process trusts the same process;
@@ -121,6 +121,8 @@
     * 3rd round - when an achieves a **quorum** of ECHO messages, it broadcasts a **READY** message - deliver only when received a **quorum** of READY messages;
     * **Amplification** - when receiving **f+1** READY messages, the process broadcasts a **READY** message - needed to ensure **totality**;
 
+> **Regular quorums** intersect in at least one replica ($n/2 + 1$), and **Byzantine quorums** intersect in at least one correct replica ($2f + 1$). $2Q -N \geq f + 1$ and $Q <= N - f$.
+
 ### Read/Write 
 
 * **Regular register**:
@@ -143,7 +145,7 @@
 * **Byzantine Fault Tolerant Consensus**:
   * **Weak Byzantine Consensus** - **weak validity** - if all processes are correct, and some process decides v, then v was proposed by some process;
     * If some processes are faulty, any value can be decided;
-  * **Strong Byzantine Consensus** - **strong validity** - a correct process only decides a value proposed by a correct process;
+  * **Strong Byzantine Consensus** - **strong validity** - if all correct processes propose the same value, then no correct process delivers other value; in the presence of faulty processes, a correct process decides the value proposed by some correct process, or a special value **⊥**;
   * **IBFT** is a practical implementation of Byzantine Fault Tolerant Consensus;
 
 ### Blockchain Fundamentals
@@ -159,6 +161,12 @@
     * **Prevents Sybil attacks** - a single entity cannot control the network with more than 50% of the computational power, because it would be too expensive;
   * A block is considered **confirmed** after 6 blocks are added on top of it - decreasing the probability of the suffix chain being replaced;
   * **Mining pools** - miners join forces to increase the probability of solving the puzzle, and share the reward;
+    * **Feather forking attack** - mining pool can censor transactions, and then add a block with the censored transactions to the blockchain - to prevent this, the network should have a **decentralized mining pool**;
+  * A block is considered finalized if its **deep enough** in the blockchain, and the probability of being replaced is very low - however, this has latency;
+  * **Double spending attack** - an attacker sends a transaction to a merchant, and at the same time sends the same transaction to another address controlled by the attacker - the attacker can control the network to add the block with the transaction to the merchant, and then add a block with the transaction to the attacker's address - to prevent this, the merchant should wait for the transaction to be confirmed, and the attacker should control more than 50% of the computational power;
+  * **Selfish mining** - a miner can keep a block secret, and when another miner finds a block, the selfish miner can publish its block, and the network will choose the longest chain;
+  * **UTXO model** - Unspent Transaction Output - a transaction is a list of inputs and outputs, and the inputs are references to previous outputs; **keep track of unspent outputs**;
+    * Is not scalable, because the number of UTXOs grows with the number of transactions - **Utreexo** is a solution to this problem - **merkle tree** - kept by **full nodes** , and **compact state nodes** only keep the **root** of the tree;
 
 > #### Consensus vs PoW
 >
@@ -167,12 +175,12 @@
 >   * **✅ Termination** - eventually a block will be added;
 >   * **❌ Integrity** - a block can be decided twice, because can change due to a fork;
 >   * **❌ Agreement** - due to forks, different nodes can have different views of the blockchain;
->  * **❌ Validity** - a block can be added without being valid, because the PoW is not related to the block content - **only weak validity is guaranteed**.
+>   * **❌ Validity** - a block can be added without being valid, because the PoW is not related to the block content - **only weak validity is guaranteed**.
 
-_TODO: Add information about Double spending attacks, finney attack, Feather-forking attack, selfish mining, UTXO._
 
 * **Ethereum**:
   * Uses **PoS** - **Proof of Stake** - to add a block to the blockchain, a validator must have a stake in the network, and the probability of adding a block is proportional to the stake - **stake is the non-counterfeitable resource**;
+  * **Smart Contracts** - self-executing contracts with the terms of the agreement between buyer and seller being directly written into lines of code - **turing complete**;
   * **Account model** - instead of UTXO, Ethereum uses accounts;
     * **Externally Owned Accounts** - controlled by private keys, and can send transactions;
     * **Contract Accounts** - controlled by code, and can send transactions;
@@ -181,13 +189,14 @@ _TODO: Add information about Double spending attacks, finney attack, Feather-for
     * If there is leftover gas, it is **refunded**;
   * **EVM** - Ethereum Virtual Machine - a Turing complete machine that executes smart contracts;
   * **Solidity** - a high-level language to write smart contracts;
+  * **Reentrancy attack** - an attacker can call a contract that calls back the attacker's contract, and the attacker can call the contract again, and so on - to prevent this, use **non-reentrant locks**;
 
 ### Trusted Hardware
 
 * **Smart Cards** - a secure and tamper-resistant device that can store and process information; 
   * **ROM** - card OS;
   * **RAM** - volatile memory;
-  * **EEPROM** - **cryptographic keys, PINs, biometric data, balance, etc**;
+  * **EEPROM** - **cryptographic keys, PINs, biometric data, balance, etc** - non-volatile memory that is mostly read-only, only can be written a few times;
   * **Side-channel attacks** - attacker can measure power consumption, heat, etc, to extract information - **power analysis attack** consists of measuring the power consumption of the card while executing a cryptographic operation, and with that, the attacker can extract the key - a **countermeasure** is to add random artificial noise;
 * **TPMs** - Trusted Platform Module - a secure **crypto-processor** that can store cryptographic keys and perform cryptographic operations - **ensure that machine is in a trusted state**;
   * Used to **secure boot** - ensure that the machine boots from a trusted source;
@@ -197,3 +206,5 @@ _TODO: Add information about Double spending attacks, finney attack, Feather-for
   * Allow for strong **confidentiality and integrity** guarantees;
   * **SGX Enclaves** - Software Guard Extensions - a secure area of the main memory that can store code in **isolation** (data and code cannot be seen or modified by the OS or other applications), **attestation** (means to prove that the code is running in an enclave), and **sealing** (encrypt data with the enclave's key, and only the enclave can decrypt it);
   * **Replay attack** - is a vulnerability in SGX data sealing, because an attacker can change the sealed data to a previous state, and the enclave will decrypt it, and the application will use the old data;
+
+_Remote attestation is a mechanism in which a host authenticates it's hardware/software configuration to a remote host._
