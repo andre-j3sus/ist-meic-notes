@@ -22,7 +22,7 @@
 
 * **Dependability**: a service is dependable if it is able to work in a way that is justifiably trusted;
   * Attributes:
-    * **Availability** - readiness for correct service;
+    * **Availability** - readiness for correct service - **five nines** - 99.999% availability means 5 minutes of downtime per year - **high availability**;
     * **Reliability** - continuity of correct service;
     * **Safety** - absence of catastrophic consequences for the system;
     * **Confidentiality** - no unauthorized third party observes information;
@@ -67,6 +67,26 @@
 * **Authenticated Perfect Links**: use MACs to sign the message in the send, and verify in the deliver;
   * **APL 1 to APL 3 are the same to PL 1 to PL3**;
   * **APL 4 - Authenticity**: if a correct process pj delivers a message from a correct process pi, then the message it was sent from pi to pj.
+
+* **Perfect Failure Detector**:
+  * **Strong Correctness** - if a process crashes, then eventually every correct process will suspect it;
+  * **Strong Accuracy** - no correct process is suspected;
+* **Eventually Perfect Failure Detector**:
+  * **Strong Completeness**;
+  * **Eventual Strong Accuracy** - eventually no correct process is suspected;
+  * Implemented with heartbeats and timeouts, in a **eventually synchronous system**;
+  * Used in broadcasts or consensus protocols.
+
+* **Leader Election**:  
+  * **Eventual detection** - either there is no correct process, or eventually some correct process is elected as leader;
+  * **Accuracy** - if a process is leader, then all previous leaders are faulty;
+* **Eventual Leader Election**:
+  * **Eventual accuracy** - there is a time after which every correct process trusts some correct process;
+  * **Eventual agreement** - if a correct process trusts a correct process, then every correct process trusts the same process;
+* **Byzantine Leader Election**:
+  * **Eventual succession** - if more thant f processes suspect a process, then eventually every correct process suspects it;
+  * **Putsch resistance** - a correct process does not trust a leader unless at least one correct process has complained about the previous leader;
+  * **Eventual agreement** - if a correct process trusts a correct process, then every correct process trusts the same process;
 
 ### Broadcast Primitives
 
@@ -130,6 +150,7 @@
 * **Distributed Ledger** - a database that is shared and synchronized across multiple sites, institutions, or geographies, accessible by multiple people or parties;
 * **Bitcoin**:
   * Uses **PoW** - **Proof of Work** - to add a block to the blockchain, a miner must solve a cryptographic puzzle, that is computationally expensive - miner that solves it first, adds the block, and receives a **reward**;
+    * The miner tries to solve `SHA256(previousBlochHash||digestTxs||pubKey||nonce) < D`, and to adjust the difficulty, the network changes the value of D;
   * **Block** contains a list of transactions, a reference to the previous block, and a **nonce**;
   * Properties of PoW:
     * **Tamperproof** - changing a block requires changing all subsequent blocks, which is computationally expensive;
@@ -166,7 +187,7 @@ _TODO: Add information about Double spending attacks, finney attack, Feather-for
   * **ROM** - card OS;
   * **RAM** - volatile memory;
   * **EEPROM** - **cryptographic keys, PINs, biometric data, balance, etc**;
-  * **Physical attacks** - attacker may make some measurements on the semiconductor - **side-channel attacks** - explores information **leaked** by the device - **power consumption, heat, etc** - a countermeasure can be adding artificial noise;
+  * **Side-channel attacks** - attacker can measure power consumption, heat, etc, to extract information - **power analysis attack** consists of measuring the power consumption of the card while executing a cryptographic operation, and with that, the attacker can extract the key - a **countermeasure** is to add random artificial noise;
 * **TPMs** - Trusted Platform Module - a secure **crypto-processor** that can store cryptographic keys and perform cryptographic operations - **ensure that machine is in a trusted state**;
   * Used to **secure boot** - ensure that the machine boots from a trusted source;
   * **PCR** - Platform Configuration Registers - a set of registers that store the hash of the boot process;
