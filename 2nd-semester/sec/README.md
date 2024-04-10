@@ -43,6 +43,7 @@
     * Use of a symmetric/secret key;
   * **Asymmetric primitives** - asymmetric cipher and **digital signatures** (more costly, but more safe - also ensure **non-repudiation**; also can be verified by third parties);
     * Need of a PKI, with public and private keys;
+    * Nowadays, signatures are much faster than in 1999 due to **faster processors** and the use of methods like **elliptic curves**;
   * **Hash**:
     * One-way - its computational infeasible to revert an hash;
     * Collision resistant - its computation infeasible to find a pair of different plain texts with the same hash. 
@@ -69,8 +70,8 @@
   * **APL 4 - Authenticity**: if a correct process pj delivers a message from a correct process pi, then the message it was sent from pi to pj.
 
 * **Perfect Failure Detector**:
-  * **Strong Correctness** - if a process crashes, then eventually every correct process will suspect it;
-  * **Strong Accuracy** - no correct process is suspected;
+  * **Strong Completeness** - eventually, every process that crashes is permanently suspected by every correct process;
+  * **Strong Accuracy** - no correct process is suspected (no process is suspected unless it has crashed);
 * **Eventually Perfect Failure Detector**:
   * **Strong Completeness**;
   * **Eventual Strong Accuracy** - eventually no correct process is suspected;
