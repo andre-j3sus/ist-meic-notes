@@ -5,8 +5,8 @@
 1. Introduction;
    1. [Introduction to Cloud Computing and Virtualization](./01-1-introduction-to-cloud-computing-and-virtualization.md) - cloud computing, virtualization techniques and abstraction levels;
    2. [Core Emulation Techniques](./01-2-core-emulation-techniques.md) - interpretation and translation techniques;
-   3. [System Virtualization](./01-3-system-virtualization.md);
-2. Infrastructure-as-a-Service
+   3. [System Virtualization](./01-3-system-virtualization.md) - ISA virtualizability, memory virtualization, paravirtualization and hardware support;
+2. [Infrastructure-as-a-Service](./02-infrastructure-as-a-service.md) - Amazon EC2, AWS CloudWatch, AWS Auto Scaling, AWS Elastic Load Balancing;
 3. Platform-as-a-Service
 4. Data-and-Storage as Services (Big-Data)
 5. Scalable Computing (Big-Data Processing)

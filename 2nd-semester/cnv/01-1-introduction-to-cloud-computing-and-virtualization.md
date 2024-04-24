@@ -13,9 +13,21 @@
 
 ### Delivery models
 
-* **Infrastructure as a Service (IaaS)** - rent virtual machines; e.g. Amazon EC2 (**System-level Virtualization**);
-* **Platform as a Service (PaaS)** - rent a platform; e.g. Google App Engine (**Application-level Virtualization**);
-* **Software as a Service (SaaS)** - rent software; e.g. Google Docs (**User-level Virtualization**).
+* **Infrastructure as a Service (IaaS)** - rent virtual machines - **System-level Virtualization**;
+  * User controls the **OS**, storage, network, applications;
+  * User does not control the underlying infrastructure;
+  * e.g. Amazon EC2;
+* **Platform as a Service (PaaS)** - rent a platform - **Application-level Virtualization**;
+  * User does not control the underlying infrastructure;
+  * User only controls deployed apps and configuration settings;
+  * e.g. Google App Engine (Java, Python apps);
+* **Software as a Service (SaaS)** - rent software - **User-level Virtualization**;
+  * Only runs applications developed by the provider;
+  * e.g. Google Docs, Office 365.
+
+<p align="center">
+  <img src="https://kinsta.com/wp-content/uploads/2022/06/1.-SaaS-vs-IaaS-vs-PaaS.png" alt="Cloud Computing Delivery Models" width="500">
+</p>
 
 ### Deployment models
 
