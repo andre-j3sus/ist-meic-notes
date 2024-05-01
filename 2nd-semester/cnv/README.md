@@ -10,7 +10,8 @@
    1. [Amazon Web Services](./02-1-amazon-web-services.md) - EC2, CloudWatch, Auto Scaling, Elastic Load Balancing;
    2. [Microsoft Azure](./02-2-microsoft-azure.md) - Fabric Controller, Hyper-V;
    3. [OpenStack](./02-3-openstack.md) - Nova, Neutron, Swift;
-3. Platform-as-a-Service
+3. Platform-as-a-Service;
+   1. [High-Level Language VMs](./03-1-high-level-language-vms.md) - architecture overview, JVM, bytecode;
 4. Data-and-Storage as Services (Big-Data)
 5. Scalable Computing (Big-Data Processing)
 6. Cross-cutting Issues
