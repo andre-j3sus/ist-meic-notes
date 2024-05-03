@@ -22,3 +22,7 @@ Here are some notes from two courses I took in my bachelor's degree that are rel
 
 * [Systems Virtualization Techniques](https://github.com/andre-j3sus/isel-leic-notes/tree/main/5th-semester/tvs);
 * [Cloud Computing](https://github.com/andre-j3sus/isel-leic-notes/tree/main/6th-semester/cn);
+
+## Labs/Tools
+
+1. [Pin](./labs/01-pin.md) - dynamic binary instrumentation tool;
