@@ -11,7 +11,7 @@
    2. [Microsoft Azure](./02-2-microsoft-azure.md) - Fabric Controller, Hyper-V;
    3. [OpenStack](./02-3-openstack.md) - Nova, Neutron, Swift;
 3. Platform-as-a-Service;
-   1. [High-Level Language VMs](./03-1-high-level-language-vms.md) - architecture overview, JVM, bytecode;
+   1. [High-Level Language VMs](./03-1-high-level-language-vms.md) - architecture overview, JVM, bytecode, security, garbage collection and JIT;
 4. Data-and-Storage as Services (Big-Data)
 5. Scalable Computing (Big-Data Processing)
 6. Cross-cutting Issues
