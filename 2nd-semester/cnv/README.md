@@ -26,3 +26,4 @@ Here are some notes from two courses I took in my bachelor's degree that are rel
 ## Labs/Tools
 
 1. [Pin](./labs/01-pin.md) - dynamic binary instrumentation tool;
+2. [AWS](./labs/02-aws.md) - Amazon Web Services;
