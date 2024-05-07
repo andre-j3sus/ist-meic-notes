@@ -6,7 +6,7 @@
 2. [Fundamentals of Android OS](02-android-fundamentals.md) - Android architecture, activities, services, broadcast receivers, content providers, intents;
 3. [Mobile UI Design](03-mobile-ui-design.md);
 4. [Location Mechanisms](04-location-mechanisms.md) - GPS, Infrared/Ultrasound, 802.11 (WiFi), Cellular Networks;
-5. Privacy using Location-based Services;
+5. [Privacy using Location-based Services](05-privacy-location-based-services.md) - two-tier (PROBE) and three-tier spatial transformations (spatial k-anonymity);
 6. Context-awareness and Adaptability;
 7. Energy in Mobile Environment;
 8. Replication and Consistency in Mobile Environments;
