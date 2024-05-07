@@ -306,3 +306,23 @@ areturn // pops the stack frame and returns the reference to the caller
 <p align="center">
     <img src="imgs/method-inlining.png" alt="Method Inlining" width="400"/>
 </p>
+
+* **✅Advantages**:
+  * **Reduces method call overhead**;
+  * **Increases locality** - reduces cache misses;
+* **❌Disadvantages**:
+  * **Only beneficial for small methods**;
+  * **Increases code size** - can lead to **cache misses**;
+* Inlining in static methods is easy, but most of the methods are instance methods - **virtual methods**: the **target** of `invokevirtual` is determined at runtime;
+  * **Solution**: often the target does not change much:
+    * **Guarded inlining** - inline the **most common target** and add a **check** for the **other targets**;
+    * **Polymorphic inline cache** - **cache** the **target** of the **invokevirtual** instruction.
+
+### Array Bounds Check Elimination
+
+* Array bound checking is very frequent within loops;
+* **Hoist invariant check** checks if the array is within bounds outside the loop:
+
+<p align="center">
+    <img src="imgs/array-bound-check.png" alt="Array Bound Check" width="200"/>
+</p>
