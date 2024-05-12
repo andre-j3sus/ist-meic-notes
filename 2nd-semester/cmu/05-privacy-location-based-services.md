@@ -34,8 +34,8 @@ There are two types of privacy:
 
 * **Dummy locations**: generate a number of redundant queries, to hide the real query;
   * But, the the **resulting trajectories need to mimic realistic movement patterns** - e.g., in a sequence of queries, the user should not teleport from one location to another (in one query send from Lisbon and from Madrid (dummy), and in the next query send from Setubal and from Toledo (dummy - close to Madrid));
-* **PROBE**: an obfuscation system;
-  * In an **offline phase**, an **obfuscated map** is constructed by partitioning the space into a set of disjoint regions suc that the probability of associating each region with a certain feature type is bounded by a given threshold - **obfuscation**;
+* **PROBE**: an obfuscation system - it prevents the **association between users and sensitive locations**;
+  * In an **offline phase**, an **obfuscated map** is constructed by **partitioning the space into a set of disjoint regions** such that the **probability of associating each region with a certain feature type is bounded by a given threshold** - **obfuscation**;
   * Obfuscation may require an additional trusted third party, but in the **online phase**, PROBE is a **two-tier protocol**;
 * **⚠️Limitation**: if a user is situated in a remote location, and issues a query, an attacker who knows that the user is the only one in that area can associate the query with the user - **three-tier protocols solve this issue**.
 
