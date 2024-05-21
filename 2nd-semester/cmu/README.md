@@ -11,4 +11,4 @@
 7. [Energy in Mobile and Ubiquitous Computing](07-energy.md);
 8. [Replication and Consistency in Mobile Environments](08-replication-consistency.md) - consistency models and session consistency;
 9. Execution Offloading;
-10. Augmented Reality.
+10. [Augmented Reality](10-augmented-reality.md) - overview, characteristics, marker-based and feature-based tracking, SLAM;
