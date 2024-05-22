@@ -1,4 +1,4 @@
-# Big-Data Processing: MapReduce
+# MapReduce
 
 * **MapReduce** is a programming model for processing large data sets with a parallel, distributed algorithm on a cluster;
 * It solves typical challenges in parallel and distributed computing:
