@@ -18,7 +18,7 @@
 5. Big-Data Processing
    1. [MapReduce](./05-big-data-processing-mapreduce.md) - MapReduce programming model, examples (Word Count, Page Rank), MapReduce in Hadoop architecture (master, worker nodes, splits, tasktracker and jobtracker);
    2. [Dataflows and Stream Processing](./05-2-dataflows-and-stream-processing.md) - Spark (RDDs, Spark Streaming), Flink;
-6. Cross-cutting Issues
+6. [Cloud Datacenters Design and Operation](./06-cloud-datacenters-design-and-operation.md).
 
 ## Recap
 
