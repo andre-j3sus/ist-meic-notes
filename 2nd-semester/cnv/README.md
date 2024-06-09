@@ -64,7 +64,7 @@ Here are some notes from two courses I took in my bachelor's degree that are rel
 - **Interpretation** is the simplest form of emulation, where the source code is transformed into an **intermediate form** and executed by the host system;
   - **Decode-and-dispatch interpreter** - for each instruction, fetch, decode and dispatch it to an interpreter routine;
   - **Threaded interpretation** - **avoid inefficient control flow**;
-    - **Indirect threaded interpretation** - **reduce number of branches** by duplicating decode-dispatch code, at every instruction;
+    - **Indirect threaded interpretation** - **reduce number of branches** by duplicating decode-dispatch code, at every instruction (remove the loop);
     - **Basic pre-decoding** - **pre-decode** instructions and **save it** in an intermediate form - dispatch table;
     - **Direct threaded interpretation** - replace instruction code with pointers to interpreter routines;
 - **Translation** is a technique to convert the binary code of a program from one ISA to another, instead of having intermediate code - **remove interpretation overhead**;
@@ -107,6 +107,150 @@ Here are some notes from two courses I took in my bachelor's degree that are rel
 
 - **Memory virtualization**
 
+  - **Virtual memory -> Real memory -> Physical memory**: **VM** -> **VMM** -> **Physical memory**;
+  - VMM maintains a real map table: real pages -> physical pages;
+  - Page translation supported by **page table** and **TLB** (Translation Lookaside Buffer);
+    - Page table maintained by the OS and TLB maintained by the HW;
+    - When occurs a page fault (TLB miss), the MMU walks page table to find an entry; If the entry is not found, the OS is called to handle the page fault;
+  - VMM maintains **optimized mapping information**:
+    - **Shadow page table** - one for each process in each guest VM;
+    - **Direct virtual-to-physical mapping**;
+
+- **Performance Enhancement**
+  - **Paravirtualization** - modify the guest OS to make it aware of the virtualization layer;
+    - **Hypercalls** - **trap-and-emulate** for privileged instructions;
+    - Guest OS can issue fewer privileged instructions, reducing the number of traps, replacing them with hypercalls;
+  - **Hardware support** - **Intel VT-x**;
+    - New CPU modes, new instructions, new data structures;
+    - **VT-x** - **VMX root** (full privilege access to HW) and **VMX non-root** (limited control of global resources);
+
 ---
 
 ## Infrastructure-as-a-Service
+
+- User **does not control the underlying infrastructure**, but has **control over the OS, storage, and deployed applications**;
+- **Amazon Web Services:**
+  - **EC2** (Elastic Compute Cloud) - allows users to launch virtual machines on demand;
+    - Choose **region** and **availability zone** - regions do not share resources, and communicate through the internet; there are also **wave-length zones** for ultra-low latency, and **AWS outposts** for on-premises;
+    - **Instance** is a virtual server in the cloud, with an **instance type** (family, generation, size), and a private and a public IP (lifetime of the instance); can also have **Elastic IP** (static IP that is paid for, and can be moved between instances);
+    - Uses **AMI** (Amazon Machine Image) to launch instances, which is a template for the root volume of the instance - you can use a public AMI, or create your own;
+    - CPU measured in **ECU** (Elastic Compute Unit);
+    - Requires **security groups** (firewall rules - only limit inbound traffic - IP rules limit inbound traffic, while group rules limit access to other instances) and **key pairs** (public and private keys);
+  - **SQS** (Simple Queue Service) - message queuing service;
+  - Storage services: **S3** (Simple Storage Service), **EBS** (Elastic Block Store), **DynamoDB** (NoSQL);
+  - **CloudWatch** - monitoring service: basic monitoring (5 minutes interval, free) and detailed monitoring (1 minute interval, paid);
+  - **Auto Scaling** - automatically adjust the number of EC2 instances;
+  - **Elastic Load Balancing** - distribute incoming application traffic across multiple EC2 instances;
+  - Elastic Beanstalk - deploy and manage applications;
+  - Elastic Cache - in-memory data store;
+  - CloudFront - content delivery network;
+  - CloudFormation - infrastructure as code;
+- **Microsoft Azure:**
+  - **Fabric Controller** - manages the lifecycle of VMs; a **node** can be a **physical machine** or a **virtual machine on top of the hypervisor**; nodes run **windows server** with cluster manager, scheduler, cluster monitor and replication;
+  - **Hyper-V** - hypervisor; uses **para-virtualization**;
+  - **Azure Blob Storage** - object storage;
+  - **Azure Queues** - message queuing service;
+- **OpenStack** - open-source software platform for cloud computing;
+  - **Nova** - compute service; connects to hypervisors on compute nodes; it uses:
+    - **Cinder** - block storage;
+    - **Glance** - image service;
+    - Hierarchical structure based on accounts, containers and objects;
+    - CPU overcommit factor ratio is 16:1 and memory overcommit factor ratio is 1.5:1 - memory is less elastic than CPU;
+    - **Filter scheduler** - **filters** (finds suitable hosts using **requirements**) and **weighers** (selects the best host, based on **preferences** and **policies** - all weights are normalized);
+  - **Swift** - object storage;
+  - **Neutron** - networking service; floating IP = elastic IP in AWS;
+  - **Horizon** - dashboard;
+  - Keystone - identity service;
+  - Heat - orchestration service;
+  - Ceilometer - telemetry service.
+
+<p align="center">
+  <img src="./imgs/scaling-archs.png" alt="Scaling Architectures" width="600">
+</p>
+
+---
+
+## Java VM
+
+- Java **virtual ISA** includes:
+  - **Bytecode** - instructions for the JVM;
+  - Pre-defined **data types**;
+    - **Primitive** types: `boolean`, `byte`, `char`, `short`, `int`, `long`, `float`, `double`;
+    - **Reference** types: hold references to objects or null;
+  - **Metadata** - information about classes, methods, fields, etc, in the class file;
+- Data Storage:
+  - For each **thread**:
+    - **PC** (Program Counter) - points to the next instruction to be executed; and other registers;
+    - **Stack (typed)** - contains the **frame** of the method being executed;
+  - **Global**:
+    - **Heap** - contains objects and arrays;
+    - Class file contents, like **constant pool**;
+- Instruction Set:
+  - **Opcode byte + 0 or more operands**;
+  - Operands fetched from the **constant pool**, **local variables**, or **stack**;
+  - Each **primitive type** has its own set of **instructions**: `iadd`(int), `fadd`(float), `dadd`(double), `ladd`(long), ...
+  - Types of instructions:
+    - **Data-movement instructions**:
+      - Pushing constants onto the stack - `iconst_0`, `iconst_1`, ...
+      - Moving values between the stack and local variables - `aload_0`, `istore_1`, ...
+      - Via constant pool - `ldc`, `ldc_w`, `ldc2_w`;
+      - Stack manipulation - `dup`, `swap`, `pop`;
+    - **Functional instructions**: Arithmetic, logical, and comparison operations;
+    - **Control-flow instructions**:
+      - Jumps, conditional jumps - `goto`, `if_icmpeq`, `if_acmpne`, ...
+      - Switches - `tableswitch` (used for `switch` statements with ranges), `lookupswitch` (used for `switch` statements with arbitrary values);
+      - Method invocation - `invokevirtual` (indexes constant pool for method reference, check if arguments match, allocate stack frame of appropriate size, and jump to the method);
+      - `invokestatic`, `invokespecial` (constructors, private methods, or methods of superclass), `invokeinterface`;
+      - Method return - `ireturn`, `freturn`, `dreturn`, `lreturn`, `areturn`, `return` (void return) - pops the stack frame and returns to the caller;
+    - **Others**:
+      - Object creation - `new` (creates a new object and pushes a reference to it onto the stack) - proper creation requires a constructor call;
+      - Field access - `getfield`, `putfield`, `instanceof`, `checkcast`;
+      - Array access, synchronization, exception handling;
+      - `athrow` - throws an exception (`a` stands for any object);
+      - `monitorenter`, `monitorexit` - synchronization;
+  - All data movement is done through the **stack**.
+
+* **Security**
+  - Sandbox model: create a barrier around Java execution environment;
+  - Security enforced by **static and dynamic checks**;
+    - **Static checks** - performed at **load time**: consistency checks (types, references, etc) and integrity checks (**operand stack tracking**, and control transfer);
+    - **Dynamic checks** - performed at **runtime**: check null pointer, array bounds and casting;
+  - **Operand stack tracking** - ensures that the stack is not empty when an instruction requires operands, and that the stack is not full when an instruction pushes operands;
+    - Operand stack at any given point should has the same number of operands, the same types and in the same order, **regardless of the path taken**;
+  - **Security policy enforcer** - checks if the code is allowed to perform certain operations; limitation: **only qualitative checks, not quantitative checks** (excess threads, recursion, CPU usage, etc);
+* **Garbage Collection**
+  - **Mark-and-sweep** algorithm: mark phase (mark all reachable objects), sweep phase (reclaim all unmarked objects); ❌ **fragmentation**;
+  - **Compacting** - move all live objects to one end of the heap, and update all references; ❌ **stop-the-world**;
+  - **Copying** - divide the heap into two semispaces, allocate objects in one space, and copy them to the other space when the first one is full; ❌ high **copying cost**;
+  - **Generational** - divide the heap into generations, and collect the younger generations more frequently than the older ones; ❌ **stop the world**;
+  - **Incremental and concurrent mark-sweep** - mark and sweep in small increments, and allow the application to run concurrently with the GC; tri-color abstraction (white, gray, black);
+
+<p align="center">
+    <img src="imgs/gc-summary.png" alt="GC Summary" width="400"/>
+</p>
+
+- **Emulation engine optimizations**
+  - **Method inlining** - replace small method calls with the method body;
+  - The problem is that the target of virtual calls is not known at compile time;
+    - **Guarded inlining** - inline the most common target, and add a guard to check if the target is the same;
+    - **Polymorphic inline cache** - inline code for a small set of cases.
+
+---
+
+## Platform-as-a-Service
+
+---
+
+## Cloud Storage
+
+---
+
+## Big-Data Processing
+
+### MapReduce
+
+### Streaming
+
+---
+
+## Data Centers Design and Operation
