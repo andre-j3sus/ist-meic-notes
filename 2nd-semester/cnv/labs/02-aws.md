@@ -4,11 +4,11 @@
 
 We can interact with AWS using:
 
-* [AWS Management Console](https://eu-west-3.console.aws.amazon.com/console/home) - remember to select the **region**;
-* [AWS CLI](https://aws.amazon.com/cli/) - a unified tool to manage your AWS services;
-  * Useful to create **scripts** to automate tasks;
-* [AWS SDKs](https://aws.amazon.com/tools/) - for programming languages like Python, Java, Ruby, etc.
-  * We will use the [Java SDK](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/welcome.html) in the labs.
+- [AWS Management Console](https://eu-west-3.console.aws.amazon.com/console/home) - remember to select the **region**;
+- [AWS CLI](https://aws.amazon.com/cli/) - a unified tool to manage your AWS services;
+  - Useful to create **scripts** to automate tasks;
+- [AWS SDKs](https://aws.amazon.com/tools/) - for programming languages like Python, Java, Ruby, etc.
+  - We will use the [Java SDK](https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/welcome.html) in the labs.
 
 ## EC2
 
@@ -56,4 +56,3 @@ ssh -i "key.pem" ec2-user@<public-ip>
 5. Configure the health checks (**Turn on Elastic Balancing health checks**, grace period of **60s**, and enable **CloudWatch** at the additional settings);
 6. Configure the **desired capacity** and the **minimum and maximum size**;
 7. Configure the **scaling policies** (you can create **CloudWatch alarms** and attach them to the scaling policies).
-

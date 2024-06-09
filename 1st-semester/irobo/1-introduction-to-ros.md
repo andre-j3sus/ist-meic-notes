@@ -8,9 +8,9 @@
 
 ## What is ROS?
 
-* Framework for **robot software development**, providing operating system-like functionality on a heterogeneous computer cluster;
-* Works well in **Linux Ubuntu**, but there are bindings to Java, C#, and can be tunneled via web sockets;
-* Large user community.
+- Framework for **robot software development**, providing operating system-like functionality on a heterogeneous computer cluster;
+- Works well in **Linux Ubuntu**, but there are bindings to Java, C#, and can be tunneled via web sockets;
+- Large user community.
 
 ---
 
@@ -22,11 +22,11 @@
 
 ### [Nodes](http://wiki.ros.org/Nodes)
 
-* Modularization in ROS is achieved by separated OS processes called **nodes**;
-* **Node is a process that uses ROS framework**;
-* Nodes may reside in different machines transparently;
-* Nodes get to know each other via [`roscore`](http://wiki.ros.org/roscore), that acts as a **name server**;
-* `ROS_MASTER_URI` environment variable defines the `roscore` location.
+- Modularization in ROS is achieved by separated OS processes called **nodes**;
+- **Node is a process that uses ROS framework**;
+- Nodes may reside in different machines transparently;
+- Nodes get to know each other via [`roscore`](http://wiki.ros.org/roscore), that acts as a **name server**;
+- `ROS_MASTER_URI` environment variable defines the `roscore` location.
 
 <p align="center">
     <img src="./imgs/roscore.png" width="300px" alt="roscore"/>
@@ -34,36 +34,36 @@
 
 ### [Topics](http://wiki.ros.org/Topics)
 
-* The **communication between nodes** is done via **topics**;
-* Publish/subscribe pattern;
-* **Publishers** send messages to a **topic**;
-* Published messages are **broadcasted** to all **subscribers**.
+- The **communication between nodes** is done via **topics**;
+- Publish/subscribe pattern;
+- **Publishers** send messages to a **topic**;
+- Published messages are **broadcasted** to all **subscribers**.
 
 ### [Services](http://wiki.ros.org/Services)
 
-* **Service** is a **request/response** pattern;
-* A node can **request a service** from another node, which will **respond** to the request;
-* Similar to **RPC** (Remote Procedure Call).
+- **Service** is a **request/response** pattern;
+- A node can **request a service** from another node, which will **respond** to the request;
+- Similar to **RPC** (Remote Procedure Call).
 
 ### [Messages](http://wiki.ros.org/Messages)
 
-* **Message** is a **data structure** used for communication between nodes;
-* All messages are defined in text files with the extension `.msg`.
+- **Message** is a **data structure** used for communication between nodes;
+- All messages are defined in text files with the extension `.msg`.
 
 ### [Parameters](http://wiki.ros.org/Parameter%20Server)
 
-* **Parameters** are used to **configure nodes**;
-* Defined in a `.yaml` file;
-* `rosparam` command line tool is used to **set** and **get** parameters.
+- **Parameters** are used to **configure nodes**;
+- Defined in a `.yaml` file;
+- `rosparam` command line tool is used to **set** and **get** parameters.
 
 ---
 
 ## Development Environment
 
-* Two major languages are used in ROS: **Python** and **C++**;
-* ROS provides a portable **build system** that can be used to compile code in both languages - [**Catkin**](http://wiki.ros.org/catkin);
-* **Package** is a encapsulation of sources, data files and building files;
-* A large variety of packages are available on the web, and can be installed via `apt-get` or `rosdep`. Examples: sensor drivers, simulators, SLAM, image processing, etc.
+- Two major languages are used in ROS: **Python** and **C++**;
+- ROS provides a portable **build system** that can be used to compile code in both languages - [**Catkin**](http://wiki.ros.org/catkin);
+- **Package** is a encapsulation of sources, data files and building files;
+- A large variety of packages are available on the web, and can be installed via `apt-get` or `rosdep`. Examples: sensor drivers, simulators, SLAM, image processing, etc.
 
 Ros relies on the combination of spaces in the shell environment by sourcing scripts, this allows one to have multiple ros versions installed.
 
@@ -75,9 +75,9 @@ Ros relies on the combination of spaces in the shell environment by sourcing scr
 
 ### Catkin workspaces
 
-* catkin packages can be built as a **standalone project**, in the same way that normal cmake projects can be built;
-* But catkin also provides the concept of **workspaces**, where you can build **multiple, interdependent packages** together all at once.
-* Example workspace:
+- catkin packages can be built as a **standalone project**, in the same way that normal cmake projects can be built;
+- But catkin also provides the concept of **workspaces**, where you can build **multiple, interdependent packages** together all at once.
+- Example workspace:
 
 ```
 workspace_folder/         -- WORKSPACE
@@ -111,7 +111,7 @@ workspace_folder/         -- WORKSPACE
     include/
     lib/
     share/
-    .catkin             
+    .catkin
     env.bash
     setup.bash
     setup.sh
@@ -148,8 +148,8 @@ To find the first order dependencies of a package, you can execute the following
 
 For the previous example, the result is the following:
 
-``` bash
-$ rospack depends1 beginner_tutorials 
+```bash
+$ rospack depends1 beginner_tutorials
 roscpp
 rospy
 std_msgs
@@ -171,21 +171,21 @@ Packages also have indirect dependencies, these can be found with the `rospack d
 
 ### Commands
 
-* `roscore` -> is the first thing you should run when using ROS;
-* `rosnode` -> displays information about the ROS nodes;
-* `rosrun [package_name] [node_name]` -> Allows you to run a node of a package;
-* `rostopic` -> Allows you to get information about a topic;
-* `rosservice` ->  Can easily attach to ROS's client/service framework with services;
-* `rosparam` -> allows you to store and manipulate data on the ROS Parameter Server;
-* `roslaunch [package_name] [launch_file_name]` -> Starts nodes as defined in a launch file.
+- `roscore` -> is the first thing you should run when using ROS;
+- `rosnode` -> displays information about the ROS nodes;
+- `rosrun [package_name] [node_name]` -> Allows you to run a node of a package;
+- `rostopic` -> Allows you to get information about a topic;
+- `rosservice` -> Can easily attach to ROS's client/service framework with services;
+- `rosparam` -> allows you to store and manipulate data on the ROS Parameter Server;
+- `roslaunch [package_name] [launch_file_name]` -> Starts nodes as defined in a launch file.
 
 ### Launch file
 
-* Provides a **convenient way to start up multiple nodes and a master**, as well as other initialization requirements such as setting parameters
-* Launch files are stored in the `/launch` directory of a package.
-* Example:
+- Provides a **convenient way to start up multiple nodes and a master**, as well as other initialization requirements such as setting parameters
+- Launch files are stored in the `/launch` directory of a package.
+- Example:
 
-``` xml
+```xml
 <launch>
 
   <group ns="turtlesim1">
@@ -206,16 +206,16 @@ Packages also have indirect dependencies, these can be found with the `rospack d
 
 ### Useful nodes
 
-* `rosrun rqt_plot rqt_plot` -> displays a scrolling time plot of the data published on topics;
-* `rosrun rqt_graph rqt_graph` -> creates a dynamic graph of what's going on in the system;
-* `rosrun rqt_console rqt_console` -> attaches to ROS's logging framework to display output from nodes;
-* `rosrun rqt_console rqt_logger_level` -> allows us to change the verbosity level (DEBUG, WARN, INFO, and ERROR) of nodes as they run.
+- `rosrun rqt_plot rqt_plot` -> displays a scrolling time plot of the data published on topics;
+- `rosrun rqt_graph rqt_graph` -> creates a dynamic graph of what's going on in the system;
+- `rosrun rqt_console rqt_console` -> attaches to ROS's logging framework to display output from nodes;
+- `rosrun rqt_console rqt_logger_level` -> allows us to change the verbosity level (DEBUG, WARN, INFO, and ERROR) of nodes as they run.
 
 ### Msg Files
 
-* **Msg files** are simple text files that **describe the fields of a ROS message**. They are used to generate source code for messages in different languages.
-* Msg files are stored in the `/msg` directory of a package;
-* Msgs contain a **field type** and **field name per line**. The field types you can use are: 
+- **Msg files** are simple text files that **describe the fields of a ROS message**. They are used to generate source code for messages in different languages.
+- Msg files are stored in the `/msg` directory of a package;
+- Msgs contain a **field type** and **field name per line**. The field types you can use are:
 
 ```
 int8, int16, int32, int64 (plus uint*)
@@ -242,7 +242,7 @@ find_package(catkin REQUIRED COMPONENTS
    roscpp
    rospy
    std_msgs
-   message_generation 
+   message_generation
 )
 ```
 
@@ -304,15 +304,15 @@ Examples of system dependencies are `libqt4-dev` and `qt4-qmake` that turtlesim 
 
 ## Commands overview
 
-* `rospack` -> Get information of packages;
-* `roswtf` -> is a tool for diagnosing issues with a running ROS system;
-* `rosdep` is a tool you can use to install system dependencies required by ROS packages.
+- `rospack` -> Get information of packages;
+- `roswtf` -> is a tool for diagnosing issues with a running ROS system;
+- `rosdep` is a tool you can use to install system dependencies required by ROS packages.
 
 ## `rosbash` package commands
 
-* `roscd` -> Allows you to change directory to a package;
-* `rosls` -> `ls` directly on the package directory;
-* `rosed` -> Allows you to directly edit a file within a package by using the package name.
+- `roscd` -> Allows you to change directory to a package;
+- `rosls` -> `ls` directly on the package directory;
+- `rosed` -> Allows you to directly edit a file within a package by using the package name.
 
 To have access to catkin build (isolated packages):
 `sudo apt-get install python3-catkin-tools python3-osrf-pycommon`
@@ -378,47 +378,46 @@ rosbag info <bag_file>                 # Prints information about a bag file
 
 ## Useful ROS Facilities
 
-
 ### Launch Files
 
-* **Launch files** are used to **start multiple nodes** at once;
-* XML format;
-* `roslaunch` command line tool is used to **start** and **stop** launch files.
+- **Launch files** are used to **start multiple nodes** at once;
+- XML format;
+- `roslaunch` command line tool is used to **start** and **stop** launch files.
 
 ### [TF (Transforms)](http://wiki.ros.org/tf)
 
-* **TF** is a **framework** that keeps track of **multiple coordinate frames** over time;
-* Represents geometric transformations in 3D, position and orientation.
+- **TF** is a **framework** that keeps track of **multiple coordinate frames** over time;
+- Represents geometric transformations in 3D, position and orientation.
 
 ### [RViz](https://www.google.com/search?q=RViz&rlz=1C1FCXM_pt-PTPT968PT968&oq=RViz&aqs=chrome..69i57j0i512l9.287j0j4&sourceid=chrome&ie=UTF-8)
 
-* **RViz** is a **3D visualization tool** for ROS;
-* Displays **sensor data** and **state information** from ROS nodes;
-* Displays **TF** frames.
+- **RViz** is a **3D visualization tool** for ROS;
+- Displays **sensor data** and **state information** from ROS nodes;
+- Displays **TF** frames.
 
 ### [Gazebo](https://gazebosim.org/home)
 
-* **Gazebo** is a **3D simulator** for ROS;
-* Simulates **sensors** and **actuators**;
-* Simulates **physics**.
-* Can be used to **simulate robots**.
+- **Gazebo** is a **3D simulator** for ROS;
+- Simulates **sensors** and **actuators**;
+- Simulates **physics**.
+- Can be used to **simulate robots**.
 
 ### [Actionlib](http://wiki.ros.org/actionlib)
 
-* **Actionlib** is a **framework** for **asynchronous communication**;
-* State-full scheme to manage action execution.
+- **Actionlib** is a **framework** for **asynchronous communication**;
+- State-full scheme to manage action execution.
 
 ### [SMACH](http://wiki.ros.org/smach)
 
-* **SMACH** is a **framework** for **state machines**;
-* State machines are used to **model complex behavior**;
-* States, transitions, outcomes.
+- **SMACH** is a **framework** for **state machines**;
+- State machines are used to **model complex behavior**;
+- States, transitions, outcomes.
 
 Other packages:
 
-* [**GMapping**](http://wiki.ros.org/gmapping) - SLAM (Simultaneous Localization and Mapping);
-* [**AMCL**](http://wiki.ros.org/amcl) - Adaptive Monte Carlo Localization;
-* [**MoveIt!**](https://moveit.ros.org/) - Motion Planning;
-* [**MoveBase**](http://wiki.ros.org/move_base) - Navigation;
-* [**OctoMap**](http://wiki.ros.org/octomap) - 3D Mapping;
-* [**ROSPlan**](https://kcl-planning.github.io/ROSPlan/) - Planning.
+- [**GMapping**](http://wiki.ros.org/gmapping) - SLAM (Simultaneous Localization and Mapping);
+- [**AMCL**](http://wiki.ros.org/amcl) - Adaptive Monte Carlo Localization;
+- [**MoveIt!**](https://moveit.ros.org/) - Motion Planning;
+- [**MoveBase**](http://wiki.ros.org/move_base) - Navigation;
+- [**OctoMap**](http://wiki.ros.org/octomap) - 3D Mapping;
+- [**ROSPlan**](https://kcl-planning.github.io/ROSPlan/) - Planning.

@@ -8,17 +8,17 @@
 
 ## Agents
 
-> **Agent** - anything that can be viewed as perceiving its environment through sensors and acting upon that environment through effectors *(Russel and Norvig, 1995)*.
+> **Agent** - anything that can be viewed as perceiving its environment through sensors and acting upon that environment through effectors _(Russel and Norvig, 1995)_.
 
-Key concepts for an agent *(Jennings and Wooldridge, 1998)*:
+Key concepts for an agent _(Jennings and Wooldridge, 1998)_:
 
-* **Situatedness** - the agent is situated in an environment;
-* **Autonomy** - the agent is autonomous;
-* **Flexibility** - the agent is flexible.
+- **Situatedness** - the agent is situated in an environment;
+- **Autonomy** - the agent is autonomous;
+- **Flexibility** - the agent is flexible.
 
 ---
 
-## Autonomous Agents *(Jennings and Wooldridge, 1998)*
+## Autonomous Agents _(Jennings and Wooldridge, 1998)_
 
 > **Agent** - computer system, **situated** in some environment, receiving sensory inputs form its environment and performing actions, which change the environment in some way.
 >
@@ -40,10 +40,10 @@ control over its own actions and internal state.
 
 Should:
 
-* Be able to **learn from experience**;
-* Be able to **interact** and even **cooperate** with other autonomous agents;
-* Have means of **handling the uncertainty** associated to its sensor inputs and the effects of its actions over a surrounding, dynamic environment;
-* Have **means to take rational decisions**, leading to the achievement of its goals.
+- Be able to **learn from experience**;
+- Be able to **interact** and even **cooperate** with other autonomous agents;
+- Have means of **handling the uncertainty** associated to its sensor inputs and the effects of its actions over a surrounding, dynamic environment;
+- Have **means to take rational decisions**, leading to the achievement of its goals.
 
 ---
 
@@ -53,8 +53,8 @@ Should:
 
 Have the ability to:
 
-* **Gain information** about the environment;
-* Work for an extended period **without human intervention**;
-* **Move either all or part of itself** throughout its operating environment **without** human assistance;
-* **Avoid situations that are harmful** to people, property, or itself unless those are part of its design specifications;
-* Learn or gain new capabilities like **adjusting strategies** for accomplishing its tasks, or **adapting to changing surroundings**.
+- **Gain information** about the environment;
+- Work for an extended period **without human intervention**;
+- **Move either all or part of itself** throughout its operating environment **without** human assistance;
+- **Avoid situations that are harmful** to people, property, or itself unless those are part of its design specifications;
+- Learn or gain new capabilities like **adjusting strategies** for accomplishing its tasks, or **adapting to changing surroundings**.

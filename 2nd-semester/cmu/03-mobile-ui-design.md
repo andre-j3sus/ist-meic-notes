@@ -2,23 +2,24 @@
 
 ## Challenges of Mobile UI Design
 
-*** One hand usage**;
-* **Context constraints**:
-  * Noise;
-  * Attention;
-  * Situation type;
-  * **Brief interactions**; 
+**\* One hand usage**;
+
+- **Context constraints**:
+  - Noise;
+  - Attention;
+  - Situation type;
+  - **Brief interactions**;
 
 ## Interaction Design
 
-* **Touch**;
-* **Gestures**;
-* **Voice**;
-* No cursor;
-* No hover;
-* Fat fingers;
-* Spacing;
-* Lack of **haptic feedback** (haptic means touch).
+- **Touch**;
+- **Gestures**;
+- **Voice**;
+- No cursor;
+- No hover;
+- Fat fingers;
+- Spacing;
+- Lack of **haptic feedback** (haptic means touch).
 
 Design principles:
 
@@ -35,7 +36,7 @@ Design principles:
 
 ## Screen Design
 
-* **Miniaturization** is not the solution;
-* Mobile forces **simplicity**;
-* **Full screen** layouts;
-* Divide tasks into screens;
+- **Miniaturization** is not the solution;
+- Mobile forces **simplicity**;
+- **Full screen** layouts;
+- Divide tasks into screens;
