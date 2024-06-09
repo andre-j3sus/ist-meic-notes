@@ -239,6 +239,44 @@ Here are some notes from two courses I took in my bachelor's degree that are rel
 
 ## Platform-as-a-Service
 
+- **Google App Engine**: allows users to deploy web apps written in multiple languages; framework designed for scalability; cloud infrastructure almost completely **hidden** from the developer;
+
+  - User controls the **application code**, **configuration** and **middleware stack**;
+  - Composed of **front-end** (serves user requests) and **back-end** (performs background tasks); or **static content servers**;
+    - **Frontend**: identifices the app based on the URL, and routes the request to the appropriate instance; applications are configured using `app.yaml` file;
+    - **Backend**: can be dynamic (request-driven) or resident (always running);
+  - Apps execute within a strict **sandbox** (not possible to write to files except for `/tmp`, no sockets, no threads, no native code);
+  - Apps can call other **apis** (Google Cloud Storage, Google Cloud SQL, Google Cloud Datastore, Google Cloud Pub/Sub, Google Cloud Endpoints, Google Cloud Messaging, Google Cloud Logging, Google Cloud Monitoring, Google Cloud Task Queue, Google Cloud User Authentication);
+  - **Scalability**: number of frontends and servers scales automatically by GAE; web apps are kept in memory; scaling policies can be defined in `app.yaml`;
+  - **Payment is independent from number of servers** - user charged on real usage, like CPU time, bandwidth, storage, etc;
+
+- **Microsoft Azure**: made of **Web roles** (web apps) and **Worker roles** (background tasks);
+
+  - **Agents** - run on the VMs and communicate with the fabric controller, exposing the API both for web and worker roles;
+  - **Fabric controller** - manages the lifecycle of the VMs;
+  - Communication between roles is done through **queues**;
+
+- **Messaging services**:
+  - **Amazon SQS** - message queues are replicated for fault tolerance and scalability;
+    - Limited message size of 8KB/64KB/256KB;
+    - Fault tolerance mechanism: when messages are read, they become **invisible** for a certain period of time, to avoid being read by another consumer, and they need to be **deleted** after processing;
+    - Use an **idempotent message protocol** - do not design operations that assume a particular application state, e.g.: `setValue` instead of `incrementValue`;
+    - Do not use when app has **time constraints**.
+  - **Microsoft Azure Queues**;
+    - **Unlimited** queues per account and messages per queue;
+    - Limited message size of 8KB/64KB;
+  - **Google Cloud Pub/Sub** - messaging service; **push-based**;
+    - Guarantees: synchronous replication of all data to at least **two zones**, and **best-effort** replication to a **third zone**;
+    - Core concepts:
+      - **Topic**: a named resource to which messages are sent by publishers;
+      - **Subscription**: a named resource representing the **stream of messages** from a single, specific topic, to be delivered to the subscribing application;
+      - **Message**: data that is sent to a topic and then delivered to subscriptions;
+      - **Publisher**: an application that creates and sends messages to a topic;
+      - **Subscriber**: an application that receives messages from a subscription;
+      - **Acknowledgement**: a message is considered **delivered** when the subscriber acknowledges it - **acked messages are removed from the subscription queue**;
+
+### Function-as-a-Service
+
 ---
 
 ## Cloud Storage
