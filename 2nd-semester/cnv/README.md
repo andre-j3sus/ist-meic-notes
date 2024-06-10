@@ -461,3 +461,14 @@ Here are some notes from two courses I took in my bachelor's degree that are rel
 ---
 
 ## Data Centers Design and Operation
+
+- **PUE (Power Usage Effectiveness)** - ratio of total facility power to IT equipment power;
+  - $PUE = \frac{Total Facility Power}{IT Equipment Power}$;
+- **DCIE (Data Center Infrastructure Efficiency)** - reciprocal of PUE;
+  - $DCIE = \frac{1}{PUE}$;
+- **tPUE (Total PUE)** - includes the power used by the IT equipment - critical components;
+  - $tPUE = \frac{Total Facility Power}{Total IT Equipment Power}$;
+  - Not easy to implement, but it can be an ideal metric;
+- **Chiller** - a device that removes heat from a liquid via a vapor-compression or absorption refrigeration cycle; e.g., air conditioning units;
+  - **Chiller-less DCs** - DCs that use outside air for cooling.
+- **CEMS (Cooperative Expendable Micro-Slice Servers)** - servers with low-power CPUs and no local storage;
