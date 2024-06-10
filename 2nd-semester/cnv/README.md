@@ -277,7 +277,36 @@ Here are some notes from two courses I took in my bachelor's degree that are rel
 
 ### Function-as-a-Service
 
----
+- Also known as **serverless computing**;
+- Concurrency is not managed by the developer - simple code;
+- Applications are composed of **functions** that are **triggered** by **events**;
+- **Amazon Lambda**
+  - Max 15 mins timeout;
+  - Execute on **Firecracker** microVMs;
+  - Lambdas communicate via storage, queues, db, etc;
+  - Concurrency is subject to quotas at the region level, and can be configured;
+  - **Cost: number of invocations and memory used** - single knob: memory, because invocation has fixed price; temporary storage also charged;
+- **Google Cloud Functions**
+- **Microsoft Azure Functions** - similar to lambdas, but with a specific pricing in **premium plan** (additional payment per each **vCPU usage time**)
+- **IBM OpenWhisk**
+  - NGINX - load balancer;
+  - Controller - lambda scheduler;
+  - CouchDB - metadata storage;
+  - KV store - keeps active nodes;
+  - Kafka - pushes actions to the invokers;
+  - Invokers - run the lambdas;
+  - Docker - lambda execution environment;
+- Lambda **startup time** is **high** because of the **cold start** - the first time a lambda is executed, it needs to be loaded into memory, and the execution time is higher - **solution is to reuse already started environments (warm)**;
+- Problems:
+
+  - Cold start latency;
+  - Resource redundancy;
+  - Long warm-up time - JIT compilers and interpreters optimize the code over long periods of time;
+
+- **Optimizations**:
+  - **Function co-execution** - execute multiple concurrently lambdas in the same runtime, sharing runtime, libraries and global state - **photons**;
+  - **AOT compilation** - compile HLL into binaries - **GraalVM**;
+  - **Sharing code and profiles** - share code and profiles between lambdas;
 
 ## Cloud Storage
 
