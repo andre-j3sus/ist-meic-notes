@@ -456,7 +456,41 @@ Here are some notes from two courses I took in my bachelor's degree that are rel
 
 ### MapReduce
 
+- **MapReduce** is a programming model for processing large data sets with a parallel, **distributed** algorithm on a cluster;
+- Operates over lists of `<key, value>` pairs;
+
+  - **Map** operation: processes each `<key1, value1>` pair and produces a list of intermediate `<key2, value2>` pairs;
+  - **Reduce** operation: processes all intermediate values associated with the **same intermediate key** `<key2, list(value2)>` and produces a list of final `<key3, value3>` pairs;
+
+- **Hadoop**
+  - Execution controlled by the **master** process:
+    - Input data are **split** into **blocks of 64MB** and distributed to the **worker** nodes dynamically - workers can be **mappers** or **reducers**;
+    - Hadoop tries to create splits containing data **local** to the worker node, to minimize network traffic;
+  - Master assigns each **map task (1 split)** to a **mapper**;
+    - Worker reads the input data from the **closest location** and produces a set of intermediate `<key, value>` pairs;
+  - Master assigns each **reduce task** to a **reducer** node;
+    - Reducer reads the intermediate data from the **mappers** and produces the final output applying the **reduce function**;
+  - **Shuffling**: input to the reducer is the output **sorted** by the mappers;
+    - The framework **fetches (copies)** the intermediate data from the mappers to the reducers, and while is being copied, it is **merged** for efficiency.
+
 ### Streaming
+
+- **Spark** makes working sets a first-class concept, to efficiently support two common types of applications that **repeatedly reuse a working set of data**;
+- Provides a **distributed memory abstractions** for clusters to support apps with **working sets**;
+- Data flow model with **RDDs (Resilient Distributed Datasets)**;
+
+  - **Immutable** collections **partitioned** across the nodes of the cluster that can be **reused** across multiple parallel operations;
+  - It is not needed to be materialized on disk;
+  - Created by **RDD transformations** - map, filter, join, etc;
+  - Can be **cached** in memory across operations;
+  - **Parallel operations**: reduce, collect, count, etc;
+  - Consistency is easy due to **immutability**.
+
+- **Spark Streaming** is an extension of the core Spark API that enables scalable, high-throughput, fault-tolerant stream processing of live data streams;
+
+  - Run a streaming computation as a **series of small batch computations** on small time intervals;
+
+- Open-source **stream processing framework** with powerful stream and batch processing capabilities;
 
 ---
 

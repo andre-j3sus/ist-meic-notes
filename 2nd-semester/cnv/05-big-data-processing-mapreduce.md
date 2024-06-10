@@ -99,7 +99,7 @@
 
 ### Scheduling
 
-The **scheduling** of Hadoop MapReeduce has evolved over time:
+The **scheduling** of Hadoop MapReduce has evolved over time:
 
 - 1st Generation: **FIFO scheduler**;
   - Jobs scheduled in the order they arrive;
@@ -108,7 +108,7 @@ The **scheduling** of Hadoop MapReeduce has evolved over time:
 - 2nd Generation: **Capacity scheduler** (Yahoo!);
   - **Queues** are created and each queue has a **capacity**;
   - Guarantees resources for shorter jobs at the cost of lower cluster utilization;
-    3rd Generation: **Fair scheduler** (Facebook);
+- 3rd Generation: **Fair scheduler** (Facebook);
   - **Free slots** are divided among the jobs;
   - Dynamically balance resources between all running jobs;
 - 4th Generation: **YARN** (Yet Another Resource Negotiator).
