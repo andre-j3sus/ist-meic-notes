@@ -310,6 +310,146 @@ Here are some notes from two courses I took in my bachelor's degree that are rel
 
 ## Cloud Storage
 
+- Types of cloud storage:
+
+  - **Object Storage**
+    - Allows to store and retrieve data as objects or bytes;
+    - Supports only Object ID indexing;
+    - Examples: **Amazon S3** (Dynamo), Google Cloud Storage, Azure Blobs;
+  - **Cloud File Systems**
+    - Hierarchical organization of files, permissions and metadata;
+    - Examples: **Hadoop File System**, Google File System;
+  - **Tables (NoSQL)**
+    - Records and tables;
+    - Search and range scans;
+    - Examples: **Amazon DynamoDB** (Dynamo), Apache HBase, **Google BigTable**;
+  - **Relational Databases**
+    - Full relational model;
+    - Conventional services;
+    - Examples: Amazon RDS, SQL Azure, Google Cloud SQL.
+
+### Object Storage - Dynamo (DynamoDB and Amazon S3)
+
+- **Dynamo** - powering DynamoDB and Amazon S3;
+  - **Availability** and **partition tolerance** are prioritized over **consistency** - **eventual consistency**;
+  - Reads and writes with **unique IDs**;
+  - Two operations:
+    - `put(key, context, object)`;
+      - `key`: object identifier;
+      - `context`: versioning information (**vector clocks**);
+      - `object`: data to store;
+    - `get(key) -> (object versions, context)`;
+      - `key`: object identifier;
+      - `object versions`: list of versions;
+      - `context`: versioning information.
+
+| Problem                              | Technique                                    | Advantage                                       |
+| ------------------------------------ | -------------------------------------------- | ----------------------------------------------- |
+| **Partitioning**                     | **Consistent Hashing**                       | Incremental Stability - **Chord**               |
+| **Write availability**               | **Vector clocks** and conflict resolution    | Version size does not depend on the update rate |
+| **Temporary failures**               | **Relaxed/sloppy Quorum and hinted handoff** | High availability and durability                |
+| **Permanent failures**               | **Anti-Entropy with Merkle Trees**           | Syncs replicas asynchronically                  |
+| **Membership and failure detection** | **Gossip-based** protocol                    | Scalability and fault tolerance                 |
+
+- **DynamoDB** - hierarchical data storage;
+
+  - **Ad hoc** data model - no schema;
+  - Adds multiple attributes, indexing and queries;
+  - **Efficient** of read operations;
+  - **❌ Missing features**: joins and ordering;
+  - Data model:
+    - **Table**: collection of items, identified by a string;
+    - **Item**: identified by a **key** and contains attributes;
+      - Indexed by an **hash key**;
+      - Additional **range key** for indexing;
+      - Limited to 400KB;
+    - **Attributes**: name-value pairs;
+
+- **Amazon S3**
+  - **Simple Storage Service**;
+  - Used for storing disk images, photos, videos, often as **CDN for web content**;
+  - **⚠️ Occasionally, some S3 calls fail and must be repeated**;
+  - Include SLA for 99.99% availability;
+  - **Data model**:
+    - **Bucket**: collection of objects - delimiting namespace;
+    - **Object**: identified by a key and contains data.
+
+### File Storage - Google File System and Hadoop Distributed File System
+
+- Very large-scale distributed file system;
+- **Scalability**: data operations don't go through the central server;
+- **Block-based**: files are divided into blocks of 64MB;
+  - A file smaller than a block does not occupy the full block - a smaller local file is used;
+- **Namenode**: manages the file system **namespace** - folder hierarchy and name uniqueness;
+  - Files can be written, read, renamed and deleted, but its no possible to:
+    - Write in the middle of a file;
+    - Write concurrently in the same file;
+- **Datanode**: manages a set of **blocks**;
+  - Processes client/namenode requests;
+  - Periodically sends a heartbeat to the namenode;
+  - Block replication management: when replica number drops below a threshold, the datanode replicates the block.
+- **Reading**: the client asks the namenode for the block locations and reads directly from the datanodes;
+
+<p align="center">
+  <img src="imgs/hdfs-reading.png" alt="HDFS Reading" width="400"/>
+</p>
+
+- **Writing**: the client asks the namenode for a list of datanodes to write the block;
+  - The client writes to the first datanode and then to the next - **chain replication**;
+  - Block write requests are kept in a data queue;
+  - Unconfirmed write requests are kept in a _ack queue_;
+  - If the datanode fails, the client changes the block ID so the corrupted replica is deleted later;
+
+<p align="center">
+    <img src="imgs/hdfs-writing.png" alt="HDFS Writing" width="400"/>
+</p>
+
+### Table Storage - Google BigTable
+
+- **BigTable** - distributed storage system for structured data;
+- Stores all persistent state on top of Google File System;
+- Data model:
+  - A **table** has **entities**;
+  - A table has **column families** - like a property, created **statically**;
+  - Each column family has **columns** - instance of a property, created **dynamically**;
+    - Each column is **timestamped**;
+  - Entities are **ordered alphabetically**, and can be:
+    - Written;
+    - Deleted;
+    - Read as single row, scanned or range scanned.
+    - **ACID transactions only for a single entity**.
+  - **Sequences os entities** are stored in **tablets**;
+    - **Tablet**: a range of rows;
+    - Stored in **SSTable** files;
+- Architecture:
+
+  - **Master** performs the following tasks:
+    - **Table creation**;
+    - **Column family creation**;
+    - **Startpoint for entity location**;
+    - **Allocation and elimination of tablets**;
+  - **Tablet Servers**:
+    - Performs reading, writing directly with clients;
+    - Partitioning for tablets that are too large, employing tree with levels of **metadata tablets**, and leaves are **data tablets**;
+  - **Writing** is done on two tablet server structures: **redo log** and **memtable**;
+    - **Minor**: when a **memtable** is full, it is flushed to disk as an **SSTable**;
+    - **Merge**: groups SSTables from minor compactions;
+    - **Major**: converts SSTables to a minimum by filtering entity removals;
+
+- **Datastore**: BigTable for programmers;
+  - NoSQL database;
+  - Each entity has an unique ID that includes **appID** and **kindID**;
+    - **AppID**: application identifier;
+    - **Kind** is a namespace;
+  - **Data items are stored in the entities columns**, and columns have a name and a value;
+  - **Megastore** is an intermediate layer between BigTable and Datastore, that:
+    - Executed queries;
+    - Builds indexes;
+    - Performs multi-record transactions.
+  - Datastore supports **transactions on several entities**, but are limited:
+    - Only operate on one entity group;
+    - No distributed transactions.
+
 ---
 
 ## Big-Data Processing
