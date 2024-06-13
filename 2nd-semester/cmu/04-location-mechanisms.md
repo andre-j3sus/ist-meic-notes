@@ -138,7 +138,7 @@ $$
 
 - Goal is to estimate absolute location within a room with **high accuracy**;
 - **Badges are beacons** and receivers are the infrastructure;
-- Similar to cricket, but **bats** (small pager-like devices) emit **ultrasound signals** and the receivers i the infrastructure **calculate the distance** to the bats;
+- Similar to cricket, but **bats** (small pager-like devices) emit **ultrasound signals** and the receivers in the infrastructure **calculate the distance** to the bats;
 
 <p align="center">
     <img src="imgs/indoor-comparison.png" alt="Indoor Location Mechanisms Comparison" width="300px">

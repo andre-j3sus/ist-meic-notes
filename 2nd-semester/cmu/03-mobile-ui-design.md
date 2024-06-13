@@ -2,9 +2,9 @@
 
 ## Challenges of Mobile UI Design
 
-**\* One hand usage**;
+* **One hand usage**;
 
-- **Context constraints**:
+* **Context constraints**:
   - Noise;
   - Attention;
   - Situation type;
