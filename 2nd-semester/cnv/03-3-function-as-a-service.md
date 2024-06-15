@@ -75,9 +75,9 @@
 - **Where to run lambdas?**
   - In a dedicated VM/container? - **resource waster would be enormous**;
   - Applications are event-driven - idle most of the time;
-  - **Solution**: function runs **with no dedicated server\* - **serverless\*\*;
+  - **Solution**: function runs **with no dedicated server** - **serverless**;
   - Users do not select a VM nor OS type, only the language runtime and the memory size;
-  - Provides can decide where to host invocation **use leftovers from IaaS**;
+  - Providers can decide where to host invocation **use leftovers from IaaS**;
   - Use **already started environments** - **warm start**;
     - **Cold start** - first invocation of a lambda - **slow**;
     - **Warm start** - subsequent invocations - **fast**;
