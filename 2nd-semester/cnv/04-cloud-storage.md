@@ -72,7 +72,7 @@
   - Uses **consistent hashing** to partition data;
   - Inspired by Chord - each node has a unique ID in the key space;
   - Nodes are arranged in a ring;
-  - Data items are stored in the node with the lowest key that is greater than th object key;
+  - Data items are stored in the node with the lowest key that is greater than the object key;
 - **Replication**:
   - All objects are **replicated in the N nodes** that follow the home node associated with the object;
 
@@ -109,7 +109,7 @@
 ## DynamoDB - Table Storage Service
 
 - Hierarchical data storage based on Dynamo;
-- Adds multiple attributed, indexing and queries;
+- Adds multiple attributes, indexing and queries;
 - No schema;
 - Automatic scaling;
 - **Efficient for data where read operations dominate** due to the **eventual consistency** model;
@@ -170,7 +170,7 @@
 - **Writing**: the client asks the namenode for a list of datanodes to write the block;
   - The client writes to the first datanode and then to the next - **chain replication**;
   - Block write requests are kept in a data queue;
-  - Unconfirmed write requests are kept in a _ack queue_;
+  - Unconfirmed write requests are kept in an _ack queue_;
   - If the datanode fails, the client changes the block ID so the corrupted replica is deleted later;
 
 <p align="center">
@@ -200,7 +200,7 @@
   - Deleted;
   - Read as single row, scanned or range scanned.
   - **ACID transactions only for a single entity**.
-- **Sequences os entities** are stored in **tablets**;
+- **Sequences of entities** are stored in **tablets**;
   - **Tablet**: a range of rows;
   - Stored in **SSTable** files;
 
@@ -231,7 +231,7 @@
   - **Kind** is a namespace;
 - **Data items are stored in the entities columns**, and columns have a name and a value;
 - **Megastore** is an intermediate layer between BigTable and Datastore, that:
-  - Executed queries;
+  - Executes queries;
   - Builds indexes;
   - Performs multi-record transactions.
 - Datastore supports **transactions on several entities**, but are limited:
