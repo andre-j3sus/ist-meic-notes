@@ -49,7 +49,7 @@
   - Differentiate prices based on urgency;
   - Suspend machines during low load;
 - AWS EC2 has **spot instances** - prices vary based on demand;
-  - When spot price becomes higher than that paid by the user, or the AWS capacity is no longer available, the instance is **interruption**;
+  - When spot price becomes higher than that paid by the user, or the AWS capacity is no longer available, the instance is **interrupted**;
   - Users can specify instance **interruption behavior**:
     - **Terminate** - CPU and storage are lost;
     - **Stop** - only CPU is freed, instance can be restarted;
