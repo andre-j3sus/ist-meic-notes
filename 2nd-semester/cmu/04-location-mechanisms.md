@@ -3,8 +3,8 @@
 - Commonly used to **infer user context**;
 - **Symbolic** - abstract ideas of where something is (e.g., home, work);
 - **Physical** - actual coordinates (e.g., latitude, longitude).
-- **Accuracy** - how close the location is to the real location.
-- **Precision** - how detailed the location is - **high precision** means less variability in the location.
+- **Accuracy** - "correctness" - how close the location is to the real location.
+- **Precision** - "consistency" - how detailed the location is - **high precision** means less variability in the location.
 
 <p align="center">
     <img src="imgs/accuracy_vs_precision.png" alt="Accuracy vs Precision" width="300px">
