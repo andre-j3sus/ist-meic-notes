@@ -25,23 +25,23 @@ Please note that the notes may not have the same formatting, and some of them ma
 
 ### 📆 1st Semester
 
-- 💬 **CCEIC I** - Comunicação e Competências para Engenharia Informática e de Computadores I / Communication and Skills for Computer Science and Computer Engineering I;
-- [🤖 **IRobo** - Introdução à Robótica / Introduction to Robotics](./1st-semester/irobo/)
-- [☁️ **DAD** - Desenvolvimento de Aplicações Distribuídas / Design and Implementation of Distributed Applications](./1st-semester/dad/)
-- [📊 **CD** - Ciência de Dados / Data Science](./1st-semester/cd/)
+- [💻 **AGISIT** - Administração e Gestão de Infraestruturas e Serviços de It / Management and Administration of It Infrastructures and Services](./1st-semester/agisit/)
 - [🧠 **AP-Dei** - Aprendizagem Profunda / Deep Learning](./1st-semester/ap-dei/)
+- 💬 **CCEIC I** - Comunicação e Competências para Engenharia Informática e de Computadores I / Communication and Skills for Computer Science and Computer Engineering I;
+- [📊 **CD** - Ciência de Dados / Data Science](./1st-semester/cd/)
+- [🕵🏼 **CSF** - Ciber Segurança Forense / Forensics Cyber-Security](./1st-semester/csf/)
+- [☁️ **DAD** - Desenvolvimento de Aplicações Distribuídas / Design and Implementation of Distributed Applications](./1st-semester/dad/)
+- [🤖 **IRobo** - Introdução à Robótica / Introduction to Robotics](./1st-semester/irobo/)
 
 _(section under construction)_
 
 ### 📆 2nd Semester
 
 - 💬 **CCEIC II** - Comunicação e Competências para Engenharia Informática e de Computadores II / Communication and Skills for Computer Science and Computer Engineering II;
+- [📱 **CMU** - Computação Móvel e Ubíqua / Mobile and Ubiquitous Computing](./2nd-semester/cmu/)
+- [☁️ **CNV** - Computação na Nuvem e Virtualização / Cloud Computing and Virtualization](./2nd-semester/cnv/)
 - [🔀 **CPD** - Computação Paralela e Distribuída / Parallel and Distributed Computing](./2nd-semester/cpd/)
 - [🔒 **SEC** - Sistemas de Elevada Confiabilidade / Highly Dependable Systems](./2nd-semester/sec/)
-- [☁️ **CNV** - Computação na Nuvem e Virtualização / Cloud Computing and Virtualization](./2nd-semester/cnv/)
-- [📱 **CMU** - Computação Móvel e Ubíqua / Mobile and Ubiquitous Computing](./2nd-semester/cmu/)
-
-_(section under construction)_
 
 ### 💡Other Materials
 

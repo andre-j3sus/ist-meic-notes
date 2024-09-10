@@ -139,6 +139,7 @@ Here are some notes from two courses I took in my bachelor's degree that are rel
   - **SQS** (Simple Queue Service) - message queuing service;
   - Storage services: **S3** (Simple Storage Service), **EBS** (Elastic Block Store), **DynamoDB** (NoSQL);
   - **CloudWatch** - monitoring service: basic monitoring (5 minutes interval, free) and detailed monitoring (1 minute interval, paid);
+    - Can access **measures**, returns a list of data-points (**metric**), expressed according to a given **unit**; Results from different services are organized across different **namespaces**;
   - **Auto Scaling** - automatically adjust the number of EC2 instances;
   - **Elastic Load Balancing** - distribute incoming application traffic across multiple EC2 instances;
   - Elastic Beanstalk - deploy and manage applications;
