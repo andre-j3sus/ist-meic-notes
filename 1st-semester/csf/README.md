@@ -38,6 +38,13 @@ _(section under construction)_
 ### Kruse & Heiser Model
 
 1. **Assessment**: prepare a plan of action;
+   - Identify the stakeholders;
+   - Identify the scope of the investigation;
+   - Identify the tools/resources needed;
+   - Identify potential sources of evidence;
+   - Get all legal authorizations;
+     - For **internal investigations**, we need a signed letter of agreement from the organization;
+     - For **civil/criminal investigations**, we need a court order or a search warrant;
 2. **Acquisition**: collect evidence;
    - Maintain **chain of custody** (with timestamps, signatures, and logs);
    - **Hashing** is used to ensure data integrity;
@@ -253,6 +260,7 @@ File system evidence can be grouped into categories:
 - Goal: recover files from a disk image without the file system;
 - **Fragmentation**: files are split into fragments and stored in different locations;
   - Fragmented files are younger than non-fragmented files;
+- `foremost` or `scalpel` tools to carve files;
 - Techniques:
   - **One-pass carving**: search for file headers and footers - **structure-based carving**;
     - While True:
@@ -407,7 +415,11 @@ File system evidence can be grouped into categories:
     - Can be used in investigations to detect attacks, check in the logs, etc.;
     - ❌ Can't inspect encrypted traffic;
     - ❌ High false positive rate;
-  - **Security Information and Event Management (SIEM)**: collect logs from different sources and correlate them;
+    - Techniques:
+      - **Signature-based**: detect known attacks; `Snort` is a popular tool;
+      - **Protocol aware**: detect deviations from the protocol;
+      - **Behavioral**: detect deviations from the normal behavior;
+  - **Security Information and Event Management (SIEM)**: collect logs from different sources and correlate them; uses artificial intelligence;
     1. Event generation by different sources (firewalls, IDS, etc.);
     2. **Event collection** by the SIEM;
     3. **Normalization** of the events: convert to a common format;
@@ -420,6 +432,11 @@ File system evidence can be grouped into categories:
 
 ### Wi-Fi network investigations
 
+- **IMEI (International Mobile Equipment Identity)**: unique identifier of a mobile device;
+  - Can be used to monitor traffic of a specific device;
+- **IMSI (International Mobile Subscriber Identity)**: unique identifier of a SIM card;
+  - Can be used to monitor traffic of a specific SIM card;
+  - In pre-paid SIM cards, the subscriber is anonymous;
 - **Wi-Fi** (Wireless Fidelity) networks are based on the **IEEE 802.11** standard;
 - Client communicated with the **Access Point (AP)** or **Base Station (BS)**;
 - Common attacks:
@@ -520,7 +537,13 @@ File system evidence can be grouped into categories:
     - **Tor** adopts some ideas of **onion routing**: use PK cryptography to establish a circuit with pairwise symmetric keys;
       - The list of Tor relays is named **consensus**;
       - Tor establishes connections one hop at a time, using TLS;
+      - Each Tor node does not know the IP addresses of the Tor client and the final service, only the IP of the relay before it, and after it;
       - Supports **Hidden services** - running a server without disclosing the IP or DNS name;
+        - When a service goes online, it creates a **descriptor** that is uploaded to the **distributed hash table** in the Tor network;
+        - It then selects some relays to act as **introduction points**;
+        - The Tor client (browser) selects some relays to act as **rendezvous points**;
+        - The client sends a message to the introduction points, and the service sends a message to the rendezvous points, and they establish a connection;
+        - The client and the service establish a circuit to communicate - rendezvous points do not know the IP address of the client or the service;
 - Investigation in anonymity networks:
   - **Probe entry and exit relays**: correlate traffic by volume or timing;
   - **Predecessor attack**: investigator controls two relays in the circuit;
