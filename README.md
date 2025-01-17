@@ -32,8 +32,7 @@ Please note that the notes may not have the same formatting, and some of them ma
 - [🕵🏼 **CSF** - Ciber Segurança Forense / Forensics Cyber-Security](./1st-semester/csf/)
 - [☁️ **DAD** - Desenvolvimento de Aplicações Distribuídas / Design and Implementation of Distributed Applications](./1st-semester/dad/)
 - [🤖 **IRobo** - Introdução à Robótica / Introduction to Robotics](./1st-semester/irobo/)
-
-_(section under construction)_
+- [🔒 **SSof** - Segurança em Software / Software Security](./1st-semester/ssof/)
 
 ### 📆 2nd Semester
 
