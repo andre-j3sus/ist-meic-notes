@@ -9,8 +9,8 @@
 1. Introduction to Information Flow Security
 2. Definition of Security Properties
 3. Program Analysis for Security
-4. Static Analysis for Security of High-Level Languages
-5. Dynamic Analysis for Security
+4. Static Analysis
+5. Dynamic Analysis
 6. Security Verification and Bug-finding
 
 #### Vulnerabilities and Secure Software Development
@@ -20,9 +20,9 @@
 3. Race Conditions
 4. Web Vulnerabilities
 5. Database Vulnerabilities
-6. Validation Encoding
+6. Validation and Encoding
 7. Buffer Overflows
-8. Input Validation
+8. Input Validation and Format String Vulnerabilities
 9. Dynamic Protection
 
 ---
@@ -33,7 +33,178 @@
 
 ## Language Based Security
 
-_section under construction_
+### Introduction to Information Flow Security
+
+- **Language-based security**: techniques based on programming language theory and implementation, including semantics, types, optimization and verification, brought to bear on the security question;
+- **Tracking Information Flow**
+  - **Perl's Taint Mode**: a mode that marks all data as **tainted**, and only allows it to be used in certain ways; tainted variables **taint** variables explicitly calculated from them; tainted data cannot be used in any **sensitive operation**;
+- **Information flow policies**: specify how information should be allowed to flow between objects of each security class; we need **security labels**, **can-flow** relations between labels, and and **operator** to combine them: `(SC, →, ⊕)` where `SC` is the set of security classes, `→` is the can-flow relation, and `⊕` is the operator;
+  - **Confidentiality**: prevent unauthorized disclosure of information;
+    - **Confidentiality classes** determine who has the right to **read**;
+    - Information **can only flow** towards confidentiality classes that are **at least as secret**;
+    - Information that is derived from the **combination of two security classes** must take a confidentiality class that is **at least as secret** as each of them: `secret AND public = secret`- **intersection**
+  - **Integrity**: prevent unauthorized modification of information;
+    - **Integrity classes** determine who has the right to **write**;
+    - Information **can only flow** towards integrity classes that are **no more trustworthy**;
+    - Information that is derived from the **combination of two integrity classes** takes an integrity class that is **no more trustworthy** than each of them: `trusted OR untrusted = untrusted` - **union**
+  - **Partial orders**:
+    - **Reflexivity**: `A → A`;
+    - **Transitivity**: `A → B` and `B → C` implies `A → C`;
+    - **Anti-symmetry**: `A → B` and `B → A` implies `A = B`;
+    - **Hasse diagram**: a diagram that represents the partial order; can-flow relations are non-directed arrows, implicitly directed **upwards**;
+- **Access Control to Information Flow Control**
+  - **Discretionary Access Control (DAC)**: the owner of the object defines the access control;
+  - **Mandatory Access Control (MAC)**: the system administrator defines the access control;
+- **Encoding and exploiting information flows**
+  - **Object**: resource that can be accessed by a subject;
+  - **Security class/label**: specifies who can access objects of that class;
+  - **Security labelling**: the process of assigning security labels to objects;
+  - `xL` denotes a variable `x` with security level `L`;
+  - **No illegal flows** property: an attacker cannot infer secret input (confidentiality) or affect critical output (integrity) by inserting inputs into the system and observing its outputs.
+
+### Definition of Security Properties
+
+- **Noninterference, intuitively**: the program is secure if, for any two runs of the program that are given the same low inputs, if the program terminates, it produces the same low outputs;
+  - **Deterministic Input-Output Noninterference**: an attacker is a program that is executed sequentially after the observed program, and has access to low outputs - only sensitive to outputs of **terminating** computations;
+  - **Possibilistic Input-Output Noninterference**: an attacker is a program that is executed concurrently with the observed program, and has access to low outputs - sensitive to whether the program is capable of terminating and producing certain final outputs;
+  - **Intermediate-step-sensitive Noninterference**: possible low outputs do not depend on yH, but the **intermediate steps** of the computation do;
+  - **Temporal Noninterference**: the attacker can observe the program's behavior over time, and can distinguish between different low inputs;
+  - **Probabilistic Noninterference**: sensitive to the likelihood of outputs;
+  - Noninterference is simple and provides strong security guarantees, but sometimes we need to **leak** some information to the attacker (e.g. if password is correct or not);
+- **Formal semantics**
+  - We will use two techniques:
+    - **Denotational semantics** for expressions: **what** is the result of a computation;
+    - **Operational semantics** for instructions/statements: **how** the computation is done;
+  - **WHILE language**: a simple language with **assignment**, **conditionals** and **loops**:
+    - Syntactic categories:
+      - `c`: constants (integers);
+      - `x`: variables;
+      - `a`: arithmetic expressions;
+      - `t`: tests;
+      - `S`: statements;
+    - Grammar:
+      - `op ::= + | - | * | /`;
+      - `a ::= c | x | a op a`;
+      - `cmp ::= = | < | > | ≤ | ≥`;
+      - `t ::= a cmp a`;
+      - `S ::= x := a | S; S | if t then S else S | while t do S`;
+    - Functions:
+      - `A`: maps pairs of arithmetic expressions and states to integers;
+      - `B`: maps pairs of tests and states to booleans;
+      - `S`: partial function that maps pairs of statement and state to states;
+        - We will use **big-step transitions** to define `S`: `<S, p> → p'`;
+          - **Skip** rule: `<skip, p> → p` - does nothing;
+          - **Assignment** rule: `<x := a, p> → p[x |-> A(a, p)]` - assigns the value of `a` to `x`;
+          - **Sequential composition** rule: `<S1; S2, p> → p''` if `<S1, p> → p'` and `<S2, p'> → p''`;
+          - **Conditional statement** rule: `<if t then S1 else S2, p> → p'` if `<S1, p>` and `B(t, p) = true`, or `<S2, p>` and `B(t, p) = false`;
+          - **While loop** rule: `<while t do S, p> → p''` if `<if t then S; while t do S else skip, p> → p''`;
+        - Later we will use **small-step transitions** to define `S`: `<S, p> → <S', p'>`;
+- **Formalization of noninterference**: A program `S` is secure if for every security level `L` and for all pairs of memories `p1` and `p2` such that `p1~Lp2` we have that `<S, p1> → p1'` and `<S, p2> → p2'` implies `p1'~Lp2'`;
+
+### Program Analysis for Security
+
+- **Enforcement mechanism**: a mechanism that aims at preventing any given program from performing unwanted behaviors;
+  - **Program analysis**: process of **automatically** analyzing the behavior of computer programs;
+    - Limitations:
+      - **Scope**: designed to look for a finite set of problems;
+      - **Limited precision**: for many properties, a decidable analysis cannot be precise, its either;
+        - **unsound**: too permissive (has false positives);
+        - **incomplete**: too restrictive (has false negatives);
+- **Power and limitations of program analysis**
+  - **The halting problem**: it is **undecidable** to determine if a program will halt (terminate) or not;
+  - **Rice's theorem**: it is **undecidable** to determine if a program has a non-trivial property;
+  - **Precision**:
+    - **False positives**: the analysis reports a problem that does not exist;
+    - **False negatives**: the analysis does not report a problem that exists;
+    - Considering `S` the set of **secure programs** and `A` the set of **accepted programs**, we have:
+      - **Sound**: `A ⊆ S` - all accepted programs are secure - **no false negatives**;
+      - **Complete**: `S ⊆ A` - all secure programs are accepted - **no false positives**;
+      - **Precise**: `A = S` - no false positives and no false negatives;
+    - **Timing**:
+      - **Static analysis**: analyzes the program without executing it;
+        - Static time overhead;
+        - Can defect problems earlier in the development cycle;
+        - E.g. control-flow analysis, data-flow analysis, etc;
+      - **Dynamic analysis**: analyzes the program while executing it;
+        - May impose a cost on execution efficiency, due to runtime checks;
+        - Can take advantage of runtime knowledge; Can find problems that are hard to detect statically;
+        - E.g. testing, profiling, etc;
+      - **Hybrid analysis**: combines static and dynamic analysis;
+- **Static analysis mechanisms**
+  - Standard compilation stages:
+    - **Lexical analysis**: breaks the program into tokens;
+    - **Preprocessing**: includes header files, etc;
+    - **Semantic analysis**: builds a syntax tree;
+    - **Intermediate code generation**: generates an intermediate representation of the program;
+    - **Optimized**;
+    - **Code generation**: generates the final code;
+  - Analyzers:
+    - **String matcher**: directly on the source code; e.g. `grep`;
+    - **Lexical analyzer**: runs over the tokens generated by the scanner (does not confuse a variable `getshow` with a call to `gets`); e.g. `Flawfinder`;
+    - **Semantic analyzer**: runs over the syntax tree generated by the parser (does not confuse a variable `gets` with a call to `gets`- same name but different meaning);
+      - **Control fow analysis**: performs checks based on the **possible paths**;
+      - **Data flow analysis**: performs checks based on the **possible values**;
+      - **Type checking**: verify if the program is **type-safe**;
+  - **Interactive analysis**:
+    - **Model checking**: checks a model of a program, or the code itself;
+      - A **model** is a description of the system, based on states and possible transitions between them;
+      - Check if bad states cannot be reached (**safety**), or if good states are always reached (**liveness**);
+    - **Program verification**: formally proves a property about a program;
+- **Lattice policies**: a class of common information flow policies have some convenient ingredients:
+  - Security levels form a partial order;
+  - Two security levels can always be combined;
+  - There is a highest and a lowest level;
+  - Lattice of **confidentiality levels**: `L = (L, ⊑, ⊔, ⊓, ⊤, ⊥)`;
+    - `L` is the set of security levels;
+    - `⊑` is the **partial order** relation;
+    - `⊔` is the **join** operator;
+    - `⊓` is the **meet** operator;
+    - `⊤` is the **top** element;
+    - `⊥` is the **bottom** element;
+  - **Upper-bound**: given a partially ordered set (`L, ⊑`), an element `s` is an upper bound of two elements `l1` and `l2` if `l1 ⊑ s` and `l2 ⊑ s`;
+  - **Lower-bound**: given a partially ordered set (`L, ⊑`), an element `s` is a lower bound of two elements `l1` and `l2` if `s ⊑ l1` and `s ⊑ l2`;
+  - **Join (`⊔`)**: the **least upper bound** of two elements `l1` and `l2` is an element `s` such that `l1 ⊔ l2 ⊑ s`;
+  - **Meet (`⊓`)**: the **greatest lower bound** of two elements `l1` and `l2` is an element `s` such that `l1 ⊓ l2 ⊑ s`;
+
+### Static Analysis
+
+1. Definition of the language: **`WHILE` language** with **big-step semantics**;
+2. Information flow **policy** of security levels: a **lattice `L` of security levels**;
+   1. **High-Low policy** for **confidentiality**;
+   2. **Low-High policy** for **integrity**;
+   3. **Principal-based policy** for **confidentiality**;
+   4. **Principal-based policy** for **integrity**;
+3. Classification of objects into security levels: objects are variables that are given security levels by `Γ`;
+4. **Security property** of programs: **Deterministic Input-Output Noninterference**;
+5. Mechanism of selecting secure programs;
+6. Guarantees about the mechanism;
+   1. **Lemma 1 - Simple Security**: if `Γ ⊢ a : τ` then expression `a` contains only variables of level `τ` or lower;
+   2. **Lemma 2 - Confinement**: if `Γ ⊢ S : τ cmd` then the statement `S` assigns only to variables of level `τ` or higher;
+   3. **Theorem - Type Soundness**: if a program `S` is typable, then `S` satisfies Deterministic Input-Output Noninterference;
+      - If `Γ ⊢ S : τ cmd` then **for every security level `l`** and memories `p1` and `p2` such that `p1~l p2` we have that `<S, p1> → p1'` and `<S, p2> → p2'` implies `p1'~l p2'`\*\*;
+
+### Dynamic Analysis
+
+- **Accepting vs. Transforming - mechanisms**
+  - There are type systems that transform programs into secure programs;
+- **Web security and Dynamic Languages**
+
+  - **Same Origin Policy (SOP)**: a script loaded from one origin is not allowed to access or modify resources obtained from another origin;
+  - Dynamic approaches to control information flow:
+    - **Lock-step monitor**: modify JS engine so that it additionally implements the security monitor - monitor is **inlined`** into the program;
+    - **Inlining compiler**: inline the monitor into the original program, which has the advantage of being browser-independent.
+
+- **A monitor for Information ow analysis (Dynamic WHILE)**
+  - **Small-step semantics**
+  - **Labelled transitions**
+  - **Lock-step information flow monitor**
+
+### Security Verification and Bug-finding
+
+- **Program Properties and Noninterference**
+  - **Trace properties vs. Hyper properties**
+- **Verification and Bug-finding for Noninterference**
+  - **Self-composition + Symbolic Execution**
 
 ---
 
